@@ -1,0 +1,703 @@
+0.003455	E. coli B promoter	0
+0.003455	E. coli C promoter	0
+0.003455	E. coli promoter A1	1
+0.003455	E. coli promoter A2	0
+0.003455	E. coli promoter A3	0
+0.003455	T7 promoter phi1.1A	0
+0.003455	T7 promoter phi1.1B	0
+0.003455	T7 promoter phi1.3	0
+0.003455	T7 promoter phi1.5	0
+0.003455	T7 promoter phi1.6	0
+0.003455	T7 promoter phi10	0
+0.003455	T7 promoter phi13	0
+0.003455	T7 promoter phi17	0
+0.003455	T7 promoter phi2.5	0
+0.003455	T7 promoter phi3.8	0
+0.003455	T7 promoter phi4.3	0
+0.003455	T7 promoter phi4.7	0
+0.003455	T7 promoter phi4c	0
+0.003455	T7 promoter phi6.5	0
+0.003455	T7 promoter phi9	0
+0.003455	bound_ecolipol	1800
+0.003455	bound_ecolipol_p	0
+0.003455	bound_ribosome	9999
+0.003455	degraded_transcript	0
+0.003455	ecoli_genome	0
+0.003455	ecoli_transcript	1
+0.003455	ecolipol	0
+0.003455	ecolipol-2	0
+0.003455	ecolipol-2-p	0
+0.003455	ecolipol-p	0
+0.003455	gp-2	0
+0.003455	lysozyme-3.5	0
+0.003455	protein_kinase-0.7	0
+0.003455	rbs	0
+0.003455	ribosome	1
+0.003455	rnapol-1	0
+0.003455	rnapol-3.5	0
+4.999801	E. coli B promoter	0
+4.999801	E. coli C promoter	0
+4.999801	E. coli promoter A1	1
+4.999801	E. coli promoter A2	0
+4.999801	E. coli promoter A3	0
+4.999801	T7 promoter phi1.1A	0
+4.999801	T7 promoter phi1.1B	0
+4.999801	T7 promoter phi1.3	0
+4.999801	T7 promoter phi1.5	0
+4.999801	T7 promoter phi1.6	0
+4.999801	T7 promoter phi10	0
+4.999801	T7 promoter phi13	0
+4.999801	T7 promoter phi17	0
+4.999801	T7 promoter phi2.5	0
+4.999801	T7 promoter phi3.8	0
+4.999801	T7 promoter phi4.3	0
+4.999801	T7 promoter phi4.7	0
+4.999801	T7 promoter phi4c	0
+4.999801	T7 promoter phi6.5	0
+4.999801	T7 promoter phi9	0
+4.999801	bound_ecolipol	1734
+4.999801	bound_ecolipol_p	0
+4.999801	bound_ribosome	9602
+4.999801	degraded_transcript	7
+4.999801	ecoli_genome	66
+4.999801	ecoli_transcript	742
+4.999801	ecolipol	66
+4.999801	ecolipol-2	0
+4.999801	ecolipol-2-p	0
+4.999801	ecolipol-p	0
+4.999801	gp-2	0
+4.999801	lysozyme-3.5	0
+4.999801	protein_kinase-0.7	0
+4.999801	rbs	0
+4.999801	ribosome	398
+4.999801	rnapol-1	0
+4.999801	rnapol-3.5	0
+9.999924	E. coli B promoter	0
+9.999924	E. coli C promoter	0
+9.999924	E. coli promoter A1	1
+9.999924	E. coli promoter A2	0
+9.999924	E. coli promoter A3	0
+9.999924	T7 promoter phi1.1A	0
+9.999924	T7 promoter phi1.1B	0
+9.999924	T7 promoter phi1.3	0
+9.999924	T7 promoter phi1.5	0
+9.999924	T7 promoter phi1.6	0
+9.999924	T7 promoter phi10	0
+9.999924	T7 promoter phi13	0
+9.999924	T7 promoter phi17	0
+9.999924	T7 promoter phi2.5	0
+9.999924	T7 promoter phi3.8	0
+9.999924	T7 promoter phi4.3	0
+9.999924	T7 promoter phi4.7	0
+9.999924	T7 promoter phi4c	0
+9.999924	T7 promoter phi6.5	0
+9.999924	T7 promoter phi9	0
+9.999924	bound_ecolipol	1724
+9.999924	bound_ecolipol_p	0
+9.999924	bound_ribosome	9729
+9.999924	degraded_transcript	13
+9.999924	ecoli_genome	76
+9.999924	ecoli_transcript	1007
+9.999924	ecolipol	76
+9.999924	ecolipol-2	0
+9.999924	ecolipol-2-p	0
+9.999924	ecolipol-p	0
+9.999924	gp-2	0
+9.999924	lysozyme-3.5	0
+9.999924	protein_kinase-0.7	0
+9.999924	rbs	0
+9.999924	ribosome	271
+9.999924	rnapol-1	0
+9.999924	rnapol-3.5	0
+15.000066	E. coli B promoter	0
+15.000066	E. coli C promoter	0
+15.000066	E. coli promoter A1	1
+15.000066	E. coli promoter A2	0
+15.000066	E. coli promoter A3	0
+15.000066	T7 promoter phi1.1A	0
+15.000066	T7 promoter phi1.1B	0
+15.000066	T7 promoter phi1.3	0
+15.000066	T7 promoter phi1.5	0
+15.000066	T7 promoter phi1.6	0
+15.000066	T7 promoter phi10	0
+15.000066	T7 promoter phi13	0
+15.000066	T7 promoter phi17	0
+15.000066	T7 promoter phi2.5	0
+15.000066	T7 promoter phi3.8	0
+15.000066	T7 promoter phi4.3	0
+15.000066	T7 promoter phi4.7	0
+15.000066	T7 promoter phi4c	0
+15.000066	T7 promoter phi6.5	0
+15.000066	T7 promoter phi9	0
+15.000066	bound_ecolipol	1725
+15.000066	bound_ecolipol_p	0
+15.000066	bound_ribosome	9781
+15.000066	degraded_transcript	28
+15.000066	ecoli_genome	75
+15.000066	ecoli_transcript	1243
+15.000066	ecolipol	75
+15.000066	ecolipol-2	0
+15.000066	ecolipol-2-p	0
+15.000066	ecolipol-p	0
+15.000066	gp-2	0
+15.000066	lysozyme-3.5	0
+15.000066	protein_kinase-0.7	0
+15.000066	rbs	0
+15.000066	ribosome	219
+15.000066	rnapol-1	0
+15.000066	rnapol-3.5	0
+19.999294	E. coli B promoter	0
+19.999294	E. coli C promoter	0
+19.999294	E. coli promoter A1	1
+19.999294	E. coli promoter A2	0
+19.999294	E. coli promoter A3	0
+19.999294	T7 promoter phi1.1A	0
+19.999294	T7 promoter phi1.1B	0
+19.999294	T7 promoter phi1.3	0
+19.999294	T7 promoter phi1.5	0
+19.999294	T7 promoter phi1.6	0
+19.999294	T7 promoter phi10	0
+19.999294	T7 promoter phi13	0
+19.999294	T7 promoter phi17	0
+19.999294	T7 promoter phi2.5	0
+19.999294	T7 promoter phi3.8	0
+19.999294	T7 promoter phi4.3	0
+19.999294	T7 promoter phi4.7	0
+19.999294	T7 promoter phi4c	0
+19.999294	T7 promoter phi6.5	0
+19.999294	T7 promoter phi9	0
+19.999294	bound_ecolipol	1726
+19.999294	bound_ecolipol_p	0
+19.999294	bound_ribosome	9820
+19.999294	degraded_transcript	41
+19.999294	ecoli_genome	74
+19.999294	ecoli_transcript	1574
+19.999294	ecolipol	74
+19.999294	ecolipol-2	0
+19.999294	ecolipol-2-p	0
+19.999294	ecolipol-p	0
+19.999294	gp-2	0
+19.999294	lysozyme-3.5	0
+19.999294	protein_kinase-0.7	0
+19.999294	rbs	0
+19.999294	ribosome	180
+19.999294	rnapol-1	0
+19.999294	rnapol-3.5	0
+24.999710	E. coli B promoter	0
+24.999710	E. coli C promoter	0
+24.999710	E. coli promoter A1	1
+24.999710	E. coli promoter A2	0
+24.999710	E. coli promoter A3	0
+24.999710	T7 promoter phi1.1A	0
+24.999710	T7 promoter phi1.1B	0
+24.999710	T7 promoter phi1.3	0
+24.999710	T7 promoter phi1.5	0
+24.999710	T7 promoter phi1.6	0
+24.999710	T7 promoter phi10	0
+24.999710	T7 promoter phi13	0
+24.999710	T7 promoter phi17	0
+24.999710	T7 promoter phi2.5	0
+24.999710	T7 promoter phi3.8	0
+24.999710	T7 promoter phi4.3	0
+24.999710	T7 promoter phi4.7	0
+24.999710	T7 promoter phi4c	0
+24.999710	T7 promoter phi6.5	0
+24.999710	T7 promoter phi9	0
+24.999710	bound_ecolipol	1735
+24.999710	bound_ecolipol_p	0
+24.999710	bound_ribosome	9838
+24.999710	degraded_transcript	58
+24.999710	ecoli_genome	65
+24.999710	ecoli_transcript	1871
+24.999710	ecolipol	65
+24.999710	ecolipol-2	0
+24.999710	ecolipol-2-p	0
+24.999710	ecolipol-p	0
+24.999710	gp-2	0
+24.999710	lysozyme-3.5	0
+24.999710	protein_kinase-0.7	0
+24.999710	rbs	0
+24.999710	ribosome	162
+24.999710	rnapol-1	0
+24.999710	rnapol-3.5	0
+29.999472	E. coli B promoter	0
+29.999472	E. coli C promoter	0
+29.999472	E. coli promoter A1	1
+29.999472	E. coli promoter A2	0
+29.999472	E. coli promoter A3	0
+29.999472	T7 promoter phi1.1A	0
+29.999472	T7 promoter phi1.1B	0
+29.999472	T7 promoter phi1.3	0
+29.999472	T7 promoter phi1.5	0
+29.999472	T7 promoter phi1.6	0
+29.999472	T7 promoter phi10	0
+29.999472	T7 promoter phi13	0
+29.999472	T7 promoter phi17	0
+29.999472	T7 promoter phi2.5	0
+29.999472	T7 promoter phi3.8	0
+29.999472	T7 promoter phi4.3	0
+29.999472	T7 promoter phi4.7	0
+29.999472	T7 promoter phi4c	0
+29.999472	T7 promoter phi6.5	0
+29.999472	T7 promoter phi9	0
+29.999472	bound_ecolipol	1731
+29.999472	bound_ecolipol_p	0
+29.999472	bound_ribosome	9870
+29.999472	degraded_transcript	86
+29.999472	ecoli_genome	69
+29.999472	ecoli_transcript	2165
+29.999472	ecolipol	69
+29.999472	ecolipol-2	0
+29.999472	ecolipol-2-p	0
+29.999472	ecolipol-p	0
+29.999472	gp-2	0
+29.999472	lysozyme-3.5	0
+29.999472	protein_kinase-0.7	0
+29.999472	rbs	0
+29.999472	ribosome	130
+29.999472	rnapol-1	0
+29.999472	rnapol-3.5	0
+35.002635	E. coli B promoter	0
+35.002635	E. coli C promoter	0
+35.002635	E. coli promoter A1	1
+35.002635	E. coli promoter A2	0
+35.002635	E. coli promoter A3	0
+35.002635	T7 promoter phi1.1A	0
+35.002635	T7 promoter phi1.1B	0
+35.002635	T7 promoter phi1.3	0
+35.002635	T7 promoter phi1.5	0
+35.002635	T7 promoter phi1.6	0
+35.002635	T7 promoter phi10	0
+35.002635	T7 promoter phi13	0
+35.002635	T7 promoter phi17	0
+35.002635	T7 promoter phi2.5	0
+35.002635	T7 promoter phi3.8	0
+35.002635	T7 promoter phi4.3	0
+35.002635	T7 promoter phi4.7	0
+35.002635	T7 promoter phi4c	0
+35.002635	T7 promoter phi6.5	0
+35.002635	T7 promoter phi9	0
+35.002635	bound_ecolipol	1746
+35.002635	bound_ecolipol_p	0
+35.002635	bound_ribosome	9873
+35.002635	degraded_transcript	101
+35.002635	ecoli_genome	54
+35.002635	ecoli_transcript	2470
+35.002635	ecolipol	54
+35.002635	ecolipol-2	0
+35.002635	ecolipol-2-p	0
+35.002635	ecolipol-p	0
+35.002635	gp-2	0
+35.002635	lysozyme-3.5	0
+35.002635	protein_kinase-0.7	0
+35.002635	rbs	0
+35.002635	ribosome	127
+35.002635	rnapol-1	0
+35.002635	rnapol-3.5	0
+40.001400	E. coli B promoter	0
+40.001400	E. coli C promoter	0
+40.001400	E. coli promoter A1	1
+40.001400	E. coli promoter A2	0
+40.001400	E. coli promoter A3	0
+40.001400	T7 promoter phi1.1A	0
+40.001400	T7 promoter phi1.1B	0
+40.001400	T7 promoter phi1.3	0
+40.001400	T7 promoter phi1.5	0
+40.001400	T7 promoter phi1.6	0
+40.001400	T7 promoter phi10	0
+40.001400	T7 promoter phi13	0
+40.001400	T7 promoter phi17	0
+40.001400	T7 promoter phi2.5	0
+40.001400	T7 promoter phi3.8	0
+40.001400	T7 promoter phi4.3	0
+40.001400	T7 promoter phi4.7	0
+40.001400	T7 promoter phi4c	0
+40.001400	T7 promoter phi6.5	0
+40.001400	T7 promoter phi9	0
+40.001400	bound_ecolipol	1741
+40.001400	bound_ecolipol_p	0
+40.001400	bound_ribosome	9904
+40.001400	degraded_transcript	119
+40.001400	ecoli_genome	59
+40.001400	ecoli_transcript	2745
+40.001400	ecolipol	59
+40.001400	ecolipol-2	0
+40.001400	ecolipol-2-p	0
+40.001400	ecolipol-p	0
+40.001400	gp-2	0
+40.001400	lysozyme-3.5	0
+40.001400	protein_kinase-0.7	0
+40.001400	rbs	0
+40.001400	ribosome	96
+40.001400	rnapol-1	0
+40.001400	rnapol-3.5	0
+45.000034	E. coli B promoter	0
+45.000034	E. coli C promoter	0
+45.000034	E. coli promoter A1	1
+45.000034	E. coli promoter A2	0
+45.000034	E. coli promoter A3	0
+45.000034	T7 promoter phi1.1A	0
+45.000034	T7 promoter phi1.1B	0
+45.000034	T7 promoter phi1.3	0
+45.000034	T7 promoter phi1.5	0
+45.000034	T7 promoter phi1.6	0
+45.000034	T7 promoter phi10	0
+45.000034	T7 promoter phi13	0
+45.000034	T7 promoter phi17	0
+45.000034	T7 promoter phi2.5	0
+45.000034	T7 promoter phi3.8	0
+45.000034	T7 promoter phi4.3	0
+45.000034	T7 promoter phi4.7	0
+45.000034	T7 promoter phi4c	0
+45.000034	T7 promoter phi6.5	0
+45.000034	T7 promoter phi9	0
+45.000034	bound_ecolipol	1736
+45.000034	bound_ecolipol_p	0
+45.000034	bound_ribosome	9911
+45.000034	degraded_transcript	145
+45.000034	ecoli_genome	64
+45.000034	ecoli_transcript	3037
+45.000034	ecolipol	64
+45.000034	ecolipol-2	0
+45.000034	ecolipol-2-p	0
+45.000034	ecolipol-p	0
+45.000034	gp-2	0
+45.000034	lysozyme-3.5	0
+45.000034	protein_kinase-0.7	0
+45.000034	rbs	0
+45.000034	ribosome	89
+45.000034	rnapol-1	0
+45.000034	rnapol-3.5	0
+49.999647	E. coli B promoter	0
+49.999647	E. coli C promoter	0
+49.999647	E. coli promoter A1	1
+49.999647	E. coli promoter A2	0
+49.999647	E. coli promoter A3	0
+49.999647	T7 promoter phi1.1A	0
+49.999647	T7 promoter phi1.1B	0
+49.999647	T7 promoter phi1.3	0
+49.999647	T7 promoter phi1.5	0
+49.999647	T7 promoter phi1.6	0
+49.999647	T7 promoter phi10	0
+49.999647	T7 promoter phi13	0
+49.999647	T7 promoter phi17	0
+49.999647	T7 promoter phi2.5	0
+49.999647	T7 promoter phi3.8	0
+49.999647	T7 promoter phi4.3	0
+49.999647	T7 promoter phi4.7	0
+49.999647	T7 promoter phi4c	0
+49.999647	T7 promoter phi6.5	0
+49.999647	T7 promoter phi9	0
+49.999647	bound_ecolipol	1733
+49.999647	bound_ecolipol_p	0
+49.999647	bound_ribosome	9910
+49.999647	degraded_transcript	176
+49.999647	ecoli_genome	67
+49.999647	ecoli_transcript	3349
+49.999647	ecolipol	67
+49.999647	ecolipol-2	0
+49.999647	ecolipol-2-p	0
+49.999647	ecolipol-p	0
+49.999647	gp-2	0
+49.999647	lysozyme-3.5	0
+49.999647	protein_kinase-0.7	0
+49.999647	rbs	0
+49.999647	ribosome	90
+49.999647	rnapol-1	0
+49.999647	rnapol-3.5	0
+54.999002	E. coli B promoter	0
+54.999002	E. coli C promoter	0
+54.999002	E. coli promoter A1	1
+54.999002	E. coli promoter A2	0
+54.999002	E. coli promoter A3	0
+54.999002	T7 promoter phi1.1A	0
+54.999002	T7 promoter phi1.1B	0
+54.999002	T7 promoter phi1.3	0
+54.999002	T7 promoter phi1.5	0
+54.999002	T7 promoter phi1.6	0
+54.999002	T7 promoter phi10	0
+54.999002	T7 promoter phi13	0
+54.999002	T7 promoter phi17	0
+54.999002	T7 promoter phi2.5	0
+54.999002	T7 promoter phi3.8	0
+54.999002	T7 promoter phi4.3	0
+54.999002	T7 promoter phi4.7	0
+54.999002	T7 promoter phi4c	0
+54.999002	T7 promoter phi6.5	0
+54.999002	T7 promoter phi9	0
+54.999002	bound_ecolipol	1725
+54.999002	bound_ecolipol_p	0
+54.999002	bound_ribosome	9927
+54.999002	degraded_transcript	207
+54.999002	ecoli_genome	75
+54.999002	ecoli_transcript	3650
+54.999002	ecolipol	75
+54.999002	ecolipol-2	0
+54.999002	ecolipol-2-p	0
+54.999002	ecolipol-p	0
+54.999002	gp-2	0
+54.999002	lysozyme-3.5	0
+54.999002	protein_kinase-0.7	0
+54.999002	rbs	0
+54.999002	ribosome	73
+54.999002	rnapol-1	0
+54.999002	rnapol-3.5	0
+59.999422	E. coli B promoter	0
+59.999422	E. coli C promoter	0
+59.999422	E. coli promoter A1	1
+59.999422	E. coli promoter A2	0
+59.999422	E. coli promoter A3	0
+59.999422	T7 promoter phi1.1A	0
+59.999422	T7 promoter phi1.1B	0
+59.999422	T7 promoter phi1.3	0
+59.999422	T7 promoter phi1.5	0
+59.999422	T7 promoter phi1.6	0
+59.999422	T7 promoter phi10	0
+59.999422	T7 promoter phi13	0
+59.999422	T7 promoter phi17	0
+59.999422	T7 promoter phi2.5	0
+59.999422	T7 promoter phi3.8	0
+59.999422	T7 promoter phi4.3	0
+59.999422	T7 promoter phi4.7	0
+59.999422	T7 promoter phi4c	0
+59.999422	T7 promoter phi6.5	0
+59.999422	T7 promoter phi9	0
+59.999422	bound_ecolipol	1732
+59.999422	bound_ecolipol_p	0
+59.999422	bound_ribosome	9923
+59.999422	degraded_transcript	238
+59.999422	ecoli_genome	68
+59.999422	ecoli_transcript	3979
+59.999422	ecolipol	68
+59.999422	ecolipol-2	0
+59.999422	ecolipol-2-p	0
+59.999422	ecolipol-p	0
+59.999422	gp-2	0
+59.999422	lysozyme-3.5	0
+59.999422	protein_kinase-0.7	0
+59.999422	rbs	0
+59.999422	ribosome	77
+59.999422	rnapol-1	0
+59.999422	rnapol-3.5	0
+65.000185	E. coli B promoter	0
+65.000185	E. coli C promoter	0
+65.000185	E. coli promoter A1	1
+65.000185	E. coli promoter A2	0
+65.000185	E. coli promoter A3	0
+65.000185	T7 promoter phi1.1A	0
+65.000185	T7 promoter phi1.1B	0
+65.000185	T7 promoter phi1.3	0
+65.000185	T7 promoter phi1.5	0
+65.000185	T7 promoter phi1.6	0
+65.000185	T7 promoter phi10	0
+65.000185	T7 promoter phi13	0
+65.000185	T7 promoter phi17	0
+65.000185	T7 promoter phi2.5	0
+65.000185	T7 promoter phi3.8	0
+65.000185	T7 promoter phi4.3	0
+65.000185	T7 promoter phi4.7	0
+65.000185	T7 promoter phi4c	0
+65.000185	T7 promoter phi6.5	0
+65.000185	T7 promoter phi9	0
+65.000185	bound_ecolipol	1730
+65.000185	bound_ecolipol_p	0
+65.000185	bound_ribosome	9942
+65.000185	degraded_transcript	284
+65.000185	ecoli_genome	70
+65.000185	ecoli_transcript	4258
+65.000185	ecolipol	70
+65.000185	ecolipol-2	0
+65.000185	ecolipol-2-p	0
+65.000185	ecolipol-p	0
+65.000185	gp-2	0
+65.000185	lysozyme-3.5	0
+65.000185	protein_kinase-0.7	0
+65.000185	rbs	0
+65.000185	ribosome	58
+65.000185	rnapol-1	0
+65.000185	rnapol-3.5	0
+70.000015	E. coli B promoter	0
+70.000015	E. coli C promoter	0
+70.000015	E. coli promoter A1	1
+70.000015	E. coli promoter A2	0
+70.000015	E. coli promoter A3	0
+70.000015	T7 promoter phi1.1A	0
+70.000015	T7 promoter phi1.1B	0
+70.000015	T7 promoter phi1.3	0
+70.000015	T7 promoter phi1.5	0
+70.000015	T7 promoter phi1.6	0
+70.000015	T7 promoter phi10	0
+70.000015	T7 promoter phi13	0
+70.000015	T7 promoter phi17	0
+70.000015	T7 promoter phi2.5	0
+70.000015	T7 promoter phi3.8	0
+70.000015	T7 promoter phi4.3	0
+70.000015	T7 promoter phi4.7	0
+70.000015	T7 promoter phi4c	0
+70.000015	T7 promoter phi6.5	0
+70.000015	T7 promoter phi9	0
+70.000015	bound_ecolipol	1730
+70.000015	bound_ecolipol_p	0
+70.000015	bound_ribosome	9950
+70.000015	degraded_transcript	331
+70.000015	ecoli_genome	70
+70.000015	ecoli_transcript	4566
+70.000015	ecolipol	70
+70.000015	ecolipol-2	0
+70.000015	ecolipol-2-p	0
+70.000015	ecolipol-p	0
+70.000015	gp-2	0
+70.000015	lysozyme-3.5	0
+70.000015	protein_kinase-0.7	0
+70.000015	rbs	0
+70.000015	ribosome	50
+70.000015	rnapol-1	0
+70.000015	rnapol-3.5	0
+75.000082	E. coli B promoter	0
+75.000082	E. coli C promoter	0
+75.000082	E. coli promoter A1	1
+75.000082	E. coli promoter A2	0
+75.000082	E. coli promoter A3	0
+75.000082	T7 promoter phi1.1A	0
+75.000082	T7 promoter phi1.1B	0
+75.000082	T7 promoter phi1.3	0
+75.000082	T7 promoter phi1.5	0
+75.000082	T7 promoter phi1.6	0
+75.000082	T7 promoter phi10	0
+75.000082	T7 promoter phi13	0
+75.000082	T7 promoter phi17	0
+75.000082	T7 promoter phi2.5	0
+75.000082	T7 promoter phi3.8	0
+75.000082	T7 promoter phi4.3	0
+75.000082	T7 promoter phi4.7	0
+75.000082	T7 promoter phi4c	0
+75.000082	T7 promoter phi6.5	0
+75.000082	T7 promoter phi9	0
+75.000082	bound_ecolipol	1736
+75.000082	bound_ecolipol_p	0
+75.000082	bound_ribosome	9935
+75.000082	degraded_transcript	372
+75.000082	ecoli_genome	64
+75.000082	ecoli_transcript	4872
+75.000082	ecolipol	64
+75.000082	ecolipol-2	0
+75.000082	ecolipol-2-p	0
+75.000082	ecolipol-p	0
+75.000082	gp-2	0
+75.000082	lysozyme-3.5	0
+75.000082	protein_kinase-0.7	0
+75.000082	rbs	0
+75.000082	ribosome	65
+75.000082	rnapol-1	0
+75.000082	rnapol-3.5	0
+79.999338	E. coli B promoter	0
+79.999338	E. coli C promoter	0
+79.999338	E. coli promoter A1	1
+79.999338	E. coli promoter A2	0
+79.999338	E. coli promoter A3	0
+79.999338	T7 promoter phi1.1A	0
+79.999338	T7 promoter phi1.1B	0
+79.999338	T7 promoter phi1.3	0
+79.999338	T7 promoter phi1.5	0
+79.999338	T7 promoter phi1.6	0
+79.999338	T7 promoter phi10	0
+79.999338	T7 promoter phi13	0
+79.999338	T7 promoter phi17	0
+79.999338	T7 promoter phi2.5	0
+79.999338	T7 promoter phi3.8	0
+79.999338	T7 promoter phi4.3	0
+79.999338	T7 promoter phi4.7	0
+79.999338	T7 promoter phi4c	0
+79.999338	T7 promoter phi6.5	0
+79.999338	T7 promoter phi9	0
+79.999338	bound_ecolipol	1731
+79.999338	bound_ecolipol_p	0
+79.999338	bound_ribosome	9942
+79.999338	degraded_transcript	424
+79.999338	ecoli_genome	69
+79.999338	ecoli_transcript	5194
+79.999338	ecolipol	69
+79.999338	ecolipol-2	0
+79.999338	ecolipol-2-p	0
+79.999338	ecolipol-p	0
+79.999338	gp-2	0
+79.999338	lysozyme-3.5	0
+79.999338	protein_kinase-0.7	0
+79.999338	rbs	0
+79.999338	ribosome	58
+79.999338	rnapol-1	0
+79.999338	rnapol-3.5	0
+84.999032	E. coli B promoter	0
+84.999032	E. coli C promoter	0
+84.999032	E. coli promoter A1	1
+84.999032	E. coli promoter A2	0
+84.999032	E. coli promoter A3	0
+84.999032	T7 promoter phi1.1A	0
+84.999032	T7 promoter phi1.1B	0
+84.999032	T7 promoter phi1.3	0
+84.999032	T7 promoter phi1.5	0
+84.999032	T7 promoter phi1.6	0
+84.999032	T7 promoter phi10	0
+84.999032	T7 promoter phi13	0
+84.999032	T7 promoter phi17	0
+84.999032	T7 promoter phi2.5	0
+84.999032	T7 promoter phi3.8	0
+84.999032	T7 promoter phi4.3	0
+84.999032	T7 promoter phi4.7	0
+84.999032	T7 promoter phi4c	0
+84.999032	T7 promoter phi6.5	0
+84.999032	T7 promoter phi9	0
+84.999032	bound_ecolipol	1751
+84.999032	bound_ecolipol_p	0
+84.999032	bound_ribosome	9940
+84.999032	degraded_transcript	475
+84.999032	ecoli_genome	49
+84.999032	ecoli_transcript	5505
+84.999032	ecolipol	49
+84.999032	ecolipol-2	0
+84.999032	ecolipol-2-p	0
+84.999032	ecolipol-p	0
+84.999032	gp-2	0
+84.999032	lysozyme-3.5	0
+84.999032	protein_kinase-0.7	0
+84.999032	rbs	0
+84.999032	ribosome	60
+84.999032	rnapol-1	0
+84.999032	rnapol-3.5	0
+90.003056	E. coli B promoter	0
+90.003056	E. coli C promoter	0
+90.003056	E. coli promoter A1	1
+90.003056	E. coli promoter A2	0
+90.003056	E. coli promoter A3	0
+90.003056	T7 promoter phi1.1A	0
+90.003056	T7 promoter phi1.1B	0
+90.003056	T7 promoter phi1.3	0
+90.003056	T7 promoter phi1.5	0
+90.003056	T7 promoter phi1.6	0
+90.003056	T7 promoter phi10	0
+90.003056	T7 promoter phi13	0
+90.003056	T7 promoter phi17	0
+90.003056	T7 promoter phi2.5	0
+90.003056	T7 promoter phi3.8	0
+90.003056	T7 promoter phi4.3	0
+90.003056	T7 promoter phi4.7	0
+90.003056	T7 promoter phi4c	0
+90.003056	T7 promoter phi6.5	0
+90.003056	T7 promoter phi9	0
+90.003056	bound_ecolipol	1727
+90.003056	bound_ecolipol_p	0
+90.003056	bound_ribosome	9957
+90.003056	degraded_transcript	533
+90.003056	ecoli_genome	73
+90.003056	ecoli_transcript	5788
+90.003056	ecolipol	73
+90.003056	ecolipol-2	0
+90.003056	ecolipol-2-p	0
+90.003056	ecolipol-p	0
+90.003056	gp-2	0
+90.003056	lysozyme-3.5	0
+90.003056	protein_kinase-0.7	0
+90.003056	rbs	0
+90.003056	ribosome	43
+90.003056	rnapol-1	0
+90.003056	rnapol-3.5	0

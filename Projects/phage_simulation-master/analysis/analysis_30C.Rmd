@@ -1,0 +1,77 @@
+---
+title: "RNA-seq Analysis for 25C time course"
+output: html_document
+---
+
+```{r, echo=FALSE, fig.width = 10, fig.height = 18, fig.width = 12}
+
+library(tidyverse)
+library(ggplot2)
+library(gtools)
+library(stringr)
+library(cowplot)
+library(readxl)
+SAVE_FIGS <- TRUE
+
+cbPalette <- c("#CC79A7", "#56B4E9", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#009E73", "#999999")
+
+# These are genes that are not included in the simulation and should be removed before comparing
+# simulations with experimental data
+IGNORE_GENES <- c("gene 10B",
+                "possible gene 5.5-5.7",
+                "gene 1.5",
+                "gene 1.6",
+                "gene 4.1",
+                "gene 4B",
+                "gene 0.6A",
+                "gene 0.6B",
+                "possible gene 0.6B",
+                "gene 0.5",
+                "gene 0.4")
+```
+
+## Tools
+
+Reads were mapped with HISAT2 and counted with bedtools multicov. Counts were normalized and given as TPM values.
+
+## Normalized counts show full coverage of genome
+
+In the plot below, reads are counted towards all genes that they map to if a read overlaps with multiple genes.
+
+```{r, echo=FALSE, fig.width = 10, fig.height = 18, fig.width = 12}
+
+id_map <- read_csv("../output/id_map.csv") %>% filter(!is.na(gene_number), !(pinetree %in% IGNORE_GENES))
+
+transcripts <- read_csv("../output/transcripts_25C.csv") %>% 
+  filter(!is.na(class), !(pinetree %in% IGNORE_GENES))
+
+gene_labels <- unique(mixedsort(id_map$gene_number))
+
+rna_25_dist <- ggplot(transcripts %>% filter(time == 25), aes(x = factor(gene_number, levels=gene_labels), y = tpm)) + 
+  geom_bar(stat="summary", fun.y = "mean", aes(fill = factor(class))) +
+  geom_point(alpha = 0.5) + 
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(), legend.position = c(0.0, 0.8), legend.title=element_blank(), legend.spacing.x = unit(2, 'pt')) +
+  scale_fill_manual(values=cbPalette, breaks=c("1","2","3"), labels=c("class I", "class II", "class III")) +
+  geom_vline(xintercept = (match(c("3.8", "4.7", "6.5", "18.5"), gene_labels)) - 0.5, linetype="dashed", color = "gray40") +
+  geom_vline(xintercept = (match(c("11"), gene_labels)) - 0.5) +
+  xlab("gene") + ylab("transcripts per million") + scale_y_continuous(expand = c(0,0)) +
+  coord_cartesian(clip = "off")
+
+rna_10_dist <- ggplot(transcripts %>% filter(time == 10), aes(x = factor(gene_number, levels=gene_labels), y = tpm)) + 
+  geom_bar(stat="summary", fun.y = "mean", aes(fill = factor(class))) +
+  geom_point(alpha = 0.5) + 
+  geom_vline(xintercept = (match(c("3.8", "4.7", "6.5", "18.5"), gene_labels)) - 0.5, linetype="dashed", color = "gray40") +
+  geom_vline(xintercept = (match(c("11"), gene_labels)) - 0.5) +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(), legend.position = c(0.0, 0.8), legend.title=element_blank(), legend.spacing.x = unit(2, 'pt')) +
+  scale_fill_manual(values=cbPalette, breaks=c("1","2","3"), labels=c("class I", "class II", "class III")) +
+  xlab("gene") + ylab("transcripts per million") + scale_y_continuous(expand = c(0,0)) +
+  coord_cartesian(clip = "off")
+
+rna_10_25_exp <- plot_grid(rna_10_dist, rna_25_dist, ncol = 1, align='v', labels="AUTO")
+
+rna_10_25_exp
+
+if (SAVE_FIGS) {
+  save_plot("./figures/rna_10_25_exp.pdf", rna_10_25_exp, base_width = 8, base_height = 6)
+}
+```

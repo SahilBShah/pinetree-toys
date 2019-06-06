@@ -1,0 +1,15 @@
+Launcher: Setup complete.
+
+------------- SUMMARY ---------------
+   Number of hosts:    1
+   Working directory:  /work/03284/bjack/lonestar/phage_simulation/runs/111917
+   Processes per host: 3
+   Total processes:    3
+   Total jobs:         3
+   Scheduling method:  dynamic
+
+-------------------------------------
+Launcher: Starting parallel tasks...
+Launcher: Task 1 running job 3 on nid00033 (pinetree_run.py ./T7_111917_w1_phi10.yml -o ./run_T7_111917_w1_phi10)
+Launcher: Task 2 running job 1 on nid00033 (pinetree_run.py ./T7_111917_w1_phi9.yml -o ./run_T7_111917_w1_phi9)
+Launcher: Task 0 running job 2 on nid00033 (pinetree_run.py ./T7_111917_w1_phi9_10.yml -o ./run_T7_111917_w1_phi9_10)
