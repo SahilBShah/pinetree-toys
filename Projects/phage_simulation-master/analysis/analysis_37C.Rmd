@@ -101,7 +101,7 @@ rnase_3_8 <- ggplot(coverage, aes(x = position, y = coverage)) +
   geom_vline(xintercept = 11180) + 
   geom_vline(xintercept = 11203, linetype="dashed") + 
   xlim(11050,11550) +
-  scale_y_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0))
 
 bottom_row <- plot_grid(rnase_3_8, rnase_6_5, labels = c("B", "C"))
 cov_map <- plot_grid(full_map, bottom_row, ncol = 1, labels = c("A", ""))
@@ -183,7 +183,7 @@ if (SAVE_FIGS) {
 ```{r}
 wildtype_sim <- load_sim("../data/simulation/phage/phage_wildtype.tsv") %>% mutate(strain = "wildtype")
 recoded_sim <- load_sim("../data/simulation/phage/phage_model_recoded_27.tsv") %>% mutate(strain = "recoded")
-ko_sim <- load_sim("../data/simulation/phage/phage_model_knockout_9_10_27.tsv") %>% mutate(strain = "knockout")
+ko_sim <- load_sim("../data/simulation/phage/phage_model_knockout_9_10.tsv") %>% mutate(strain = "knockout")
 ko_recoded_sim <- load_sim("../data/simulation/phage/phage_model_knockout_9_10_recoded.tsv") %>% mutate(strain = "knockout_recoded")
 
 sims <- bind_rows(wildtype_sim, recoded_sim, ko_sim, ko_recoded_sim)
