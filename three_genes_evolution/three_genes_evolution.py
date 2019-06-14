@@ -8,9 +8,11 @@ import filecmp
 def main():
 
     global poly_list
+    global all_poly_list
     global sos_list
-    sos_list = [200000]
+    sos_list = [60000]
     poly_list = []
+    all_poly_list = []
     f_old = 1.0
     mu = 0.0
     sigma = 1.0
@@ -56,6 +58,7 @@ def main():
     #Evolution program - auto changing polymerase strength
     new_pol_strength = random.randint(1e10, 5e10)
     poly_list.append(new_pol_strength)
+    all_poly_list.append(new_pol_strength)
     while i < 1000:
         eps = np.random.normal(mu, sigma)
         f_new = f_old * (1.0 + eps)
@@ -102,7 +105,10 @@ def main():
                 gen+=1
 
         #Determines new polymerase strength to reduce sum of squares value
+        all_poly_list.append(new_pol_strength)
         new_pol_strength = random.randint(1e10, poly_list[-1])
+        if new_pol_strength in all_poly_list:
+            new_pol_strength = random.randint(1e10, poly_list[-1])
         i+=1
     print("Generations = ", gen)
 
