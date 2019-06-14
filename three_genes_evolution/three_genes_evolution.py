@@ -8,10 +8,12 @@ import filecmp
 def main():
 
     global poly_list
+    global sos_list
+    sos_list = [200000]
     poly_list = []
     f_old = 1.0
-    mu = 0
-    sigma = 1
+    mu = 0.0
+    sigma = 1.0
     Ne = 10
     i = 0
     gen = 0
@@ -53,13 +55,28 @@ def main():
 
     #Evolution program - auto changing polymerase strength
     new_pol_strength = random.randint(1e10, 5e10)
+    poly_list.append(new_pol_strength)
     while i < 1000:
         eps = np.random.normal(mu, sigma)
         f_new = f_old * (1.0 + eps)
-        poly_list.append(new_pol_strength)
+        #new_pol_strength = random.randint(1e10, 5e10)
+
         if f_new > f_old:
             #Accepting mutation
             three_genome.recreated_genome(new_pol_strength)
+            #Taking in new file and removing unnecessary rows and columns
+            nf = pandas.read_table("three_genes_rnase2.tsv", delim_whitespace=True, header=0)
+            nf = edit_new_file(nf)
+            sos = sum_of_squares(df, nf)
+            #Accepts mutation only if sum of squares value decreases
+            if sos > sos_list[-1]:
+                three_genome.recreated_genome(poly_list[-1])
+                sos = sum_of_squares(df, nf)
+            if sos < sos_list[-1]:
+                poly_list.append(new_pol_strength)
+                sos_list.append(sos)
+            print("Poly List = ", poly_list)
+            print("SOS List = ", sos_list)
             gen+=1
         else:
             #Calculate fitness of new mutation
@@ -68,16 +85,24 @@ def main():
             if probability > random.random():
                 #Accepting mutation
                 three_genome.recreated_genome(new_pol_strength)
+                #Taking in new file and removing unnecessary rows and columns
+                nf = pandas.read_table("three_genes_rnase2.tsv", delim_whitespace=True, header=0)
+                nf = edit_new_file(nf)
+                sos = sum_of_squares(df, nf)
+                #Accepts mutation only if sum of squares value decreases
+                if sos > sos_list[-1]:
+                    three_genome.recreated_genome(poly_list[-1])
+                    sos = sum_of_squares(df, nf)
+                if sos < sos_list[-1]:
+                    poly_list.append(new_pol_strength)
+                    sos_list.append(sos)
+                    new_pol_strength = random.randint(poly_list[-1], poly_list[-2])
+                print("Poly List = ", poly_list)
+                print("SOS List = ", sos_list)
                 gen+=1
-        #Taking in new file and removing unnecessary rows and columns
-        nf = pandas.read_table("three_genes_rnase2.tsv", delim_whitespace=True, header=0)
-        nf = edit_new_file(nf)
-        check = False
-        sum_of_squares(df, nf)
-        if check == True:
-            break
-        else:
-            pass
+
+        #Determines new polymerase strength to reduce sum of squares value
+        new_pol_strength = random.randint(1e10, poly_list[-1])
         i+=1
     print("Generations = ", gen)
 
@@ -89,46 +114,26 @@ def calc_fitness(variant_fit, orig_fit, Ne):
     N = Ne
 
     if xj == xi:
-        return(1.0)
+        return(1.0 / float(N))
     if xj > xi:
         return(1.0)
     else:
         variant_fit = (xj / xi) ** (2 * N - 2)
         return variant_fit
 
-#Determines if the two files are the same
-def check_files(target_file, new_file):
-
-    for row, row2 in zip(new_file.iterrows(), target_file.iterrows()):
-        if row[1][1] == row2[1][1]:
-            return True
-        else:
-            return False
-            break
-
-
-
-
-
-    '''string_new_file = "three_genes_rnase2.tsv"
-    string_target_file = "three_genes_rnase.tsv"
-    if filecmp.cmp(string_new_file, string_target_file) == True:
-        return True
-    else:
-        return False'''
+    try:
+        p =((1-pow( (xi/xj),2)) /(1-pow( (xi/xj), (2 * float(N) )) ) )
+    except OverflowError as e:
+        p = 0.0
+    return (p)
 
 #Minimizes distance between observed values and regression line from given data
 def sum_of_squares(target_file, new_file):
 
+    sos = 0.0
     for row, row2 in zip(new_file.iterrows(), target_file.iterrows()):
-        if ((row[1][1] - row2[1][1]) ** 2) != 0:
-            if row[1][1] < row2[1][1]:
-                new_pol_strength = poly_list[-1] + random.randint(1e10, 3e10)
-            if row[1][1] > row2[1][1]:
-                new_pol_strength = poly_list[-1] - random.randint(1e10, 3e10)
-        elif row[1][1] - row2[1][1] == 0:
-            check = check_files(target_file, new_file)
-            return check
+        sos = sos + (row[1][1] - row2[1][1]) ** 2
+    return sos
 
 #Removes unnecessary rows and columns in produced file
 def edit_new_file(new_file):
@@ -167,7 +172,6 @@ def edit_target_file(target_file):
 #Class containing genome for simulation with new polymerase strength
 class three_genome:
 
-    pol_strength = 0
     def __init__(self):
         self.pol_strength = 4e10
 
