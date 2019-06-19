@@ -5,10 +5,16 @@ import numpy as np
 import string
 import filecmp
 
-#Need to add in the following functions: remove promoters, remove rnase cleavage sites, change numeric values according to biological range, add in terminators after genes
+#Need to add in the following functions: change numeric values according to biological range, build probability model based on biological processes
 
 def main():
 
+    global term_list
+    global poly_list
+    global sos_list
+    global all_sos_list
+    global Ne
+    global gen
     sos_list = [60000]
     poly_list = []
     all_poly_list = []
@@ -21,22 +27,26 @@ def main():
     gene1_stop_list = []
     gene2_stop_list = []
     gene3_stop_list = []
-    new_gene1_start = 26
-    new_gene1_stop = 148
-    new_gene2_start = 178
-    new_gene2_stop = 300
-    new_gene3_start = 315
-    new_gene3_stop = 449
+    prom1_start_list = [1]
+    prom1_stop_list = [10]
+    prom2_start_list = [1]
+    prom2_stop_list = [10]
     f_old = 1.0
     mu = 0.0
     sigma = 1.0
     poly_sigma = 1e10
     term_sigma = 1.0
-    gene_sigma = 1.0
-    prom_sigma = 1.0
+    gene_sigma = 50.0
+    prom_sigma = 50.0
     Ne = 10
     i = 0
     gen = 0
+    new_gene1_start = 26
+    new_gene1_stop = 148
+    new_gene2_start = 178
+    new_gene2_stop = 300
+    new_gene3_start = 315
+    new_gene3_stop = 448
     promoter1_start = 0
     promoter1_stop = 0
     promoter2_start = 0
@@ -51,6 +61,12 @@ def main():
     new_rnase2_stop = 0
     new_rnase3_start = 0
     new_rnase3_stop = 0
+    new_term1_start = 0
+    new_term1_stop = 0
+    new_term2_start = 0
+    new_term2_stop = 0
+    new_term3_start = 0
+    new_term3_stop = 0
 
     #Taking in target tsv file
     df = pandas.read_table(input("Enter tsv file name: "), delim_whitespace=True, header=0)
@@ -72,18 +88,18 @@ def main():
     while new_gene1_start > new_gene1_stop:
         new_gene1_start = random.randint(25, gene1_stop_list[-1])
         new_gene1_stop = random.randint(26, new_gene2_start-15)
-    new_gene3_start = random.randint(new_gene2_stop+15, 449)
-    new_gene3_stop = random.randint(new_gene3_start+1, 450)
-    gene3_stop_list.append(new_gene3_stop)
-    while new_gene3_start > new_gene3_stop:
-        new_gene3_start = random.randint(new_gene2_stop+15, gene3_stop_list[-1])
-        new_gene3_stop = random.randint(new_gene3_start+1, 450)
     new_gene2_start = random.randint(new_gene1_stop+15, 449)
     new_gene2_stop = random.randint(new_gene2_start+1, new_gene3_stop-15)
     gene2_stop_list.append(new_gene2_stop)
     while new_gene2_start > new_gene2_stop:
         new_gene2_start = random.randint(new_gene1_stop+15, gene2_stop_list[-1])
         new_gene2_stop = random.randint(new_gene2_start+1, new_gene3_stop-15)
+    new_gene3_start = random.randint(new_gene2_stop+15, 449)
+    new_gene3_stop = random.randint(new_gene3_start+1, 450)
+    gene3_stop_list.append(new_gene3_stop)
+    while new_gene3_start > new_gene3_stop:
+        new_gene3_start = random.randint(new_gene2_stop+15, gene3_stop_list[-1])
+        new_gene3_stop = random.randint(new_gene3_start+1, 450)
     gene1_start_list.append(new_gene1_start)
     gene2_start_list.append(new_gene2_start)
     gene3_start_list.append(new_gene3_start)
@@ -92,567 +108,398 @@ def main():
     if new_gene2_start - (new_gene1_stop - 7) >= 25:
         new_prom1_start = random.randint(new_gene1_stop-7, new_gene2_start-25)
         new_prom1_stop = new_prom1_start + 9
+        prom1_start_list.append(new_prom1_start)
+        prom1_stop_list.append(new_prom1_stop)
     if new_gene3_start - (new_gene2_stop - 7) >= 25:
         new_prom2_start = random.randint(new_gene2_stop-7, new_gene3_start-25)
         new_prom2_stop = new_prom2_start + 9
+        prom2_start_list.append(new_prom2_start)
+        prom2_stop_list.append(new_prom2_stop)
 
 
-    while i < 1000:
-        aspect_probability = random.uniform(0.0, 1.0)
+    while i < 100:
 
-        if aspect_probability > 0.5:
-            #Determining polymerase strength
-            eps = np.random.normal(mu, sigma)
+        #Determining polymerase strength
+        eps = np.random.normal(mu, sigma)
+        poly_eps = np.random.normal(mu, poly_sigma)
+        f_new = f_old * (1.0 + eps)
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
+
+        #Determines new polymerase strength to reduce sum of squares value
+        new_pol_strength = poly_list[-1] + poly_eps
+        while new_pol_strength < 0:
             poly_eps = np.random.normal(mu, poly_sigma)
-            f_new = f_old * (1.0 + eps)
-
-            if f_new > f_old:
-                #Accepting mutation
-                three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                    new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                    promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                    new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                    new_rnase3_start, new_rnase3_stop)
-                #Taking in new file and removing unnecessary rows and columns
-                nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                nf = edit_new_file(nf)
-                sos = sum_of_squares(df, nf)
-                all_sos_list.append(sos)
-                #Accepts mutation only if sum of squares value decreases
-                if sos <= sos_list[-1]:
-                    poly_list.append(new_pol_strength)
-                    sos_list.append(sos)
-                    three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                        new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                        promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                        new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                        new_rnase3_start, new_rnase3_stop)
-                if sos_list[-1] == 0:
-                    break
-                gen+=1
-            else:
-                #Calculate fitness of new mutation
-                probability = calc_fitness(f_new, f_old, Ne)
-                f_old = probability
-                if probability > random.random():
-                    #Accepting mutation
-                    three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                        new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                        promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                        new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                        new_rnase3_start, new_rnase3_stop)
-                    #Taking in new file and removing unnecessary rows and columns
-                    nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                    nf = edit_new_file(nf)
-                    sos = sum_of_squares(df, nf)
-                    all_sos_list.append(sos)
-                    #Accepts mutation only if sum of squares value decreases
-                    if sos <= sos_list[-1]:
-                        poly_list.append(new_pol_strength)
-                        sos_list.append(sos)
-                        three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                            new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                            promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                            new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                            new_rnase3_start, new_rnase3_stop)
-                    if sos_list[-1] == 0:
-                        break
-                    gen+=1
-
-            #Determines new polymerase strength to reduce sum of squares value
             new_pol_strength = poly_list[-1] + poly_eps
-            #if sos_list[-1] < 2000:
-                #poly_sigma = 1e8
-            while new_pol_strength < 0:
-                poly_eps = np.random.normal(mu, poly_sigma)
-                new_pol_strength = poly_list[-1] + poly_eps
-                if new_pol_strength in all_poly_list:
-                    poly_eps = np.random.normal(mu, poly_sigma)
-                    new_pol_strength = poly_list[-1] + poly_eps
             if new_pol_strength in all_poly_list:
                 poly_eps = np.random.normal(mu, poly_sigma)
                 new_pol_strength = poly_list[-1] + poly_eps
-            all_poly_list.append(new_pol_strength)
+        if new_pol_strength in all_poly_list:
+            poly_eps = np.random.normal(mu, poly_sigma)
+            new_pol_strength = poly_list[-1] + poly_eps
+        all_poly_list.append(new_pol_strength)
 
 
-        if aspect_probability < 0.5 and aspect_probability > 0.2:
-            #Determining terminator polymerase efficiency rate
-            eps = np.random.normal(mu, sigma)
+        #Determining terminator polymerase efficiency rate
+        eps = np.random.normal(mu, sigma)
+        term_eps = np.random.normal(mu, term_sigma)
+        f_new = f_old * (1.0 + eps)
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
+
+        #Determines new terminator efficiency value to reduce sum of squares value
+        new_term_efficiency = term_list[-1] + term_eps
+        while new_term_efficiency < 0 or new_term_efficiency > 1:
             term_eps = np.random.normal(mu, term_sigma)
-            f_new = f_old * (1.0 + eps)
-
-            if f_new > f_old:
-                #Accepting mutation
-                three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                    new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                    promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                    new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                    new_rnase3_start, new_rnase3_stop)
-                #Taking in new file and removing unnecessary rows and columns
-                nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                nf = edit_new_file(nf)
-                sos = sum_of_squares(df, nf)
-                all_sos_list.append(sos)
-                if sos == 0:
-                    break
-                #Accepts mutation only if sum of squares value decreases
-                if sos <= sos_list[-1]:
-                    term_list.append(new_term_efficiency)
-                    sos_list.append(sos)
-                    three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                        new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                        promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                        new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                        new_rnase3_start, new_rnase3_stop)
-                if sos_list[-1] == 0:
-                    break
-                gen+=1
-            else:
-                #Calculate fitness of new mutation
-                probability = calc_fitness(f_new, f_old, Ne)
-                f_old = probability
-                if probability > random.random():
-                    #Accepting mutation
-                    three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                        new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                        promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                        new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                        new_rnase3_start, new_rnase3_stop)
-                    #Taking in new file and removing unnecessary rows and columns
-                    nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                    nf = edit_new_file(nf)
-                    sos = sum_of_squares(df, nf)
-                    all_sos_list.append(sos)
-                    if sos == 0:
-                        break
-                    #Accepts mutation only if sum of squares value decreases
-                    if sos <= sos_list[-1]:
-                        term_list.append(new_term_efficiency)
-                        sos_list.append(sos)
-                        three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                            new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                            promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                            new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                            new_rnase3_start, new_rnase3_stop)
-                    if sos_list[-1] == 0:
-                        break
-                    gen+=1
-
-            #Determines new terminator efficiency value to reduce sum of squares value
             new_term_efficiency = term_list[-1] + term_eps
-            while new_term_efficiency < 0 or new_term_efficiency > 1:
-                term_eps = np.random.normal(mu, term_sigma)
-                new_term_efficiency = term_list[-1] + term_eps
-                if new_term_efficiency in all_term_list:
-                    term_eps = np.random.normal(mu, term_sigma)
-                    new_term_efficiency = term_list[-1] + term_eps
             if new_term_efficiency in all_term_list:
                 term_eps = np.random.normal(mu, term_sigma)
                 new_term_efficiency = term_list[-1] + term_eps
-            all_term_list.append(new_term_efficiency)
+        if new_term_efficiency in all_term_list:
+            term_eps = np.random.normal(mu, term_sigma)
+            new_term_efficiency = term_list[-1] + term_eps
+        all_term_list.append(new_term_efficiency)
 
+        #Changing gene lengths
+        eps = np.random.normal(mu, sigma)
+        gene_eps = np.random.normal(mu, gene_sigma)
+        f_new = f_old * (1.0 + eps)
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
 
-        if aspect_probability < 0.1:
-            #Changing gene lengths
-            eps = np.random.normal(mu, sigma)
+        #Alter gene sizes
+        new_gene1_start += round(gene_eps)
+        new_gene1_stop += round(gene_eps)
+        new_gene2_start += round(gene_eps)
+        new_gene2_stop += round(gene_eps)
+        new_gene3_start += round(gene_eps)
+        new_gene3_stop += round(gene_eps)
+
+        #If gene size is larger or smaller than genome, redo
+        while new_gene3_stop > 450 or new_gene1_start < 26:
             gene_eps = np.random.normal(mu, gene_sigma)
-            f_new = f_old * (1.0 + eps)
+            new_gene1_start = gene1_start_list[-1] + round(gene_eps)
+            new_gene1_stop = gene1_stop_list[-1] + round(gene_eps)
+            new_gene2_start = gene2_start_list[-1] + round(gene_eps)
+            new_gene2_stop = gene2_stop_list[-1] + round(gene_eps)
+            new_gene3_start = gene3_start_list[-1] + round(gene_eps)
+            new_gene3_stop = gene3_stop_list[-1] + round(gene_eps)
 
-            if f_new > f_old:
-                #Accepting mutation
-                three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                    new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                    promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                    new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                    new_rnase3_start, new_rnase3_stop)
-                #Taking in new file and removing unnecessary rows and columns
-                nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                nf = edit_new_file(nf)
-                sos = sum_of_squares(df, nf)
-                all_sos_list.append(sos)
-                #Accepts mutation only if sum of squares value decreases
-                if sos <= sos_list[-1]:
-                    sos_list.append(sos)
-                    three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                        new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                        promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                        new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                        new_rnase3_start, new_rnase3_stop)
-                if sos_list[-1] == 0:
-                    break
-                gen+=1
-            else:
-                #Calculate fitness of new mutation
-                probability = calc_fitness(f_new, f_old, Ne)
-                f_old = probability
-                if probability > random.random():
-                    #Accepting mutation
-                    three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                        new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                        promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                        new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                        new_rnase3_start, new_rnase3_stop)
-                    #Taking in new file and removing unnecessary rows and columns
-                    nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                    nf = edit_new_file(nf)
-                    sos = sum_of_squares(df, nf)
-                    all_sos_list.append(sos)
-                    #Accepts mutation only if sum of squares value decreases
-                    if sos <= sos_list[-1]:
-                        sos_list.append(sos)
-                        three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                            new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                            promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                            new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                            new_rnase3_start, new_rnase3_stop)
-                    if sos_list[-1] == 0:
-                        break
-                    gen+=1
+        gene1_start_list.append(new_gene1_start)
+        gene2_start_list.append(new_gene2_start)
+        gene3_start_list.append(new_gene3_start)
+        gene1_stop_list.append(new_gene1_stop)
+        gene2_stop_list.append(new_gene2_stop)
+        gene3_stop_list.append(new_gene3_stop)
 
-            #Alter gene sizes
-            new_gene1_start += round(gene_eps)
-            new_gene1_stop += round(gene_eps)
-            new_gene2_start += round(gene_eps)
-            new_gene2_stop += round(gene_eps)
-            new_gene3_start += round(gene_eps)
-            new_gene3_stop += round(gene_eps)
+        #Adding second promoter
+        if new_prom1_start > 0:
+            promoter1_start = new_prom1_start
+            promoter1_stop = new_prom1_stop
+        eps = np.random.normal(mu, sigma)
+        prom1_eps = np.random.normal(mu, prom_sigma)
+        f_new = f_old * (1.0 + eps)
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
 
-            #If gene size is larger or smaller than genome, redo
-            while new_gene3_stop > 450 or new_gene1_start < 26:
-                gene_eps = np.random.normal(mu, gene_sigma)
-                new_gene1_start = gene1_start_list[-1] + round(gene_eps)
-                new_gene1_stop = gene1_stop_list[-1] + round(gene_eps)
-                new_gene2_start = gene2_start_list[-1] + round(gene_eps)
-                new_gene2_stop = gene2_stop_list[-1] + round(gene_eps)
-                new_gene3_start = gene3_start_list[-1] + round(gene_eps)
-                new_gene3_stop = gene3_stop_list[-1] + round(gene_eps)
-
-            gene1_start_list.append(new_gene1_start)
-            gene2_start_list.append(new_gene2_start)
-            gene3_start_list.append(new_gene3_start)
-            gene1_stop_list.append(new_gene1_stop)
-            gene2_stop_list.append(new_gene2_stop)
-            gene3_stop_list.append(new_gene3_stop)
-
-
-        if aspect_probability < 0.2 and aspect_probability > 0.15:
-            #Adding second promoter
-            if new_prom1_start > 0:
-                promoter1_start = new_prom1_start
-                promoter1_stop = new_prom1_stop
-            eps = np.random.normal(mu, sigma)
+        #Adjusting promoter site
+        new_prom1_start += round(prom1_eps)
+        new_prom1_stop += round(prom1_eps)
+        prom1_start_list.append(new_prom1_start)
+        prom1_stop_list.append(new_prom1_stop)
+        while new_prom1_start < new_gene2_start - 15 or new_prom1_start < new_gene1_stop - 7:
             prom1_eps = np.random.normal(mu, prom_sigma)
-            f_new = f_old * (1.0 + eps)
-
-            if f_new > f_old:
-                #Accepting mutation
-                three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                    new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                    promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                    new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                    new_rnase3_start, new_rnase3_stop)
-                #Taking in new file and removing unnecessary rows and columns
-                nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                nf = edit_new_file(nf)
-                sos = sum_of_squares(df, nf)
-                all_sos_list.append(sos)
-                #Accepts mutation only if sum of squares value decreases
-                if sos <= sos_list[-1]:
-                    sos_list.append(sos)
-                    three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                        new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                        promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                        new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                        new_rnase3_start, new_rnase3_stop)
-                if sos_list[-1] == 0:
-                    break
-                gen+=1
-            else:
-                #Calculate fitness of new mutation
-                probability = calc_fitness(f_new, f_old, Ne)
-                f_old = probability
-                if probability > random.random():
-                    #Accepting mutation
-                    three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                        new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                        promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                        new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                        new_rnase3_start, new_rnase3_stop)
-                    #Taking in new file and removing unnecessary rows and columns
-                    nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                    nf = edit_new_file(nf)
-                    sos = sum_of_squares(df, nf)
-                    all_sos_list.append(sos)
-                    #Accepts mutation only if sum of squares value decreases
-                    if sos <= sos_list[-1]:
-                        sos_list.append(sos)
-                        three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                            new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                            promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                            new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                            new_rnase3_start, new_rnase3_stop)
-                    if sos_list[-1] == 0:
-                        break
-                    gen+=1
-
             new_prom1_start += round(prom1_eps)
             new_prom1_stop += round(prom1_eps)
-            while new_prom1_start < new_gene2_start - 15 or new_prom1_start < new_gene1_stop - 7:
+            if new_prom1_start >= prom2_start_list[-1] and new_prom1_start <= prom2_stop_list[-1]:
                 prom1_eps = np.random.normal(mu, prom_sigma)
                 new_prom1_start += round(prom1_eps)
                 new_prom1_stop += round(prom1_eps)
-            promoter1_start = new_prom1_start
-            promoter1_stop = new_prom1_stop
+        promoter1_start = new_prom1_start
+        promoter1_stop = new_prom1_stop
 
-        if aspect_probability < 0.15:
-            #Adding third promoter
-            if new_prom2_start > 0:
-                promoter2_start = new_prom2_start
-                promoter2_stop = new_prom2_stop
-            eps = np.random.normal(mu, sigma)
+        #Adding third promoter
+        if new_prom2_start > 0:
+            promoter2_start = new_prom2_start
+            promoter2_stop = new_prom2_stop
+        eps = np.random.normal(mu, sigma)
+        prom2_eps = np.random.normal(mu, prom_sigma)
+        f_new = f_old * (1.0 + eps)
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
+
+        #Adjusting promoter site
+        new_prom2_start += round(prom2_eps)
+        new_prom2_stop += round(prom2_eps)
+        prom2_start_list.append(new_prom2_start)
+        prom2_stop_list.append(new_prom2_stop)
+        while new_prom2_start < new_gene3_start - 15 or new_prom2_start < new_gene2_stop - 7:
             prom2_eps = np.random.normal(mu, prom_sigma)
-            f_new = f_old * (1.0 + eps)
-
-            if f_new > f_old:
-                #Accepting mutation
-                three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                    new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                    promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                    new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                    new_rnase3_start, new_rnase3_stop)
-                #Taking in new file and removing unnecessary rows and columns
-                nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                nf = edit_new_file(nf)
-                sos = sum_of_squares(df, nf)
-                all_sos_list.append(sos)
-                #Accepts mutation only if sum of squares value decreases
-                if sos <= sos_list[-1]:
-                    sos_list.append(sos)
-                    three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                        new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                        promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                        new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                        new_rnase3_start, new_rnase3_stop)
-                if sos_list[-1] == 0:
-                    break
-                gen+=1
-            else:
-                #Calculate fitness of new mutation
-                probability = calc_fitness(f_new, f_old, Ne)
-                f_old = probability
-                if probability > random.random():
-                    #Accepting mutation
-                    three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                        new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                        promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                        new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                        new_rnase3_start, new_rnase3_stop)
-                    #Taking in new file and removing unnecessary rows and columns
-                    nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                    nf = edit_new_file(nf)
-                    sos = sum_of_squares(df, nf)
-                    all_sos_list.append(sos)
-                    #Accepts mutation only if sum of squares value decreases
-                    if sos <= sos_list[-1]:
-                        sos_list.append(sos)
-                        three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                            new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                            promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                            new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                            new_rnase3_start, new_rnase3_stop)
-                    if sos_list[-1] == 0:
-                        break
-                    gen+=1
-
             new_prom2_start += round(prom2_eps)
             new_prom2_stop += round(prom2_eps)
-            while new_prom2_start < new_gene3_start - 15 or new_prom2_start < new_gene2_stop - 7:
+            if new_prom2_start >= prom1_start_list[-1] and new_prom2_start <= prom1_stop_list[-1]:
                 prom2_eps = np.random.normal(mu, prom_sigma)
                 new_prom2_start += round(prom2_eps)
                 new_prom2_stop += round(prom2_eps)
-            promoter2_start = new_prom2_start
-            promoter2_stop = new_prom2_stop
+        promoter2_start = new_prom2_start
+        promoter2_stop = new_prom2_stop
 
-        if aspect_probability > 0.8:
-            #Rnase after initial promoter
-            eps = np.random.normal(mu, sigma)
-            f_new = f_old * (1.0 + eps)
-            new_rnase1_start = 10
-            new_rnase1_stop = 20
-            if f_new > f_old:
-                #Accepting mutation
-                three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                    new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                    promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                    new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                    new_rnase3_start, new_rnase3_stop)
-                #Taking in new file and removing unnecessary rows and columns
-                nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                nf = edit_new_file(nf)
-                sos = sum_of_squares(df, nf)
-                all_sos_list.append(sos)
-                #Accepts mutation only if sum of squares value decreases
-                if sos <= sos_list[-1]:
-                    sos_list.append(sos)
-                    three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                        new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                        promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                        new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                        new_rnase3_start, new_rnase3_stop)
-                if sos_list[-1] == 0:
-                    break
-                gen+=1
-            else:
-                #Calculate fitness of new mutation
-                probability = calc_fitness(f_new, f_old, Ne)
-                f_old = probability
-                if probability > random.random():
-                    #Accepting mutation
-                    three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                        new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                        promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                        new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                        new_rnase3_start, new_rnase3_stop)
-                    #Taking in new file and removing unnecessary rows and columns
-                    nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                    nf = edit_new_file(nf)
-                    sos = sum_of_squares(df, nf)
-                    all_sos_list.append(sos)
-                    #Accepts mutation only if sum of squares value decreases
-                    if sos <= sos_list[-1]:
-                        sos_list.append(sos)
-                        three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                            new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                            promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                            new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                            new_rnase3_start, new_rnase3_stop)
-                    if sos_list[-1] == 0:
-                        break
-                    gen+=1
+        #Removing second promoter
+        promoter1_start = 0
+        promoter1_stop = 0
+        eps = np.random.normal(mu, sigma)
+        prom1_eps = np.random.normal(mu, prom_sigma)
+        f_new = f_old * (1.0 + eps)
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
 
-            if aspect_probability > 0.85:
-                #Rnase after second promoter
-                eps = np.random.normal(mu, sigma)
-                f_new = f_old * (1.0 + eps)
-                if promoter1_start > 0:
-                    new_rnase1_start = promoter1_stop
-                    new_rnase1_stop = promoter1_stop + 10
-                if promoter1_stop > 0:
-                    if f_new > f_old:
-                        #Accepting mutation
-                        three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                            new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                            promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                            new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                            new_rnase3_start, new_rnase3_stop)
-                        #Taking in new file and removing unnecessary rows and columns
-                        nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                        nf = edit_new_file(nf)
-                        sos = sum_of_squares(df, nf)
-                        all_sos_list.append(sos)
-                        #Accepts mutation only if sum of squares value decreases
-                        if sos <= sos_list[-1]:
-                            sos_list.append(sos)
-                            three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                                new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                                promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                                new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                                new_rnase3_start, new_rnase3_stop)
-                        if sos_list[-1] == 0:
-                            break
-                        gen+=1
-                    else:
-                        #Calculate fitness of new mutation
-                        probability = calc_fitness(f_new, f_old, Ne)
-                        f_old = probability
-                        if probability > random.random():
-                            #Accepting mutation
-                            three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                                new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                                promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                                new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                                new_rnase3_start, new_rnase3_stop)
-                            #Taking in new file and removing unnecessary rows and columns
-                            nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                            nf = edit_new_file(nf)
-                            sos = sum_of_squares(df, nf)
-                            all_sos_list.append(sos)
-                            #Accepts mutation only if sum of squares value decreases
-                            if sos <= sos_list[-1]:
-                                sos_list.append(sos)
-                                three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                                    new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                                    promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                                    new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                                    new_rnase3_start, new_rnase3_stop)
-                            if sos_list[-1] == 0:
-                                break
-                            gen+=1
+        #Removing second promoter
+        promoter1_start = 0
+        promoter1_stop = 0
+        eps = np.random.normal(mu, sigma)
+        prom1_eps = np.random.normal(mu, prom_sigma)
+        f_new = f_old * (1.0 + eps)
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
 
-            if aspect_probability > 0.90:
-                #Rnase after third promoter
-                eps = np.random.normal(mu, sigma)
-                f_new = f_old * (1.0 + eps)
-                if promoter2_start > 0:
-                    new_rnase2_start = promoter2_stop
-                    new_rnase2_stop = promoter2_stop + 10
-                if promoter2_stop > 0:
-                    if f_new > f_old:
-                        #Accepting mutation
-                        three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                            new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                            promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                            new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                            new_rnase3_start, new_rnase3_stop)
-                        #Taking in new file and removing unnecessary rows and columns
-                        nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                        nf = edit_new_file(nf)
-                        sos = sum_of_squares(df, nf)
-                        all_sos_list.append(sos)
-                        #Accepts mutation only if sum of squares value decreases
-                        if sos <= sos_list[-1]:
-                            sos_list.append(sos)
-                            three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                                new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                                promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                                new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                                new_rnase3_start, new_rnase3_stop)
-                        if sos_list[-1] == 0:
-                            break
-                        gen+=1
-                    else:
-                        #Calculate fitness of new mutation
-                        probability = calc_fitness(f_new, f_old, Ne)
-                        f_old = probability
-                        if probability > random.random():
-                            #Accepting mutation
-                            three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                                new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                                promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                                new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                                new_rnase3_start, new_rnase3_stop)
-                            #Taking in new file and removing unnecessary rows and columns
-                            nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
-                            nf = edit_new_file(nf)
-                            sos = sum_of_squares(df, nf)
-                            all_sos_list.append(sos)
-                            #Accepts mutation only if sum of squares value decreases
-                            if sos <= sos_list[-1]:
-                                sos_list.append(sos)
-                                three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
-                                                                    new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
-                                                                    promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
-                                                                    new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
-                                                                    new_rnase3_start, new_rnase3_stop)
-                            if sos_list[-1] == 0:
-                                break
-                            gen+=1
+        #Rnase after initial promoter
+        eps = np.random.normal(mu, sigma)
+        f_new = f_old * (1.0 + eps)
+        new_rnase1_start = 10
+        new_rnase1_stop = 20
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
 
+        #Rnase after second promoter
+        eps = np.random.normal(mu, sigma)
+        f_new = f_old * (1.0 + eps)
+        if promoter1_start > 0:
+            new_rnase2_start = promoter1_stop
+            new_rnase2_stop = new_rnase2_start + 10
+            test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                    new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                    promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                    new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                    new_term3_stop)
+            if test > 0:
+                f_old = test
+            if sos_list[-1] == 0:
+                break
+
+        #Rnase after third promoter
+        eps = np.random.normal(mu, sigma)
+        f_new = f_old * (1.0 + eps)
+        if promoter2_start > 0:
+            new_rnase3_start = promoter2_stop
+            new_rnase3_stop = new_rnase3_start + 10
+            test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                    new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                    promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                    new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                    new_term3_stop)
+            if test > 0:
+                f_old = test
+            if sos_list[-1] == 0:
+                break
+
+        #Add the first terminator
+        if new_gene2_start - new_gene1_stop > 16:
+            new_term1_start = new_gene1_stop + 1
+            new_term1_stop = new_gene1_stop + 2
+        eps = np.random.normal(mu, sigma)
+        f_new = f_old * (1.0 + eps)
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
+
+        #Add the second terminator
+        if new_gene3_start - new_gene2_stop > 16:
+            new_term2_start = new_gene2_stop + 1
+            new_term2_stop = new_gene2_stop + 2
+        eps = np.random.normal(mu, sigma)
+        f_new = f_old * (1.0 + eps)
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
+
+        #Add the third terminator
+        if new_gene3_stop < 449:
+            new_term3_start = new_gene3_stop + 1
+            new_term3_stop = new_gene3_stop + 2
+        eps = np.random.normal(mu, sigma)
+        f_new = f_old * (1.0 + eps)
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
+
+        #Remove the first terminator
+        new_term1_start = 0
+        new_term1_stop = 0
+        eps = np.random.normal(mu, sigma)
+        f_new = f_old * (1.0 + eps)
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
+
+        #Remove the second terminator
+        new_term2_start = 0
+        new_term2_stop = 0
+        eps = np.random.normal(mu, sigma)
+        f_new = f_old * (1.0 + eps)
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
+
+        #Remove the third terminator
+        new_term3_start = 0
+        new_term3_stop = 0
+        eps = np.random.normal(mu, sigma)
+        f_new = f_old * (1.0 + eps)
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
+
+        #Remove rnase after initial promoter
+        eps = np.random.normal(mu, sigma)
+        f_new = f_old * (1.0 + eps)
+        new_rnase1_start = 0
+        new_rnase1_stop = 0
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
+
+        #Remove rnase after second promoter
+        eps = np.random.normal(mu, sigma)
+        f_new = f_old * (1.0 + eps)
+        new_rnase2_start = 0
+        new_rnase2_stop = 0
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
+
+        #Remove rnase after third promoter
+        eps = np.random.normal(mu, sigma)
+        f_new = f_old * (1.0 + eps)
+        new_rnase3_start = 0
+        new_rnase3_stop = 0
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
 
         i+=1
 
 
-    #Export tsv file of sum of squares and polymerase rate data
+    #Exported tsv files
     all_sos_dataframe = pandas.DataFrame(all_sos_list, columns=["Sum of Squares"])
     export_csv = all_sos_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/all_sos_data.tsv", index=False)
     sos_dataframe = pandas.DataFrame(sos_list, columns=["Sum of Squares"])
@@ -665,32 +512,36 @@ def main():
     export_csv = all_term_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/all_term_data.tsv", index=False)
     term_dataframe = pandas.DataFrame(term_list, columns=["Terminator Efficiency Rate"])
     export_csv = term_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/term_data.tsv", index=False)
+    gene1_start_dataframe = pandas.DataFrame(gene1_start_list, columns=["Gene Start"])
+    export_csv = gene1_start_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gene1_start_data.tsv", index=False)
+    gene2_start_dataframe = pandas.DataFrame(gene2_start_list, columns=["Gene Start"])
+    export_csv = gene2_start_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gene2_start_data.tsv", index=False)
+    gene3_start_dataframe = pandas.DataFrame(gene3_start_list, columns=["Gene Start"])
+    export_csv = gene3_start_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gene3_start_data.tsv", index=False)
+    gene1_stop_dataframe = pandas.DataFrame(gene1_stop_list, columns=["Gene Stop"])
+    export_csv = gene1_stop_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gene1_stop_data.tsv", index=False)
+    gene2_stop_dataframe = pandas.DataFrame(gene2_stop_list, columns=["Gene Stop"])
+    export_csv = gene2_stop_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gene2_stop_data.tsv", index=False)
+    gene3_stop_dataframe = pandas.DataFrame(gene3_stop_list, columns=["Gene Stop"])
+    export_csv = gene3_stop_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gene3_stop_data.tsv", index=False)
     print("Final Polymerase Rate: ", poly_list[-1])
     print("Final Terminator Efficiency Rate: ", term_list[-1])
-    print("Gene 1 starts: ", new_gene1_start)
-    print("Gene 1 stops: ", new_gene1_stop)
-    print("Gene 1 Ribosome Binding Site starts: ", new_gene1_start-15)
-    print("Gene 1 Ribosome Binding Site stops: ", new_gene1_start)
-    print("Gene 2 starts: ", new_gene2_start)
-    print("Gene 2 stops: ", new_gene2_stop)
-    print("Gene 2 Ribosome Binding Site starts: ", new_gene2_start-15)
-    print("Gene 2 Ribosome Binding Site stops: ", new_gene2_start)
-    print("Gene 3 starts: ", new_gene3_start)
-    print("Gene 3 stops: ", new_gene3_stop)
-    print("Gene 3 Ribosome Binding Site starts: ", new_gene3_start-15)
-    print("Gene 3 Ribosome Binding Site stops: ", new_gene3_start)
-    print("Added Promoter 1 starts at: ", promoter1_start)
-    print("Added Promoter 1 stops at: ", promoter1_stop)
-    print("Added Promoter 2 starts at: ", promoter2_start)
-    print("Added Promoter 2 stops at: ", promoter2_stop)
-    print("Rnase site 1 starts at: ", new_rnase1_start)
-    print("Rnase site 1 stops at: ", new_rnase1_stop)
-    print("Rnase site 2 starts at: ", new_rnase2_start)
-    print("Rnase site 2 stops at: ", new_rnase2_stop)
-    print("Rnase site 3 starts at: ", new_rnase3_start)
-    print("Rnase site 3 stops at: ", new_rnase3_stop)
+    print("Gene 1 starts at: ", new_gene1_start, "and stops at: ", new_gene1_stop)
+    print("Gene 1 Ribosome Binding Site starts at: ", new_gene1_start-15, "and stops at: ", new_gene1_start)
+    print("Gene 1 terminator starts at: ", new_term1_start, "and stop at: ", new_term1_stop)
+    print("Gene 2 starts at: ", new_gene2_start, "and stop at: ", new_gene2_stop)
+    print("Gene 2 Ribosome Binding Site starts at: ", new_gene2_start-15, "and stop at: ", new_gene2_start)
+    print("Gene 2 terminator starts at: ", new_term2_start, "and stop at: ", new_term2_stop)
+    print("Gene 3 starts at: ", new_gene3_start, "and stop at: ", new_gene3_stop)
+    print("Gene 3 Ribosome Binding Site starts at: ", new_gene3_start-15, "and stop at: ", new_gene3_start)
+    print("Gene 3 terminator starts at: ", new_term3_start, "and stop at: ", new_term3_stop)
+    print("Promoter 1 starts at: ", 1, "and stops at: ", 10)
+    print("Added Promoter 2 starts at: ", promoter1_start, "and stop at: ", promoter1_stop)
+    print("Added Promoter 3 starts at: ", promoter2_start, "and stop at: ", promoter2_stop)
+    print("Rnase site 1 starts at: ", new_rnase1_start, "and stop at: ", new_rnase1_stop)
+    print("Rnase site 2 starts at: ", new_rnase2_start, "and stop at: ", new_rnase2_stop)
+    print("Rnase site 3 starts at: ", new_rnase3_start, "and stop at: ", new_rnase3_stop)
     print("Generations = ", gen)
-
 
 #Calculates the fitness of the new mutation
 def calc_fitness(variant_fit, orig_fit, Ne):
@@ -700,7 +551,7 @@ def calc_fitness(variant_fit, orig_fit, Ne):
     N = Ne
 
     if xj == xi:
-        return(1.0 / float(N) )
+        return(1.0 / float(N))
     if xj > xi:
         return(1.0)
     else:
@@ -755,6 +606,73 @@ def edit_target_file(target_file):
     target_file = target_file[target_file.species != 'p2']
     return target_file
 
+def accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                    new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                    promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                    new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                    new_term3_stop):
+    global gen
+
+    if f_new > f_old:
+        #Accepting mutation
+        three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
+                                        new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
+                                        promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
+                                        new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
+                                        new_rnase3_start, new_rnase3_stop, new_term1_start, new_term1_stop,
+                                        new_term2_start, new_term2_stop, new_term3_start, new_term3_stop)
+        #Taking in new file and removing unnecessary rows and columns
+        nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
+        nf = edit_new_file(nf)
+        sos = sum_of_squares(df, nf)
+        all_sos_list.append(sos)
+        return 0
+        #Accepts mutation only if sum of squares value decreases
+        if sos <= sos_list[-1]:
+            poly_list.append(new_pol_strength)
+            term_list.append(new_term_efficiency)
+            sos_list.append(sos)
+            three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
+                                                new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
+                                                promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
+                                                new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
+                                                new_rnase3_start, new_rnase3_stop, new_term1_start, new_term1_stop,
+                                                new_term2_start, new_term2_stop, new_term3_start, new_term3_stop)
+            return 0
+            gen+=1
+    else:
+        #Calculate fitness of new mutation
+        probability = calc_fitness(f_new, f_old, Ne)
+        f_old = probability
+        return probability
+        if probability > random.random():
+            #Accepting mutation
+            three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
+                                            new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
+                                            promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
+                                            new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
+                                            new_rnase3_start, new_rnase3_stop, new_term1_start, new_term1_stop,
+                                            new_term2_start, new_term2_stop, new_term3_start, new_term3_stop)
+            #Taking in new file and removing unnecessary rows and columns
+            nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
+            nf = edit_new_file(nf)
+            sos = sum_of_squares(df, nf)
+            all_sos_list.append(sos)
+            #Accepts mutation only if sum of squares value decreases
+            if sos <= sos_list[-1]:
+                poly_list.append(new_pol_strength)
+                term_list.append(new_term_efficiency)
+                sos_list.append(sos)
+                three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
+                                                    new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
+                                                    promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
+                                                    new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
+                                                    new_rnase3_start, new_rnase3_stop, new_term1_start, new_term1_stop,
+                                                    new_term2_start, new_term2_stop, new_term3_start, new_term3_stop)
+                gen+=1
+
+
+
 #Class containing genome for simulation with new polymerase strength
 class three_genome:
 
@@ -764,7 +682,8 @@ class three_genome:
     def recreated_genome(pol_strength, term_efficiency, gene1_start, gene1_stop, gene2_start,
                          gene2_stop, gene3_start, gene3_stop, prom1_start, prom1_stop, prom2_start,
                          prom2_stop, rnase1_start, rnase1_stop, rnase2_start, rnase2_stop, rnase3_start,
-                         rnase3_stop):
+                         rnase3_stop, term1_start, term1_stop, term2_start, term2_stop, term3_start,
+                         term3_stop):
 
         sim = pt.Model(cell_volume=8e-16)
         sim.seed(34)
@@ -790,9 +709,15 @@ class three_genome:
             plasmid.add_rnase_site(start=rnase2_start, stop=rnase2_stop)
         if rnase3_start > 0:
             plasmid.add_rnase_site(start=rnase3_start, stop=rnase3_stop)
-        plasmid.add_terminator(name="t1", start=449, stop=450,
-                               efficiency={"rnapol": term_efficiency})
-
+        if term1_start > 0:
+            plasmid.add_terminator(name="t1", start=term1_start, stop=term1_stop,
+                                   efficiency={"rnapol": term_efficiency})
+        if term2_start > 0:
+            plasmid.add_terminator(name="t2", start=term2_start, stop=term2_stop,
+                                   efficiency={"rnapol": term_efficiency})
+        if term3_start > 0:
+            plasmid.add_terminator(name="t3", start=term3_start, stop=term3_stop,
+                                   efficiency={"rnapol": term_efficiency})
         plasmid.add_gene(name="proteinX", start=gene1_start, stop=gene1_stop,
                          rbs_start=gene1_start-15, rbs_stop=gene1_start, rbs_strength=1e7)
 
@@ -807,7 +732,8 @@ class three_genome:
     def best_recreated_genome(pol_strength, term_efficiency, gene1_start, gene1_stop, gene2_start,
                               gene2_stop, gene3_start, gene3_stop, prom1_start, prom1_stop, prom2_start,
                               prom2_stop, rnase1_start, rnase1_stop, rnase2_start, rnase2_stop, rnase3_start,
-                              rnase3_stop):
+                              rnase3_stop, term1_start, term1_stop, term2_start, term2_stop, term3_start,
+                              term3_stop):
 
         sim = pt.Model(cell_volume=8e-16)
         sim.seed(34)
@@ -833,9 +759,15 @@ class three_genome:
             plasmid.add_rnase_site(start=rnase2_start, stop=rnase2_stop)
         if rnase3_start > 0:
             plasmid.add_rnase_site(start=rnase3_start, stop=rnase3_stop)
-        plasmid.add_terminator(name="t1", start=449, stop=450,
-                               efficiency={"rnapol": term_efficiency})
-
+        if term1_start > 0:
+            plasmid.add_terminator(name="t1", start=term1_start, stop=term1_stop,
+                                   efficiency={"rnapol": term_efficiency})
+        if term2_start > 0:
+            plasmid.add_terminator(name="t2", start=term2_start, stop=term2_stop,
+                                   efficiency={"rnapol": term_efficiency})
+        if term3_start > 0:
+            plasmid.add_terminator(name="t3", start=term3_start, stop=term3_stop,
+                                   efficiency={"rnapol": term_efficiency})
         plasmid.add_gene(name="proteinX", start=gene1_start, stop=gene1_stop,
                          rbs_start=gene1_start-15, rbs_stop=gene1_start, rbs_strength=1e7)
 
