@@ -11,11 +11,67 @@ import math
 def main():
 
     global term_list
+    global all_term_list
     global poly_list
     global sos_list
     global all_sos_list
+    global all_poly_list
     global Ne
     global gen
+    global mu
+    global sigma
+    global poly_sigma
+    global term_sigma
+    global gene_sigma
+    global prom_sigma
+    global gene1_start_list
+    global gene2_start_list
+    global gene3_start_list
+    global gene1_stop_list
+    global gene2_stop_list
+    global gene3_stop_list
+    global term1_start_list
+    global term1_stop_list
+    global term2_start_list
+    global term2_stop_list
+    global term3_start_list
+    global term3_stop_list
+    global rnase1_start_list
+    global rnase1_stop_list
+    global rnase2_start_list
+    global rnase2_stop_list
+    global rnase3_start_list
+    global rnase3_stop_list
+    global prom1_start_list
+    global prom1_stop_list
+    global prom2_start_list
+    global prom2_stop_list
+    global new_gene1_start
+    global new_gene1_stop
+    global new_gene2_start
+    global new_gene2_stop
+    global new_gene3_start
+    global new_gene3_stop
+    global promoter1_start
+    global promoter1_stop
+    global promoter2_start
+    global promoter2_stop
+    global new_prom1_start
+    global new_prom1_stop
+    global new_prom2_start
+    global new_prom2_stop
+    global new_rnase1_start
+    global new_rnase1_stop
+    global new_rnase2_start
+    global new_rnase2_stop
+    global new_rnase3_start
+    global new_rnase3_stop
+    global new_term1_start
+    global new_term1_stop
+    global new_term2_start
+    global new_term2_stop
+    global new_term3_start
+    global new_term3_stop
     sos_list = [60000]
     poly_list = []
     all_poly_list = []
@@ -49,8 +105,8 @@ def main():
     sigma = 1.0
     poly_sigma = 1e10
     term_sigma = 1.0
-    gene_sigma = 50.0
-    prom_sigma = 50.0
+    gene_sigma = 10.0
+    prom_sigma = 10.0
     Ne = 10
     i = 0
     gen = 0
@@ -129,532 +185,25 @@ def main():
         prom2_start_list.append(new_prom2_start)
         prom2_stop_list.append(new_prom2_stop)
 
+    possibilities = [alter_poly_strength(new_pol_strength), alter_term_efficiency(new_term_efficiency),
+                        alter_gene_length(new_gene1_start, new_gene1_stop, new_gene2_start, new_gene2_stop,new_gene3_start, new_gene3_stop),
+                        add_promoter1(new_prom1_start, new_prom1_stop), add_promoter2(new_prom2_start, new_prom2_stop),
+                        remove_promoter1(promoter1_start, promoter1_stop), remove_promoter2(promoter2_start, promoter2_stop), add_ranse1(),
+                        add_rnase2(promoter1_start), add_rnase3(promoter2_start), add_terminator1(new_gene2_start, new_gene1_stop),
+                        add_terminator2(new_gene3_start, new_gene2_stop), add_terminator3(new_gene3_stop), remove_terminator1(new_term1_start, new_term1_stop),
+                        remove_terminator2(new_term2_start, new_term2_stop), remove_terminator3(new_term3_start, new_term3_stop),
+                        remove_rnase1(new_rnase1_start, new_rnase1_stop), remove_rnase2(new_rnase2_start, new_rnase2_stop), remove_rnase3(new_rnase3_start, new_rnase3_stop)]
 
-    while i < 10:
+    while i < 1000:
 
-        #Determining polymerase strength
+        random.choice(possibilities)
         eps = np.random.normal(mu, sigma)
-        poly_eps = np.random.normal(mu, poly_sigma)
         f_new = f_old * (1.0 + eps)
         test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Determines new polymerase strength to reduce sum of squares value
-        new_pol_strength = poly_list[-1] + poly_eps
-        while new_pol_strength < 0:
-            poly_eps = np.random.normal(mu, poly_sigma)
-            new_pol_strength = poly_list[-1] + poly_eps
-            if new_pol_strength in all_poly_list:
-                poly_eps = np.random.normal(mu, poly_sigma)
-                new_pol_strength = poly_list[-1] + poly_eps
-        if new_pol_strength in all_poly_list:
-            poly_eps = np.random.normal(mu, poly_sigma)
-            new_pol_strength = poly_list[-1] + poly_eps
-        all_poly_list.append(new_pol_strength)
-
-
-        #Determining terminator polymerase efficiency rate
-        eps = np.random.normal(mu, sigma)
-        term_eps = np.random.normal(mu, term_sigma)
-        f_new = f_old * (1.0 + eps)
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Determines new terminator efficiency value to reduce sum of squares value
-        new_term_efficiency = term_list[-1] + term_eps
-        while new_term_efficiency < 0 or new_term_efficiency > 1:
-            term_eps = np.random.normal(mu, term_sigma)
-            new_term_efficiency = term_list[-1] + term_eps
-            if new_term_efficiency in all_term_list:
-                term_eps = np.random.normal(mu, term_sigma)
-                new_term_efficiency = term_list[-1] + term_eps
-        if new_term_efficiency in all_term_list:
-            term_eps = np.random.normal(mu, term_sigma)
-            new_term_efficiency = term_list[-1] + term_eps
-        all_term_list.append(new_term_efficiency)
-
-        #Changing gene lengths
-        eps = np.random.normal(mu, sigma)
-        gene_eps = np.random.normal(mu, gene_sigma)
-        f_new = f_old * (1.0 + eps)
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Alter gene sizes
-        new_gene1_start += round(gene_eps)
-        new_gene1_stop += round(gene_eps)
-        new_gene2_start += round(gene_eps)
-        new_gene2_stop += round(gene_eps)
-        new_gene3_start += round(gene_eps)
-        new_gene3_stop += round(gene_eps)
-
-        #If gene size is larger or smaller than genome, redo
-        while new_gene3_stop > 450 or new_gene1_start < 26:
-            gene_eps = np.random.normal(mu, gene_sigma)
-            new_gene1_start = gene1_start_list[-1] + round(gene_eps)
-            new_gene1_stop = gene1_stop_list[-1] + round(gene_eps)
-            new_gene2_start = gene2_start_list[-1] + round(gene_eps)
-            new_gene2_stop = gene2_stop_list[-1] + round(gene_eps)
-            new_gene3_start = gene3_start_list[-1] + round(gene_eps)
-            new_gene3_stop = gene3_stop_list[-1] + round(gene_eps)
-
-        gene1_start_list.append(new_gene1_start)
-        gene2_start_list.append(new_gene2_start)
-        gene3_start_list.append(new_gene3_start)
-        gene1_stop_list.append(new_gene1_stop)
-        gene2_stop_list.append(new_gene2_stop)
-        gene3_stop_list.append(new_gene3_stop)
-
-        #Adding second promoter
-        if new_prom1_start > 0:
-            promoter1_start = new_prom1_start
-            promoter1_stop = new_prom1_stop
-        eps = np.random.normal(mu, sigma)
-        prom1_eps = np.random.normal(mu, prom_sigma)
-        f_new = f_old * (1.0 + eps)
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Adjusting promoter site
-        new_prom1_start += round(prom1_eps)
-        new_prom1_stop += round(prom1_eps)
-        prom1_start_list.append(new_prom1_start)
-        prom1_stop_list.append(new_prom1_stop)
-        while new_prom1_start < new_gene2_start - 15 or new_prom1_start < new_gene1_stop - 7:
-            prom1_eps = np.random.normal(mu, prom_sigma)
-            new_prom1_start += round(prom1_eps)
-            new_prom1_stop += round(prom1_eps)
-            if new_prom1_start >= prom2_start_list[-1] and new_prom1_start <= prom2_stop_list[-1]:
-                prom1_eps = np.random.normal(mu, prom_sigma)
-                new_prom1_start += round(prom1_eps)
-                new_prom1_stop += round(prom1_eps)
-            if (new_prom1_start > rnase1_start_list[-1] and new_prom1_start < rnase1_stop_list[-1]) or (new_prom1_stop > rnase1_start_list[-1] and new_prom1_stop < rnase1_stop_list[-1]):
-                prom1_eps = np.random.normal(mu, prom_sigma)
-                new_prom1_start += round(prom1_eps)
-                new_prom1_stop += round(prom1_eps)
-            if (new_prom1_start > rnase2_start_list[-1] and new_prom1_start < rnase2_stop_list[-1]) or (new_prom1_stop > rnase2_start_list[-1] and new_prom1_stop < rnase2_stop_list[-1]):
-                prom1_eps = np.random.normal(mu, prom_sigma)
-                new_prom1_start += round(prom1_eps)
-                new_prom1_stop += round(prom1_eps)
-            if (new_prom1_start > rnase3_start_list[-1] and new_prom1_start < rnase3_stop_list[-1]) or (new_prom1_stop > rnase3_start_list[-1] and new_prom1_stop < rnase3_stop_list[-1]):
-                prom1_eps = np.random.normal(mu, prom_sigma)
-                new_prom1_start += round(prom1_eps)
-                new_prom1_stop += round(prom1_eps)
-            if (new_prom1_start > term1_start_list[-1] and new_prom1_start < term1_stop_list[-1]) or (new_prom1_stop > term1_start_list[-1] and new_prom1_stop < term1_stop_list[-1]):
-                prom1_eps = np.random.normal(mu, prom_sigma)
-                new_prom1_start += round(prom1_eps)
-                new_prom1_stop += round(prom1_eps)
-            if (new_prom1_start > term2_start_list[-1] and new_prom1_start < term2_stop_list[-1]) or (new_prom1_stop > term2_start_list[-1] and new_prom1_stop < term2_stop_list[-1]):
-                prom1_eps = np.random.normal(mu, prom_sigma)
-                new_prom1_start += round(prom1_eps)
-                new_prom1_stop += round(prom1_eps)
-            if (new_prom1_start > term3_start_list[-1] and new_prom1_start < term3_stop_list[-1]) or (new_prom1_stop > term3_start_list[-1] and new_prom1_stop < term3_stop_list[-1]):
-                prom1_eps = np.random.normal(mu, prom_sigma)
-                new_prom1_start += round(prom1_eps)
-                new_prom1_stop += round(prom1_eps)
-        promoter1_start = new_prom1_start
-        promoter1_stop = new_prom1_stop
-
-        #Adding third promoter
-        if new_prom2_start > 0:
-            promoter2_start = new_prom2_start
-            promoter2_stop = new_prom2_stop
-        eps = np.random.normal(mu, sigma)
-        prom2_eps = np.random.normal(mu, prom_sigma)
-        f_new = f_old * (1.0 + eps)
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Adjusting promoter site
-        new_prom2_start += round(prom2_eps)
-        new_prom2_stop += round(prom2_eps)
-        prom2_start_list.append(new_prom2_start)
-        prom2_stop_list.append(new_prom2_stop)
-        while new_prom2_start < new_gene3_start - 15 or new_prom2_start < new_gene2_stop - 7:
-            prom2_eps = np.random.normal(mu, prom_sigma)
-            new_prom2_start += round(prom2_eps)
-            new_prom2_stop += round(prom2_eps)
-            if new_prom2_start >= prom1_start_list[-1] and new_prom2_start <= prom1_stop_list[-1]:
-                prom2_eps = np.random.normal(mu, prom_sigma)
-                new_prom2_start += round(prom2_eps)
-                new_prom2_stop += round(prom2_eps)
-            if (new_prom2_start > rnase1_start_list[-1] and new_prom2_start < rnase1_stop_list[-1]) or (new_prom2_stop > rnase1_start_list[-1] and new_prom2_stop < rnase1_stop_list[-1]):
-                prom2_eps = np.random.normal(mu, prom_sigma)
-                new_prom2_start += round(prom2_eps)
-                new_prom2_stop += round(prom2_eps)
-            if (new_prom2_start > rnase2_start_list[-1] and new_prom2_start < rnase2_stop_list[-1]) or (new_prom2_stop > rnase2_start_list[-1] and new_prom2_stop < rnase2_stop_list[-1]):
-                prom2_eps = np.random.normal(mu, prom_sigma)
-                new_prom2_start += round(prom2_eps)
-                new_prom2_stop += round(prom2_eps)
-            if (new_prom2_start > rnase3_start_list[-1] and new_prom2_start < rnase3_stop_list[-1]) or (new_prom2_stop > rnase2_start_list[-1] and new_prom2_stop < rnase3_stop_list[-1]):
-                prom2_eps = np.random.normal(mu, prom_sigma)
-                new_prom2_start += round(prom2_eps)
-                new_prom2_stop += round(prom2_eps)
-            if (new_prom2_start > term1_start_list[-1] and new_prom2_start < term1_stop_list[-1]) or (new_prom2_stop > term1_start_list[-1] and new_prom2_stop < term1_stop_list[-1]):
-                prom2_eps = np.random.normal(mu, prom_sigma)
-                new_prom2_start += round(prom1_eps)
-                new_prom2_stop += round(prom1_eps)
-            if (new_prom2_start > term2_start_list[-1] and new_prom2_start < term2_stop_list[-1]) or (new_prom2_stop > term2_start_list[-1] and new_prom2_stop < term2_stop_list[-1]):
-                prom2_eps = np.random.normal(mu, prom_sigma)
-                new_prom2_start += round(prom1_eps)
-                new_prom2_stop += round(prom1_eps)
-            if (new_prom2_start > term3_start_list[-1] and new_prom2_start < term3_stop_list[-1]) or (new_prom2_stop > term3_start_list[-1] and new_prom2_stop < term3_stop_list[-1]):
-                prom2_eps = np.random.normal(mu, prom_sigma)
-                new_prom2_start += round(prom1_eps)
-                new_prom2_stop += round(prom1_eps)
-        promoter2_start = new_prom2_start
-        promoter2_stop = new_prom2_stop
-
-        #Removing second promoter
-        promoter1_start = 0
-        promoter1_stop = 0
-        eps = np.random.normal(mu, sigma)
-        prom1_eps = np.random.normal(mu, prom_sigma)
-        f_new = f_old * (1.0 + eps)
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Removing second promoter
-        promoter1_start = 0
-        promoter1_stop = 0
-        eps = np.random.normal(mu, sigma)
-        prom1_eps = np.random.normal(mu, prom_sigma)
-        f_new = f_old * (1.0 + eps)
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Rnase after initial promoter
-        eps = np.random.normal(mu, sigma)
-        f_new = f_old * (1.0 + eps)
-        new_rnase1_start = 10
-        new_rnase1_stop = 20
-        if (new_rnase1_start > 1 and new_rnase2_start < 10) or (new_rnase2_stop > 1 and new_rnase2_stop < 10):
-            new_rnase1_start = 0
-            new_rnase1_stop = 0
-        if (new_rnase1_start > term1_start_list[-1] and new_rnase1_start < term1_stop_list[-1]) or (new_rnase1_stop > term1_start_list[-1] and new_rnase1_stop < term1_stop_list[-1]):
-            new_rnase1_start = 0
-            new_rnase1_stop = 0
-        if (new_rnase1_start > term2_start_list[-1] and new_rnase1_start < term2_stop_list[-1]) or (new_rnase1_stop > term2_start_list[-1] and new_rnase1_stop < term2_stop_list[-1]):
-            new_rnase1_start = 0
-            new_rnase1_stop = 0
-        if (new_rnase1_start > term3_start_list[-1] and new_rnase1_start < term3_stop_list[-1]) or (new_rnase1_stop > term3_start_list[-1] and new_rnase1_stop < term3_stop_list[-1]):
-            new_rnase1_start = 0
-            new_rnase1_stop = 0
-        rnase1_start_list.append(new_rnase1_start)
-        rnase1_stop_list.append(new_rnase1_stop)
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Rnase after second promoter
-        eps = np.random.normal(mu, sigma)
-        f_new = f_old * (1.0 + eps)
-        if promoter1_start > 0:
-            new_rnase2_start = promoter1_stop
-            new_rnase2_stop = new_rnase2_start + 10
-        if (new_rnase2_start > prom1_start_list[-1] and new_rnase2_start < prom1_stop_list[-1]) or (new_rnase2_stop > prom1_start_list[-1] and new_rnase2_stop < prom1_stop_list[-1]):
-            new_rnase2_start = 0
-            new_rnase2_stop = 0
-        if (new_rnase2_start > prom2_start_list[-1] and new_rnase2_start < prom2_stop_list[-1]) or (new_rnase2_stop > prom2_start_list[-1] and new_rnase2_stop < prom2_stop_list[-1]):
-            new_rnase2_start = 0
-            new_rnase2_stop = 0
-        if (new_rnase2_start > term1_start_list[-1] and new_rnase2_start < term1_stop_list[-1]) or (new_rnase2_stop > term1_start_list[-1] and new_rnase2_stop < term1_stop_list[-1]):
-            new_rnase2_start = 0
-            new_rnase2_stop = 0
-        if (new_rnase2_start > term2_start_list[-1] and new_rnase2_start < term2_stop_list[-1]) or (new_rnase2_stop > term2_start_list[-1] and new_rnase2_stop < term2_stop_list[-1]):
-            new_rnase2_start = 0
-            new_rnase2_stop = 0
-        if (new_rnase2_start > term3_start_list[-1] and new_rnase2_start < term3_stop_list[-1]) or (new_rnase2_stop > term3_start_list[-1] and new_rnase2_stop < term3_stop_list[-1]):
-            new_rnase2_start = 0
-            new_rnase2_stop = 0
-        else:
-            rnase2_start_list.append(new_rnase2_start)
-            rnase2_stop_list.append(new_rnase2_stop)
-            test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
                                     new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
                                     promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
                                     new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
                                     new_term3_stop)
-            if test > 0:
-                f_old = test
-            if sos_list[-1] == 0:
-                break
-
-        #Rnase after third promoter
-        eps = np.random.normal(mu, sigma)
-        f_new = f_old * (1.0 + eps)
-        if promoter2_start > 0:
-            new_rnase3_start = promoter2_stop
-            new_rnase3_stop = new_rnase3_start + 10
-        if (new_rnase3_start > prom1_start_list[-1] and new_rnase3_start < prom1_stop_list[-1]) or (new_rnase3_stop > prom1_start_list[-1] and new_rnase3_stop < prom1_stop_list[-1]):
-            new_rnase3_start = 0
-            new_rnase3_stop = 0
-        if (new_rnase3_start > prom2_start_list[-1] and new_rnase3_start < prom2_stop_list[-1]) or (new_rnase3_stop > prom2_start_list[-1] and new_rnase3_stop < prom2_stop_list[-1]):
-            new_rnase3_start = 0
-            new_rnase3_stop = 0
-        if (new_rnase3_start > term1_start_list[-1] and new_rnase3_start < term1_stop_list[-1]) or (new_rnase3_stop > term1_start_list[-1] and new_rnase3_stop < term1_stop_list[-1]):
-            new_rnase3_start = 0
-            new_rnase3_stop = 0
-        if (new_rnase3_start > term2_start_list[-1] and new_rnase3_start < term2_stop_list[-1]) or (new_rnase3_stop > term2_start_list[-1] and new_rnase3_stop < term2_stop_list[-1]):
-            new_rnase3_start = 0
-            new_rnase3_stop = 0
-        if (new_rnase3_start > term3_start_list[-1] and new_rnase3_start < term3_stop_list[-1]) or (new_rnase3_stop > term3_start_list[-1] and new_rnase3_stop < term3_stop_list[-1]):
-            new_rnase3_start = 0
-            new_rnase3_stop = 0
-        else:
-            rnase3_start_list.append(new_rnase3_start)
-            rnase3_stop_list.append(new_rnase3_stop)
-            test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                    new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                    promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                    new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                    new_term3_stop)
-            if test > 0:
-                f_old = test
-            if sos_list[-1] == 0:
-                break
-
-
-
-        #Add the first terminator
-        if new_gene2_start - new_gene1_stop > 16:
-            new_term1_start = new_gene1_stop + 1
-            new_term1_stop = new_gene1_stop + 2
-        if (new_term1_start > prom1_start_list[-1] and new_term1_start < prom1_stop_list[-1]) or (new_term1_stop > prom1_start_list[-1] and new_term1_stop < prom1_stop_list[-1]):
-            new_term1_start = 0
-            new_term1_stop = 0
-        if (new_term1_start > prom2_start_list[-1] and new_term1_start < prom2_stop_list[-1]) or (new_term1_stop > prom2_start_list[-1] and new_term1_stop < prom2_stop_list[-1]):
-            new_term1_start = 0
-            new_term1_stop = 0
-        if (new_term1_start > rnase1_start_list[-1] and new_term1_start < rnase1_stop_list[-1]) or (new_term1_stop > rnase1_start_list[-1] and new_term1_stop < rnase1_stop_list[-1]):
-            new_term1_start = 0
-            new_term1_stop = 0
-        if (new_term1_start > rnase2_start_list[-1] and new_term1_start < rnase2_stop_list[-1]) or (new_term1_stop > rnase2_start_list[-1] and new_term1_stop < rnase2_stop_list[-1]):
-            new_term1_start = 0
-            new_term1_stop = 0
-        if (new_term1_start > rnase3_start_list[-1] and new_term1_start < rnase3_stop_list[-1]) or (new_term1_stop > rnase2_start_list[-1] and new_term1_stop < rnase3_stop_list[-1]):
-            new_term1_start = 0
-            new_term1_stop = 0
-        term1_start_list.append(new_term1_start)
-        term1_stop_list.append(new_term1_stop)
-        eps = np.random.normal(mu, sigma)
-        f_new = f_old * (1.0 + eps)
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Add the second terminator
-        if new_gene3_start - new_gene2_stop > 16:
-            new_term2_start = new_gene2_stop + 1
-            new_term2_stop = new_gene2_stop + 2
-        if (new_term2_start > prom1_start_list[-1] and new_term2_start < prom1_stop_list[-1]) or (new_term2_stop > prom1_start_list[-1] and new_term2_stop < prom1_stop_list[-1]):
-            new_term2_start = 0
-            new_term2_stop = 0
-        if (new_term2_start > prom2_start_list[-1] and new_term2_start < prom2_stop_list[-1]) or (new_term2_stop > prom2_start_list[-1] and new_term2_stop < prom2_stop_list[-1]):
-            new_term2_start = 0
-            new_term2_stop = 0
-        if (new_term2_start > rnase1_start_list[-1] and new_term2_start < rnase1_stop_list[-1]) or (new_term2_stop > rnase1_start_list[-1] and new_term2_stop < rnase1_stop_list[-1]):
-            new_term2_start = 0
-            new_term2_stop = 0
-        if (new_term2_start > rnase2_start_list[-1] and new_term2_start < rnase2_stop_list[-1]) or (new_term2_stop > rnase2_start_list[-1] and new_term2_stop < rnase2_stop_list[-1]):
-            new_term2_start = 0
-            new_term2_stop = 0
-        if (new_term2_start > rnase3_start_list[-1] and new_term2_start < rnase3_stop_list[-1]) or (new_term2_stop > rnase2_start_list[-1] and new_term2_stop < rnase3_stop_list[-1]):
-            new_term2_start = 0
-            new_term2_stop = 0
-        term2_start_list.append(new_term2_start)
-        term2_stop_list.append(new_term2_stop)
-        eps = np.random.normal(mu, sigma)
-        f_new = f_old * (1.0 + eps)
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Add the third terminator
-        if new_gene3_stop < 449:
-            new_term3_start = new_gene3_stop + 1
-            new_term3_stop = new_gene3_stop + 2
-        if (new_term3_start > prom1_start_list[-1] and new_term3_start < prom1_stop_list[-1]) or (new_term3_stop > prom1_start_list[-1] and new_term3_stop < prom1_stop_list[-1]):
-            new_term3_start = 0
-            new_term3_stop = 0
-        if (new_term3_start > prom2_start_list[-1] and new_term3_start < prom2_stop_list[-1]) or (new_term3_stop > prom2_start_list[-1] and new_term3_stop < prom2_stop_list[-1]):
-            new_term3_start = 0
-            new_term3_stop = 0
-        if (new_term3_start > rnase1_start_list[-1] and new_term3_start < rnase1_stop_list[-1]) or (new_term3_stop > rnase1_start_list[-1] and new_term3_stop < rnase1_stop_list[-1]):
-            new_term3_start = 0
-            new_term3_stop = 0
-        if (new_term3_start > rnase2_start_list[-1] and new_term3_start < rnase2_stop_list[-1]) or (new_term3_stop > rnase2_start_list[-1] and new_term3_stop < rnase2_stop_list[-1]):
-            new_term3_start = 0
-            new_term3_stop = 0
-        if (new_term3_start > rnase3_start_list[-1] and new_term3_start < rnase3_stop_list[-1]) or (new_term3_stop > rnase2_start_list[-1] and new_term3_stop < rnase2_stop_list[-1]):
-            new_term3_start = 0
-            new_term3_stop = 0
-        term3_start_list.append(new_term3_start)
-        term3_stop_list.append(new_term3_stop)
-        eps = np.random.normal(mu, sigma)
-        f_new = f_old * (1.0 + eps)
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Remove the first terminator
-        new_term1_start = 0
-        new_term1_stop = 0
-        eps = np.random.normal(mu, sigma)
-        f_new = f_old * (1.0 + eps)
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Remove the second terminator
-        new_term2_start = 0
-        new_term2_stop = 0
-        eps = np.random.normal(mu, sigma)
-        f_new = f_old * (1.0 + eps)
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Remove the third terminator
-        new_term3_start = 0
-        new_term3_stop = 0
-        eps = np.random.normal(mu, sigma)
-        f_new = f_old * (1.0 + eps)
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Remove rnase after initial promoter
-        eps = np.random.normal(mu, sigma)
-        f_new = f_old * (1.0 + eps)
-        new_rnase1_start = 0
-        new_rnase1_stop = 0
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Remove rnase after second promoter
-        eps = np.random.normal(mu, sigma)
-        f_new = f_old * (1.0 + eps)
-        new_rnase2_start = 0
-        new_rnase2_stop = 0
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
-        if test > 0:
-            f_old = test
-        if sos_list[-1] == 0:
-            break
-
-        #Remove rnase after third promoter
-        eps = np.random.normal(mu, sigma)
-        f_new = f_old * (1.0 + eps)
-        new_rnase3_start = 0
-        new_rnase3_stop = 0
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
-                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
-                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
-                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                new_term3_stop)
         if test > 0:
             f_old = test
         if sos_list[-1] == 0:
@@ -838,7 +387,922 @@ def accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new
     else:
         return 0
 
+def alter_poly_strength(new_pol_strength):
 
+    #Determining polymerase strength
+    poly_eps = np.random.normal(mu, poly_sigma)
+    #Determines new polymerase strength to reduce sum of squares value
+    new_pol_strength = poly_list[-1] + poly_eps
+    while new_pol_strength < 0:
+        poly_eps = np.random.normal(mu, poly_sigma)
+        new_pol_strength = poly_list[-1] + poly_eps
+        if new_pol_strength in all_poly_list:
+            poly_eps = np.random.normal(mu, poly_sigma)
+            new_pol_strength = poly_list[-1] + poly_eps
+    if new_pol_strength in all_poly_list:
+        poly_eps = np.random.normal(mu, poly_sigma)
+        new_pol_strength = poly_list[-1] + poly_eps
+    all_poly_list.append(new_pol_strength)
+
+def alter_term_efficiency(new_term_efficiency):
+
+
+    #Determining terminator polymerase efficiency rate
+    term_eps = np.random.normal(mu, term_sigma)
+    #Determines new terminator efficiency value to reduce sum of squares value
+    new_term_efficiency = term_list[-1] + term_eps
+    while new_term_efficiency < 0 or new_term_efficiency > 1:
+        term_eps = np.random.normal(mu, term_sigma)
+        new_term_efficiency = term_list[-1] + term_eps
+        if new_term_efficiency in all_term_list:
+            term_eps = np.random.normal(mu, term_sigma)
+            new_term_efficiency = term_list[-1] + term_eps
+    if new_term_efficiency in all_term_list:
+        term_eps = np.random.normal(mu, term_sigma)
+        new_term_efficiency = term_list[-1] + term_eps
+    all_term_list.append(new_term_efficiency)
+
+def alter_gene_length(new_gene1_start, new_gene1_stop, new_gene2_start, new_gene2_stop,
+                        new_gene3_start, new_gene3_stop):
+
+
+    #Changing gene lengths
+    gene_eps = np.random.normal(mu, gene_sigma)
+    #Alter gene sizes
+    new_gene1_start += round(gene_eps)
+    new_gene1_stop += round(gene_eps)
+    new_gene2_start += round(gene_eps)
+    new_gene2_stop += round(gene_eps)
+    new_gene3_start += round(gene_eps)
+    new_gene3_stop += round(gene_eps)
+
+    #If gene size is larger or smaller than genome, redo
+    while new_gene3_stop > 450 or new_gene1_start < 26:
+        gene1_eps = np.random.normal(mu, gene_sigma)
+        gene2_eps = np.random.normal(mu, gene_sigma)
+        gene3_eps = np.random.normal(mu, gene_sigma)
+        new_gene1_start = gene1_start_list[-1] + round(gene1_eps)
+        new_gene1_stop = gene1_stop_list[-1] + round(gene1_eps)
+        new_gene2_start = gene2_start_list[-1] + round(gene2_eps)
+        new_gene2_stop = gene2_stop_list[-1] + round(gene2_eps)
+        new_gene3_start = gene3_start_list[-1] + round(gene3_eps)
+        new_gene3_stop = gene3_stop_list[-1] + round(gene3_eps)
+        if (new_gene1_start > term1_start_list[-1] and new_gene1_start < term1_stop_list[-1]) or (new_gene1_stop > term1_start_list[-1] and new_gene1_stop < term1_stop_list[-1]):
+            new_gene1_start = gene1_start_list[-1] + round(gene1_eps)
+            new_gene1_stop = gene1_stop_list[-1] + round(gene1_eps)
+        if (new_gene1_start > prom1_start_list[-1] and new_gene1_start < prom1_stop_list[-1]) or (new_gene1_stop > prom1_start_list[-1] and new_gene1_stop < prom1_stop_list[-1]):
+            new_gene1_start = gene1_start_list[-1] + round(gene1_eps)
+            new_gene1_stop = gene1_stop_list[-1] + round(gene1_eps)
+        if (new_gene1_start > rnase1_start_list[-1] and new_gene1_start < rnase1_stop_list[-1]) or (new_gene1_stop > rnase1_start_list[-1] and new_gene1_stop < rnase1_stop_list[-1]):
+            new_gene1_start = gene1_start_list[-1] + round(gene1_eps)
+            new_gene1_stop = gene1_stop_list[-1] + round(gene1_eps)
+        if (new_gene2_start > term2_start_list[-1] and new_gene2_start < term2_stop_list[-1]) or (new_gene2_stop > term2_start_list[-1] and new_gene2_stop < term2_stop_list[-1]):
+            new_gene2_start = gene2_start_list[-1] + round(gene2_eps)
+            new_gene2_stop = gene2_stop_list[-1] + round(gene2_eps)
+        if  (new_gene2_start > prom2_start_list[-1] and new_gene2_start < prom2_stop_list[-1]) or (new_gene2_stop > prom2_start_list[-1] and new_gene2_stop < prom2_stop_list[-1]):
+            new_gene2_start = gene2_start_list[-1] + round(gene2_eps)
+            new_gene2_stop = gene2_stop_list[-1] + round(gene2_eps)
+        if (new_gene2_start > rnase2_start_list[-1] and new_gene2_start < rnase2_stop_list[-1]) or (new_gene2_stop > rnase2_start_list[-1] and new_gene2_stop < rnase2_stop_list[-1]):
+            new_gene2_start = gene2_start_list[-1] + round(gene2_eps)
+            new_gene2_stop = gene2_stop_list[-1] + round(gene2_eps)
+        if (new_gene3_start > term3_start_list[-1] and new_gene3_start < term3_stop_list[-1]) or (new_gene3_stop > term3_start_list[-1] and new_gene3_stop < term3_stop_list[-1]):
+            new_gene3_start = gene3_start_list[-1] + round(gene3_eps)
+            new_gene3_stop = gene3_stop_list[-1] + round(gene3_eps)
+        if (new_gene3_start > prom2_start_list[-1] and new_gene3_start < prom2_stop_list[-1]) :
+            new_gene3_start = gene3_start_list[-1] + round(gene3_eps)
+            new_gene3_stop = gene3_stop_list[-1] + round(gene3_eps)
+        if (new_gene3_start > rnase3_start_list[-1] and new_gene3_start < rnase3_stop_list[-1]) or (new_gene3_stop > rnase3_start_list[-1] and new_gene3_stop < rnase3_stop_list[-1]):
+            new_gene3_start = gene3_start_list[-1] + round(gene3_eps)
+            new_gene3_stop = gene3_stop_list[-1] + round(gene3_eps)
+
+    gene1_start_list.append(new_gene1_start)
+    gene2_start_list.append(new_gene2_start)
+    gene3_start_list.append(new_gene3_start)
+    gene1_stop_list.append(new_gene1_stop)
+    gene2_stop_list.append(new_gene2_stop)
+    gene3_stop_list.append(new_gene3_stop)
+
+def add_promoter1(new_prom1_start, new_prom1_stop):
+
+    #Adding in a promoter between genes 1 and 2
+    if new_prom1_start > 0:
+        promoter1_start = new_prom1_start
+        promoter1_stop = new_prom1_stop
+    prom1_eps = np.random.normal(mu, prom_sigma)
+    #Adjusting promoter site
+    new_prom1_start += round(prom1_eps)
+    new_prom1_stop += round(prom1_eps)
+    prom1_start_list.append(new_prom1_start)
+    prom1_stop_list.append(new_prom1_stop)
+    while new_prom1_start < new_gene2_start - 15 or new_prom1_start < new_gene1_stop - 7:
+        prom1_eps = np.random.normal(mu, prom_sigma)
+        new_prom1_start += round(prom1_eps)
+        new_prom1_stop += round(prom1_eps)
+        if new_prom1_start >= prom2_start_list[-1] and new_prom1_start <= prom2_stop_list[-1]:
+            prom1_eps = np.random.normal(mu, prom_sigma)
+            new_prom1_start += round(prom1_eps)
+            new_prom1_stop += round(prom1_eps)
+        if (new_prom1_start > rnase1_start_list[-1] and new_prom1_start < rnase1_stop_list[-1]) or (new_prom1_stop > rnase1_start_list[-1] and new_prom1_stop < rnase1_stop_list[-1]):
+            prom1_eps = np.random.normal(mu, prom_sigma)
+            new_prom1_start += round(prom1_eps)
+            new_prom1_stop += round(prom1_eps)
+        if (new_prom1_start > rnase2_start_list[-1] and new_prom1_start < rnase2_stop_list[-1]) or (new_prom1_stop > rnase2_start_list[-1] and new_prom1_stop < rnase2_stop_list[-1]):
+            prom1_eps = np.random.normal(mu, prom_sigma)
+            new_prom1_start += round(prom1_eps)
+            new_prom1_stop += round(prom1_eps)
+        if (new_prom1_start > rnase3_start_list[-1] and new_prom1_start < rnase3_stop_list[-1]) or (new_prom1_stop > rnase3_start_list[-1] and new_prom1_stop < rnase3_stop_list[-1]):
+            prom1_eps = np.random.normal(mu, prom_sigma)
+            new_prom1_start += round(prom1_eps)
+            new_prom1_stop += round(prom1_eps)
+        if (new_prom1_start > term1_start_list[-1] and new_prom1_start < term1_stop_list[-1]) or (new_prom1_stop > term1_start_list[-1] and new_prom1_stop < term1_stop_list[-1]):
+            prom1_eps = np.random.normal(mu, prom_sigma)
+            new_prom1_start += round(prom1_eps)
+            new_prom1_stop += round(prom1_eps)
+        if (new_prom1_start > term2_start_list[-1] and new_prom1_start < term2_stop_list[-1]) or (new_prom1_stop > term2_start_list[-1] and new_prom1_stop < term2_stop_list[-1]):
+            prom1_eps = np.random.normal(mu, prom_sigma)
+            new_prom1_start += round(prom1_eps)
+            new_prom1_stop += round(prom1_eps)
+        if (new_prom1_start > term3_start_list[-1] and new_prom1_start < term3_stop_list[-1]) or (new_prom1_stop > term3_start_list[-1] and new_prom1_stop < term3_stop_list[-1]):
+            prom1_eps = np.random.normal(mu, prom_sigma)
+            new_prom1_start += round(prom1_eps)
+            new_prom1_stop += round(prom1_eps)
+        promoter1_start = new_prom1_start
+        promoter1_stop = new_prom1_stop
+
+def add_promoter2(new_prom2_start, new_prom2_stop):
+
+    #Adding promoter between genes 2 and 3
+    if new_prom2_start > 0:
+        promoter2_start = new_prom2_start
+        promoter2_stop = new_prom2_stop
+    prom2_eps = np.random.normal(mu, prom_sigma)
+    #Adjusting promoter site
+    new_prom2_start += round(prom2_eps)
+    new_prom2_stop += round(prom2_eps)
+    prom2_start_list.append(new_prom2_start)
+    prom2_stop_list.append(new_prom2_stop)
+    while new_prom2_start < new_gene3_start - 15 or new_prom2_start < new_gene2_stop - 7:
+        prom2_eps = np.random.normal(mu, prom_sigma)
+        new_prom2_start += round(prom2_eps)
+        new_prom2_stop += round(prom2_eps)
+        if new_prom2_start >= prom1_start_list[-1] and new_prom2_start <= prom1_stop_list[-1]:
+            prom2_eps = np.random.normal(mu, prom_sigma)
+            new_prom2_start += round(prom2_eps)
+            new_prom2_stop += round(prom2_eps)
+        if (new_prom2_start > rnase1_start_list[-1] and new_prom2_start < rnase1_stop_list[-1]) or (new_prom2_stop > rnase1_start_list[-1] and new_prom2_stop < rnase1_stop_list[-1]):
+            prom2_eps = np.random.normal(mu, prom_sigma)
+            new_prom2_start += round(prom2_eps)
+            new_prom2_stop += round(prom2_eps)
+        if (new_prom2_start > rnase2_start_list[-1] and new_prom2_start < rnase2_stop_list[-1]) or (new_prom2_stop > rnase2_start_list[-1] and new_prom2_stop < rnase2_stop_list[-1]):
+            prom2_eps = np.random.normal(mu, prom_sigma)
+            new_prom2_start += round(prom2_eps)
+            new_prom2_stop += round(prom2_eps)
+        if (new_prom2_start > rnase3_start_list[-1] and new_prom2_start < rnase3_stop_list[-1]) or (new_prom2_stop > rnase2_start_list[-1] and new_prom2_stop < rnase3_stop_list[-1]):
+            prom2_eps = np.random.normal(mu, prom_sigma)
+            new_prom2_start += round(prom2_eps)
+            new_prom2_stop += round(prom2_eps)
+        if (new_prom2_start > term1_start_list[-1] and new_prom2_start < term1_stop_list[-1]) or (new_prom2_stop > term1_start_list[-1] and new_prom2_stop < term1_stop_list[-1]):
+            prom2_eps = np.random.normal(mu, prom_sigma)
+            new_prom2_start += round(prom1_eps)
+            new_prom2_stop += round(prom1_eps)
+        if (new_prom2_start > term2_start_list[-1] and new_prom2_start < term2_stop_list[-1]) or (new_prom2_stop > term2_start_list[-1] and new_prom2_stop < term2_stop_list[-1]):
+            prom2_eps = np.random.normal(mu, prom_sigma)
+            new_prom2_start += round(prom1_eps)
+            new_prom2_stop += round(prom1_eps)
+        if (new_prom2_start > term3_start_list[-1] and new_prom2_start < term3_stop_list[-1]) or (new_prom2_stop > term3_start_list[-1] and new_prom2_stop < term3_stop_list[-1]):
+            prom2_eps = np.random.normal(mu, prom_sigma)
+            new_prom2_start += round(prom1_eps)
+            new_prom2_stop += round(prom1_eps)
+    promoter2_start = new_prom2_start
+    promoter2_stop = new_prom2_stop
+
+def remove_promoter1(promoter1_start, promoter1_stop):
+
+    #Removing promoter between genes 1 and 2
+    promoter1_start = 0
+    promoter1_stop = 0
+
+def remove_promoter2(promoter2_start, promoter2_stop):
+
+    #Removing promoter between genes 2 and 3
+    promoter2_start = 0
+    promoter2_stop = 0
+
+def add_ranse1():
+
+    #Adds rnase after first promoter
+    new_rnase1_start = 10
+    new_rnase1_stop = 20
+    if (new_rnase1_start > 1 and new_rnase2_start < 10) or (new_rnase2_stop > 1 and new_rnase2_stop < 10):
+        new_rnase1_start = 0
+        new_rnase1_stop = 0
+    if (new_rnase1_start > term1_start_list[-1] and new_rnase1_start < term1_stop_list[-1]) or (new_rnase1_stop > term1_start_list[-1] and new_rnase1_stop < term1_stop_list[-1]):
+        new_rnase1_start = 0
+        new_rnase1_stop = 0
+    if (new_rnase1_start > term2_start_list[-1] and new_rnase1_start < term2_stop_list[-1]) or (new_rnase1_stop > term2_start_list[-1] and new_rnase1_stop < term2_stop_list[-1]):
+        new_rnase1_start = 0
+        new_rnase1_stop = 0
+    if (new_rnase1_start > term3_start_list[-1] and new_rnase1_start < term3_stop_list[-1]) or (new_rnase1_stop > term3_start_list[-1] and new_rnase1_stop < term3_stop_list[-1]):
+        new_rnase1_start = 0
+        new_rnase1_stop = 0
+    rnase1_start_list.append(new_rnase1_start)
+    rnase1_stop_list.append(new_rnase1_stop)
+
+def add_rnase2(promoter1_start):
+
+    #Adds rnase after second promoter
+    new_rnase2_start = 0
+    new_rnase2_stop = 0
+    if promoter1_start > 0:
+        new_rnase2_start = promoter1_stop
+        new_rnase2_stop = new_rnase2_start + 10
+    if (new_rnase2_start > prom1_start_list[-1] and new_rnase2_start < prom1_stop_list[-1]) or (new_rnase2_stop > prom1_start_list[-1] and new_rnase2_stop < prom1_stop_list[-1]):
+        new_rnase2_start = 0
+        new_rnase2_stop = 0
+    if (new_rnase2_start > prom2_start_list[-1] and new_rnase2_start < prom2_stop_list[-1]) or (new_rnase2_stop > prom2_start_list[-1] and new_rnase2_stop < prom2_stop_list[-1]):
+        new_rnase2_start = 0
+        new_rnase2_stop = 0
+    if (new_rnase2_start > term1_start_list[-1] and new_rnase2_start < term1_stop_list[-1]) or (new_rnase2_stop > term1_start_list[-1] and new_rnase2_stop < term1_stop_list[-1]):
+        new_rnase2_start = 0
+        new_rnase2_stop = 0
+    if (new_rnase2_start > term2_start_list[-1] and new_rnase2_start < term2_stop_list[-1]) or (new_rnase2_stop > term2_start_list[-1] and new_rnase2_stop < term2_stop_list[-1]):
+        new_rnase2_start = 0
+        new_rnase2_stop = 0
+    if (new_rnase2_start > term3_start_list[-1] and new_rnase2_start < term3_stop_list[-1]) or (new_rnase2_stop > term3_start_list[-1] and new_rnase2_stop < term3_stop_list[-1]):
+        new_rnase2_start = 0
+        new_rnase2_stop = 0
+    rnase2_start_list.append(new_rnase2_start)
+    rnase2_stop_list.append(new_rnase2_stop)
+
+def add_rnase3(promoter2_start):
+
+    #Adds rnase after third promoter
+    new_rnase3_start = 0
+    new_rnase3_stop = 0
+    if promoter2_start > 0:
+        new_rnase3_start = promoter2_stop
+        new_rnase3_stop = new_rnase3_start + 10
+    if (new_rnase3_start > prom1_start_list[-1] and new_rnase3_start < prom1_stop_list[-1]) or (new_rnase3_stop > prom1_start_list[-1] and new_rnase3_stop < prom1_stop_list[-1]):
+        new_rnase3_start = 0
+        new_rnase3_stop = 0
+    if (new_rnase3_start > prom2_start_list[-1] and new_rnase3_start < prom2_stop_list[-1]) or (new_rnase3_stop > prom2_start_list[-1] and new_rnase3_stop < prom2_stop_list[-1]):
+        new_rnase3_start = 0
+        new_rnase3_stop = 0
+    if (new_rnase3_start > term1_start_list[-1] and new_rnase3_start < term1_stop_list[-1]) or (new_rnase3_stop > term1_start_list[-1] and new_rnase3_stop < term1_stop_list[-1]):
+        new_rnase3_start = 0
+        new_rnase3_stop = 0
+    if (new_rnase3_start > term2_start_list[-1] and new_rnase3_start < term2_stop_list[-1]) or (new_rnase3_stop > term2_start_list[-1] and new_rnase3_stop < term2_stop_list[-1]):
+        new_rnase3_start = 0
+        new_rnase3_stop = 0
+    if (new_rnase3_start > term3_start_list[-1] and new_rnase3_start < term3_stop_list[-1]) or (new_rnase3_stop > term3_start_list[-1] and new_rnase3_stop < term3_stop_list[-1]):
+        new_rnase3_start = 0
+        new_rnase3_stop = 0
+    rnase3_start_list.append(new_rnase3_start)
+    rnase3_stop_list.append(new_rnase3_stop)
+
+def add_terminator1(new_gene2_start, new_gene1_stop):
+
+    #Adds terminator after first gene
+    new_term1_start = 0
+    new_term1_stop = 0
+    if new_gene2_start - new_gene1_stop > 16:
+        new_term1_start = new_gene1_stop + 1
+        new_term1_stop = new_gene1_stop + 2
+    if (new_term1_start > prom1_start_list[-1] and new_term1_start < prom1_stop_list[-1]) or (new_term1_stop > prom1_start_list[-1] and new_term1_stop < prom1_stop_list[-1]):
+        new_term1_start = 0
+        new_term1_stop = 0
+    if (new_term1_start > prom2_start_list[-1] and new_term1_start < prom2_stop_list[-1]) or (new_term1_stop > prom2_start_list[-1] and new_term1_stop < prom2_stop_list[-1]):
+        new_term1_start = 0
+        new_term1_stop = 0
+    if (new_term1_start > rnase1_start_list[-1] and new_term1_start < rnase1_stop_list[-1]) or (new_term1_stop > rnase1_start_list[-1] and new_term1_stop < rnase1_stop_list[-1]):
+        new_term1_start = 0
+        new_term1_stop = 0
+    if (new_term1_start > rnase2_start_list[-1] and new_term1_start < rnase2_stop_list[-1]) or (new_term1_stop > rnase2_start_list[-1] and new_term1_stop < rnase2_stop_list[-1]):
+        new_term1_start = 0
+        new_term1_stop = 0
+    if (new_term1_start > rnase3_start_list[-1] and new_term1_start < rnase3_stop_list[-1]) or (new_term1_stop > rnase2_start_list[-1] and new_term1_stop < rnase3_stop_list[-1]):
+        new_term1_start = 0
+        new_term1_stop = 0
+    term1_start_list.append(new_term1_start)
+    term1_stop_list.append(new_term1_stop)
+
+def add_terminator2(new_gene3_start, new_gene2_stop):
+
+    #Adds terminator after second gene
+    new_term2_start = 0
+    new_term2_stop = 0
+    if new_gene3_start - new_gene2_stop > 16:
+        new_term2_start = new_gene2_stop + 1
+        new_term2_stop = new_gene2_stop + 2
+    if (new_term2_start > prom1_start_list[-1] and new_term2_start < prom1_stop_list[-1]) or (new_term2_stop > prom1_start_list[-1] and new_term2_stop < prom1_stop_list[-1]):
+        new_term2_start = 0
+        new_term2_stop = 0
+    if (new_term2_start > prom2_start_list[-1] and new_term2_start < prom2_stop_list[-1]) or (new_term2_stop > prom2_start_list[-1] and new_term2_stop < prom2_stop_list[-1]):
+        new_term2_start = 0
+        new_term2_stop = 0
+    if (new_term2_start > rnase1_start_list[-1] and new_term2_start < rnase1_stop_list[-1]) or (new_term2_stop > rnase1_start_list[-1] and new_term2_stop < rnase1_stop_list[-1]):
+        new_term2_start = 0
+        new_term2_stop = 0
+    if (new_term2_start > rnase2_start_list[-1] and new_term2_start < rnase2_stop_list[-1]) or (new_term2_stop > rnase2_start_list[-1] and new_term2_stop < rnase2_stop_list[-1]):
+        new_term2_start = 0
+        new_term2_stop = 0
+    if (new_term2_start > rnase3_start_list[-1] and new_term2_start < rnase3_stop_list[-1]) or (new_term2_stop > rnase2_start_list[-1] and new_term2_stop < rnase3_stop_list[-1]):
+        new_term2_start = 0
+        new_term2_stop = 0
+    term2_start_list.append(new_term2_start)
+    term2_stop_list.append(new_term2_stop)
+
+def add_terminator3(new_gene3_stop):
+
+    #Adds terminator after third gene
+    new_term3_start = 0
+    new_term3_stop = 0
+    if new_gene3_stop < 449:
+        new_term3_start = new_gene3_stop + 1
+        new_term3_stop = new_gene3_stop + 2
+    if (new_term3_start > prom1_start_list[-1] and new_term3_start < prom1_stop_list[-1]) or (new_term3_stop > prom1_start_list[-1] and new_term3_stop < prom1_stop_list[-1]):
+        new_term3_start = 0
+        new_term3_stop = 0
+    if (new_term3_start > prom2_start_list[-1] and new_term3_start < prom2_stop_list[-1]) or (new_term3_stop > prom2_start_list[-1] and new_term3_stop < prom2_stop_list[-1]):
+        new_term3_start = 0
+        new_term3_stop = 0
+    if (new_term3_start > rnase1_start_list[-1] and new_term3_start < rnase1_stop_list[-1]) or (new_term3_stop > rnase1_start_list[-1] and new_term3_stop < rnase1_stop_list[-1]):
+        new_term3_start = 0
+        new_term3_stop = 0
+    if (new_term3_start > rnase2_start_list[-1] and new_term3_start < rnase2_stop_list[-1]) or (new_term3_stop > rnase2_start_list[-1] and new_term3_stop < rnase2_stop_list[-1]):
+        new_term3_start = 0
+        new_term3_stop = 0
+    if (new_term3_start > rnase3_start_list[-1] and new_term3_start < rnase3_stop_list[-1]) or (new_term3_stop > rnase2_start_list[-1] and new_term3_stop < rnase2_stop_list[-1]):
+        new_term3_start = 0
+        new_term3_stop = 0
+    term3_start_list.append(new_term3_start)
+    term3_stop_list.append(new_term3_stop)
+
+def remove_terminator1(new_term1_start, new_term1_stop):
+
+    #Removes terminator after first gene
+    new_term1_start = 0
+    new_term1_stop = 0
+
+def remove_terminator2(new_term2_start, new_term2_stop):
+
+    #Removes terminator after second gene
+    new_term2_start = 0
+    new_term2_stop = 0
+
+def remove_terminator3(new_term3_start, new_term3_stop):
+
+    #Removes terminator after third gene
+    new_term3_start = 0
+    new_term3_stop = 0
+
+def remove_rnase1(new_rnase1_start, new_rnase1_stop):
+
+    #Removes rnase after first promoter
+    new_rnase1_start = 0
+    new_rnase1_stop = 0
+
+def remove_rnase2(new_rnase2_start, new_rnase2_stop):
+
+    #Removes rnase after second promoter
+    new_rnase2_start = 0
+    new_rnase2_stop = 0
+
+def remove_rnase3(new_rnase3_start, new_rnase3_stop):
+
+    #Removes rnase after third promoter
+    new_rnase3_start = 0
+    new_rnase3_stop = 0
+
+
+'''def working_code():
+    #Determining polymerase strength
+    eps = np.random.normal(mu, sigma)
+    poly_eps = np.random.normal(mu, poly_sigma)
+    f_new = f_old * (1.0 + eps)
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Determines new polymerase strength to reduce sum of squares value
+    new_pol_strength = poly_list[-1] + poly_eps
+    while new_pol_strength < 0:
+        poly_eps = np.random.normal(mu, poly_sigma)
+        new_pol_strength = poly_list[-1] + poly_eps
+        if new_pol_strength in all_poly_list:
+            poly_eps = np.random.normal(mu, poly_sigma)
+            new_pol_strength = poly_list[-1] + poly_eps
+    if new_pol_strength in all_poly_list:
+        poly_eps = np.random.normal(mu, poly_sigma)
+        new_pol_strength = poly_list[-1] + poly_eps
+    all_poly_list.append(new_pol_strength)
+
+
+    #Determining terminator polymerase efficiency rate
+    eps = np.random.normal(mu, sigma)
+    term_eps = np.random.normal(mu, term_sigma)
+    f_new = f_old * (1.0 + eps)
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Determines new terminator efficiency value to reduce sum of squares value
+    new_term_efficiency = term_list[-1] + term_eps
+    while new_term_efficiency < 0 or new_term_efficiency > 1:
+        term_eps = np.random.normal(mu, term_sigma)
+        new_term_efficiency = term_list[-1] + term_eps
+        if new_term_efficiency in all_term_list:
+            term_eps = np.random.normal(mu, term_sigma)
+            new_term_efficiency = term_list[-1] + term_eps
+    if new_term_efficiency in all_term_list:
+        term_eps = np.random.normal(mu, term_sigma)
+        new_term_efficiency = term_list[-1] + term_eps
+    all_term_list.append(new_term_efficiency)
+
+    #Changing gene lengths
+    eps = np.random.normal(mu, sigma)
+    gene_eps = np.random.normal(mu, gene_sigma)
+    f_new = f_old * (1.0 + eps)
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Alter gene sizes
+    new_gene1_start += round(gene_eps)
+    new_gene1_stop += round(gene_eps)
+    new_gene2_start += round(gene_eps)
+    new_gene2_stop += round(gene_eps)
+    new_gene3_start += round(gene_eps)
+    new_gene3_stop += round(gene_eps)
+
+    #If gene size is larger or smaller than genome, redo
+    while new_gene3_stop > 450 or new_gene1_start < 26:
+        gene_eps = np.random.normal(mu, gene_sigma)
+        new_gene1_start = gene1_start_list[-1] + round(gene_eps)
+        new_gene1_stop = gene1_stop_list[-1] + round(gene_eps)
+        new_gene2_start = gene2_start_list[-1] + round(gene_eps)
+        new_gene2_stop = gene2_stop_list[-1] + round(gene_eps)
+        new_gene3_start = gene3_start_list[-1] + round(gene_eps)
+        new_gene3_stop = gene3_stop_list[-1] + round(gene_eps)
+
+    gene1_start_list.append(new_gene1_start)
+    gene2_start_list.append(new_gene2_start)
+    gene3_start_list.append(new_gene3_start)
+    gene1_stop_list.append(new_gene1_stop)
+    gene2_stop_list.append(new_gene2_stop)
+    gene3_stop_list.append(new_gene3_stop)
+
+    #Adding second promoter
+    if new_prom1_start > 0:
+        promoter1_start = new_prom1_start
+        promoter1_stop = new_prom1_stop
+    eps = np.random.normal(mu, sigma)
+    prom1_eps = np.random.normal(mu, prom_sigma)
+    f_new = f_old * (1.0 + eps)
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Adjusting promoter site
+    new_prom1_start += round(prom1_eps)
+    new_prom1_stop += round(prom1_eps)
+    prom1_start_list.append(new_prom1_start)
+    prom1_stop_list.append(new_prom1_stop)
+    while new_prom1_start < new_gene2_start - 15 or new_prom1_start < new_gene1_stop - 7:
+        prom1_eps = np.random.normal(mu, prom_sigma)
+        new_prom1_start += round(prom1_eps)
+        new_prom1_stop += round(prom1_eps)
+        if new_prom1_start >= prom2_start_list[-1] and new_prom1_start <= prom2_stop_list[-1]:
+            prom1_eps = np.random.normal(mu, prom_sigma)
+            new_prom1_start += round(prom1_eps)
+            new_prom1_stop += round(prom1_eps)
+        if (new_prom1_start > rnase1_start_list[-1] and new_prom1_start < rnase1_stop_list[-1]) or (new_prom1_stop > rnase1_start_list[-1] and new_prom1_stop < rnase1_stop_list[-1]):
+            prom1_eps = np.random.normal(mu, prom_sigma)
+            new_prom1_start += round(prom1_eps)
+            new_prom1_stop += round(prom1_eps)
+        if (new_prom1_start > rnase2_start_list[-1] and new_prom1_start < rnase2_stop_list[-1]) or (new_prom1_stop > rnase2_start_list[-1] and new_prom1_stop < rnase2_stop_list[-1]):
+            prom1_eps = np.random.normal(mu, prom_sigma)
+            new_prom1_start += round(prom1_eps)
+            new_prom1_stop += round(prom1_eps)
+        if (new_prom1_start > rnase3_start_list[-1] and new_prom1_start < rnase3_stop_list[-1]) or (new_prom1_stop > rnase3_start_list[-1] and new_prom1_stop < rnase3_stop_list[-1]):
+            prom1_eps = np.random.normal(mu, prom_sigma)
+            new_prom1_start += round(prom1_eps)
+            new_prom1_stop += round(prom1_eps)
+        if (new_prom1_start > term1_start_list[-1] and new_prom1_start < term1_stop_list[-1]) or (new_prom1_stop > term1_start_list[-1] and new_prom1_stop < term1_stop_list[-1]):
+            prom1_eps = np.random.normal(mu, prom_sigma)
+            new_prom1_start += round(prom1_eps)
+            new_prom1_stop += round(prom1_eps)
+        if (new_prom1_start > term2_start_list[-1] and new_prom1_start < term2_stop_list[-1]) or (new_prom1_stop > term2_start_list[-1] and new_prom1_stop < term2_stop_list[-1]):
+            prom1_eps = np.random.normal(mu, prom_sigma)
+            new_prom1_start += round(prom1_eps)
+            new_prom1_stop += round(prom1_eps)
+        if (new_prom1_start > term3_start_list[-1] and new_prom1_start < term3_stop_list[-1]) or (new_prom1_stop > term3_start_list[-1] and new_prom1_stop < term3_stop_list[-1]):
+            prom1_eps = np.random.normal(mu, prom_sigma)
+            new_prom1_start += round(prom1_eps)
+            new_prom1_stop += round(prom1_eps)
+    promoter1_start = new_prom1_start
+    promoter1_stop = new_prom1_stop
+
+    #Adding third promoter
+    if new_prom2_start > 0:
+        promoter2_start = new_prom2_start
+        promoter2_stop = new_prom2_stop
+    eps = np.random.normal(mu, sigma)
+    prom2_eps = np.random.normal(mu, prom_sigma)
+    f_new = f_old * (1.0 + eps)
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Adjusting promoter site
+    new_prom2_start += round(prom2_eps)
+    new_prom2_stop += round(prom2_eps)
+    prom2_start_list.append(new_prom2_start)
+    prom2_stop_list.append(new_prom2_stop)
+    while new_prom2_start < new_gene3_start - 15 or new_prom2_start < new_gene2_stop - 7:
+        prom2_eps = np.random.normal(mu, prom_sigma)
+        new_prom2_start += round(prom2_eps)
+        new_prom2_stop += round(prom2_eps)
+        if new_prom2_start >= prom1_start_list[-1] and new_prom2_start <= prom1_stop_list[-1]:
+            prom2_eps = np.random.normal(mu, prom_sigma)
+            new_prom2_start += round(prom2_eps)
+            new_prom2_stop += round(prom2_eps)
+        if (new_prom2_start > rnase1_start_list[-1] and new_prom2_start < rnase1_stop_list[-1]) or (new_prom2_stop > rnase1_start_list[-1] and new_prom2_stop < rnase1_stop_list[-1]):
+            prom2_eps = np.random.normal(mu, prom_sigma)
+            new_prom2_start += round(prom2_eps)
+            new_prom2_stop += round(prom2_eps)
+        if (new_prom2_start > rnase2_start_list[-1] and new_prom2_start < rnase2_stop_list[-1]) or (new_prom2_stop > rnase2_start_list[-1] and new_prom2_stop < rnase2_stop_list[-1]):
+            prom2_eps = np.random.normal(mu, prom_sigma)
+            new_prom2_start += round(prom2_eps)
+            new_prom2_stop += round(prom2_eps)
+        if (new_prom2_start > rnase3_start_list[-1] and new_prom2_start < rnase3_stop_list[-1]) or (new_prom2_stop > rnase2_start_list[-1] and new_prom2_stop < rnase3_stop_list[-1]):
+            prom2_eps = np.random.normal(mu, prom_sigma)
+            new_prom2_start += round(prom2_eps)
+            new_prom2_stop += round(prom2_eps)
+        if (new_prom2_start > term1_start_list[-1] and new_prom2_start < term1_stop_list[-1]) or (new_prom2_stop > term1_start_list[-1] and new_prom2_stop < term1_stop_list[-1]):
+            prom2_eps = np.random.normal(mu, prom_sigma)
+            new_prom2_start += round(prom1_eps)
+            new_prom2_stop += round(prom1_eps)
+        if (new_prom2_start > term2_start_list[-1] and new_prom2_start < term2_stop_list[-1]) or (new_prom2_stop > term2_start_list[-1] and new_prom2_stop < term2_stop_list[-1]):
+            prom2_eps = np.random.normal(mu, prom_sigma)
+            new_prom2_start += round(prom1_eps)
+            new_prom2_stop += round(prom1_eps)
+        if (new_prom2_start > term3_start_list[-1] and new_prom2_start < term3_stop_list[-1]) or (new_prom2_stop > term3_start_list[-1] and new_prom2_stop < term3_stop_list[-1]):
+            prom2_eps = np.random.normal(mu, prom_sigma)
+            new_prom2_start += round(prom1_eps)
+            new_prom2_stop += round(prom1_eps)
+    promoter2_start = new_prom2_start
+    promoter2_stop = new_prom2_stop
+
+    #Removing second promoter
+    promoter1_start = 0
+    promoter1_stop = 0
+    eps = np.random.normal(mu, sigma)
+    prom1_eps = np.random.normal(mu, prom_sigma)
+    f_new = f_old * (1.0 + eps)
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Removing second promoter
+    promoter1_start = 0
+    promoter1_stop = 0
+    eps = np.random.normal(mu, sigma)
+    prom1_eps = np.random.normal(mu, prom_sigma)
+    f_new = f_old * (1.0 + eps)
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Rnase after initial promoter
+    eps = np.random.normal(mu, sigma)
+    f_new = f_old * (1.0 + eps)
+    new_rnase1_start = 10
+    new_rnase1_stop = 20
+    if (new_rnase1_start > 1 and new_rnase2_start < 10) or (new_rnase2_stop > 1 and new_rnase2_stop < 10):
+        new_rnase1_start = 0
+        new_rnase1_stop = 0
+    if (new_rnase1_start > term1_start_list[-1] and new_rnase1_start < term1_stop_list[-1]) or (new_rnase1_stop > term1_start_list[-1] and new_rnase1_stop < term1_stop_list[-1]):
+        new_rnase1_start = 0
+        new_rnase1_stop = 0
+    if (new_rnase1_start > term2_start_list[-1] and new_rnase1_start < term2_stop_list[-1]) or (new_rnase1_stop > term2_start_list[-1] and new_rnase1_stop < term2_stop_list[-1]):
+        new_rnase1_start = 0
+        new_rnase1_stop = 0
+    if (new_rnase1_start > term3_start_list[-1] and new_rnase1_start < term3_stop_list[-1]) or (new_rnase1_stop > term3_start_list[-1] and new_rnase1_stop < term3_stop_list[-1]):
+        new_rnase1_start = 0
+        new_rnase1_stop = 0
+    rnase1_start_list.append(new_rnase1_start)
+    rnase1_stop_list.append(new_rnase1_stop)
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Rnase after second promoter
+    eps = np.random.normal(mu, sigma)
+    f_new = f_old * (1.0 + eps)
+    if promoter1_start > 0:
+        new_rnase2_start = promoter1_stop
+        new_rnase2_stop = new_rnase2_start + 10
+    if (new_rnase2_start > prom1_start_list[-1] and new_rnase2_start < prom1_stop_list[-1]) or (new_rnase2_stop > prom1_start_list[-1] and new_rnase2_stop < prom1_stop_list[-1]):
+        new_rnase2_start = 0
+        new_rnase2_stop = 0
+    if (new_rnase2_start > prom2_start_list[-1] and new_rnase2_start < prom2_stop_list[-1]) or (new_rnase2_stop > prom2_start_list[-1] and new_rnase2_stop < prom2_stop_list[-1]):
+        new_rnase2_start = 0
+        new_rnase2_stop = 0
+    if (new_rnase2_start > term1_start_list[-1] and new_rnase2_start < term1_stop_list[-1]) or (new_rnase2_stop > term1_start_list[-1] and new_rnase2_stop < term1_stop_list[-1]):
+        new_rnase2_start = 0
+        new_rnase2_stop = 0
+    if (new_rnase2_start > term2_start_list[-1] and new_rnase2_start < term2_stop_list[-1]) or (new_rnase2_stop > term2_start_list[-1] and new_rnase2_stop < term2_stop_list[-1]):
+        new_rnase2_start = 0
+        new_rnase2_stop = 0
+    if (new_rnase2_start > term3_start_list[-1] and new_rnase2_start < term3_stop_list[-1]) or (new_rnase2_stop > term3_start_list[-1] and new_rnase2_stop < term3_stop_list[-1]):
+        new_rnase2_start = 0
+        new_rnase2_stop = 0
+    else:
+        rnase2_start_list.append(new_rnase2_start)
+        rnase2_stop_list.append(new_rnase2_stop)
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
+
+    #Rnase after third promoter
+    eps = np.random.normal(mu, sigma)
+    f_new = f_old * (1.0 + eps)
+    if promoter2_start > 0:
+        new_rnase3_start = promoter2_stop
+        new_rnase3_stop = new_rnase3_start + 10
+    if (new_rnase3_start > prom1_start_list[-1] and new_rnase3_start < prom1_stop_list[-1]) or (new_rnase3_stop > prom1_start_list[-1] and new_rnase3_stop < prom1_stop_list[-1]):
+        new_rnase3_start = 0
+        new_rnase3_stop = 0
+    if (new_rnase3_start > prom2_start_list[-1] and new_rnase3_start < prom2_stop_list[-1]) or (new_rnase3_stop > prom2_start_list[-1] and new_rnase3_stop < prom2_stop_list[-1]):
+        new_rnase3_start = 0
+        new_rnase3_stop = 0
+    if (new_rnase3_start > term1_start_list[-1] and new_rnase3_start < term1_stop_list[-1]) or (new_rnase3_stop > term1_start_list[-1] and new_rnase3_stop < term1_stop_list[-1]):
+        new_rnase3_start = 0
+        new_rnase3_stop = 0
+    if (new_rnase3_start > term2_start_list[-1] and new_rnase3_start < term2_stop_list[-1]) or (new_rnase3_stop > term2_start_list[-1] and new_rnase3_stop < term2_stop_list[-1]):
+        new_rnase3_start = 0
+        new_rnase3_stop = 0
+    if (new_rnase3_start > term3_start_list[-1] and new_rnase3_start < term3_stop_list[-1]) or (new_rnase3_stop > term3_start_list[-1] and new_rnase3_stop < term3_stop_list[-1]):
+        new_rnase3_start = 0
+        new_rnase3_stop = 0
+    else:
+        rnase3_start_list.append(new_rnase3_start)
+        rnase3_stop_list.append(new_rnase3_stop)
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                                new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                                promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                                new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                                new_term3_stop)
+        if test > 0:
+            f_old = test
+        if sos_list[-1] == 0:
+            break
+
+
+
+    #Add the first terminator
+    if new_gene2_start - new_gene1_stop > 16:
+        new_term1_start = new_gene1_stop + 1
+        new_term1_stop = new_gene1_stop + 2
+    if (new_term1_start > prom1_start_list[-1] and new_term1_start < prom1_stop_list[-1]) or (new_term1_stop > prom1_start_list[-1] and new_term1_stop < prom1_stop_list[-1]):
+        new_term1_start = 0
+        new_term1_stop = 0
+    if (new_term1_start > prom2_start_list[-1] and new_term1_start < prom2_stop_list[-1]) or (new_term1_stop > prom2_start_list[-1] and new_term1_stop < prom2_stop_list[-1]):
+        new_term1_start = 0
+        new_term1_stop = 0
+    if (new_term1_start > rnase1_start_list[-1] and new_term1_start < rnase1_stop_list[-1]) or (new_term1_stop > rnase1_start_list[-1] and new_term1_stop < rnase1_stop_list[-1]):
+        new_term1_start = 0
+        new_term1_stop = 0
+    if (new_term1_start > rnase2_start_list[-1] and new_term1_start < rnase2_stop_list[-1]) or (new_term1_stop > rnase2_start_list[-1] and new_term1_stop < rnase2_stop_list[-1]):
+        new_term1_start = 0
+        new_term1_stop = 0
+    if (new_term1_start > rnase3_start_list[-1] and new_term1_start < rnase3_stop_list[-1]) or (new_term1_stop > rnase2_start_list[-1] and new_term1_stop < rnase3_stop_list[-1]):
+        new_term1_start = 0
+        new_term1_stop = 0
+    term1_start_list.append(new_term1_start)
+    term1_stop_list.append(new_term1_stop)
+    eps = np.random.normal(mu, sigma)
+    f_new = f_old * (1.0 + eps)
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Add the second terminator
+    if new_gene3_start - new_gene2_stop > 16:
+        new_term2_start = new_gene2_stop + 1
+        new_term2_stop = new_gene2_stop + 2
+    if (new_term2_start > prom1_start_list[-1] and new_term2_start < prom1_stop_list[-1]) or (new_term2_stop > prom1_start_list[-1] and new_term2_stop < prom1_stop_list[-1]):
+        new_term2_start = 0
+        new_term2_stop = 0
+    if (new_term2_start > prom2_start_list[-1] and new_term2_start < prom2_stop_list[-1]) or (new_term2_stop > prom2_start_list[-1] and new_term2_stop < prom2_stop_list[-1]):
+        new_term2_start = 0
+        new_term2_stop = 0
+    if (new_term2_start > rnase1_start_list[-1] and new_term2_start < rnase1_stop_list[-1]) or (new_term2_stop > rnase1_start_list[-1] and new_term2_stop < rnase1_stop_list[-1]):
+        new_term2_start = 0
+        new_term2_stop = 0
+    if (new_term2_start > rnase2_start_list[-1] and new_term2_start < rnase2_stop_list[-1]) or (new_term2_stop > rnase2_start_list[-1] and new_term2_stop < rnase2_stop_list[-1]):
+        new_term2_start = 0
+        new_term2_stop = 0
+    if (new_term2_start > rnase3_start_list[-1] and new_term2_start < rnase3_stop_list[-1]) or (new_term2_stop > rnase2_start_list[-1] and new_term2_stop < rnase3_stop_list[-1]):
+        new_term2_start = 0
+        new_term2_stop = 0
+    term2_start_list.append(new_term2_start)
+    term2_stop_list.append(new_term2_stop)
+    eps = np.random.normal(mu, sigma)
+    f_new = f_old * (1.0 + eps)
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Add the third terminator
+    if new_gene3_stop < 449:
+        new_term3_start = new_gene3_stop + 1
+        new_term3_stop = new_gene3_stop + 2
+    if (new_term3_start > prom1_start_list[-1] and new_term3_start < prom1_stop_list[-1]) or (new_term3_stop > prom1_start_list[-1] and new_term3_stop < prom1_stop_list[-1]):
+        new_term3_start = 0
+        new_term3_stop = 0
+    if (new_term3_start > prom2_start_list[-1] and new_term3_start < prom2_stop_list[-1]) or (new_term3_stop > prom2_start_list[-1] and new_term3_stop < prom2_stop_list[-1]):
+        new_term3_start = 0
+        new_term3_stop = 0
+    if (new_term3_start > rnase1_start_list[-1] and new_term3_start < rnase1_stop_list[-1]) or (new_term3_stop > rnase1_start_list[-1] and new_term3_stop < rnase1_stop_list[-1]):
+        new_term3_start = 0
+        new_term3_stop = 0
+    if (new_term3_start > rnase2_start_list[-1] and new_term3_start < rnase2_stop_list[-1]) or (new_term3_stop > rnase2_start_list[-1] and new_term3_stop < rnase2_stop_list[-1]):
+        new_term3_start = 0
+        new_term3_stop = 0
+    if (new_term3_start > rnase3_start_list[-1] and new_term3_start < rnase3_stop_list[-1]) or (new_term3_stop > rnase2_start_list[-1] and new_term3_stop < rnase2_stop_list[-1]):
+        new_term3_start = 0
+        new_term3_stop = 0
+    term3_start_list.append(new_term3_start)
+    term3_stop_list.append(new_term3_stop)
+    eps = np.random.normal(mu, sigma)
+    f_new = f_old * (1.0 + eps)
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Remove the first terminator
+    new_term1_start = 0
+    new_term1_stop = 0
+    eps = np.random.normal(mu, sigma)
+    f_new = f_old * (1.0 + eps)
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Remove the second terminator
+    new_term2_start = 0
+    new_term2_stop = 0
+    eps = np.random.normal(mu, sigma)
+    f_new = f_old * (1.0 + eps)
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Remove the third terminator
+    new_term3_start = 0
+    new_term3_stop = 0
+    eps = np.random.normal(mu, sigma)
+    f_new = f_old * (1.0 + eps)
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Remove rnase after initial promoter
+    eps = np.random.normal(mu, sigma)
+    f_new = f_old * (1.0 + eps)
+    new_rnase1_start = 0
+    new_rnase1_stop = 0
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Remove rnase after second promoter
+    eps = np.random.normal(mu, sigma)
+    f_new = f_old * (1.0 + eps)
+    new_rnase2_start = 0
+    new_rnase2_stop = 0
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break
+
+    #Remove rnase after third promoter
+    eps = np.random.normal(mu, sigma)
+    f_new = f_old * (1.0 + eps)
+    new_rnase3_start = 0
+    new_rnase3_stop = 0
+    test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+                            new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
+                            promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
+                            new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
+                            new_term3_stop)
+    if test > 0:
+        f_old = test
+    if sos_list[-1] == 0:
+        break'''
 
 #Class containing genome for simulation with new polymerase strength
 class three_genome:
