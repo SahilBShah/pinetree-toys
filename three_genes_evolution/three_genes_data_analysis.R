@@ -21,3 +21,10 @@ data3 <- filter(data3, species == c("proteinX", "proteinY", "proteinZ"))
 
 line_plot <- ggplot(data3, aes(fill=species, color=species, x=time, y=transcript)) + geom_point(stat="identity") + geom_line(stat="identity")
 line_plot
+
+setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/14000_test_run")
+data4 <- read.table("all_sos_data.tsv", header=TRUE)
+data4$index <- seq.int(nrow(data4))
+
+sos_line_plot <- ggplot(data4, aes(x=index, y=sos)) + geom_point(stat="identity") + geom_line(stat="identity")
+sos_line_plot
