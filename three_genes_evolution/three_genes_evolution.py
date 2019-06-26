@@ -6,42 +6,14 @@ import string
 import filecmp
 import math
 
-#Need to add in the following functions: change numeric values according to biological range, check to see if we need to restrict movement after gene sequence has been rearranged, figure out what to do with the global variables
+#Need to add in the following functions: change numeric values according to biological range, expand genome when adding in components
 
 def main():
 
-    global term_list
-    global all_term_list
-    global poly_list
-    global sos_list
-    global all_sos_list
-    global all_poly_list
     global Ne
     global gen
     global mu
     global sigma
-    global gene1_start_list
-    global gene2_start_list
-    global gene3_start_list
-    global gene1_stop_list
-    global gene2_stop_list
-    global gene3_stop_list
-    global term1_start_list
-    global term1_stop_list
-    global term2_start_list
-    global term2_stop_list
-    global term3_start_list
-    global term3_stop_list
-    global rnase1_start_list
-    global rnase1_stop_list
-    global rnase2_start_list
-    global rnase2_stop_list
-    global rnase3_start_list
-    global rnase3_stop_list
-    global prom1_start_list
-    global prom1_stop_list
-    global prom2_start_list
-    global prom2_stop_list
     sos_list = [60000]
     poly_list = []
     all_poly_list = []
@@ -86,10 +58,6 @@ def main():
     new_gene2_stop = 280
     new_gene3_start = 319
     new_gene3_stop = 449
-    '''promoter1_start = 0
-    promoter1_stop = 0
-    promoter2_start = 0
-    promoter2_stop = 0'''
     new_prom1_start = 0
     new_prom1_stop = 0
     new_prom2_start = 0
@@ -148,14 +116,16 @@ def main():
     possibilities = ["alter polymerase strength", "alter terminator efficiency", "add promoter", "remove promoter", "add rnase",
                       "remove rnase", "add terminator", "remove terminator"]
 
-    while i < 10000:
+    while i < 1000:
 
         mutation = random.choice(possibilities)
 
         if mutation == "alter polymerase strength":
-            new_pol_strength = alter_poly_strength(new_pol_strength)
+            new_pol_strength = alter_poly_strength(new_pol_strength, poly_list, all_poly_list)
+
         if mutation == "alter terminator efficiency":
-            new_term_efficiency = alter_term_efficiency(new_term_efficiency)
+            new_term_efficiency = alter_term_efficiency(new_term_efficiency, term_list, all_term_list)
+
         if mutation == "alter gene length":
             gene_length = alter_gene_length(new_gene1_start, new_gene1_stop, new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop)
             new_gene1_start = gene1_start_list[-1]
@@ -164,44 +134,93 @@ def main():
             new_gene2_stop = gene2_stop_list[-1]
             new_gene3_start = gene3_start_list[-1]
             new_gene3_stop = gene3_stop_list[-1]
+
         if mutation == "add promoter":
-            new_promoter = add_promoter(new_prom1_start, new_prom1_stop, new_prom2_start, new_prom2_stop)
+            new_promoter = add_promoter(new_prom1_start, new_prom1_stop, new_prom2_start, new_prom2_stop, prom1_start_list, prom1_stop_list,
+                                         prom2_start_list, prom2_stop_list, term1_start_list, term1_stop_list, term2_start_list, term2_stop_list,
+                                         rnase1_start_list, rnase1_stop_list, rnase2_start_list, rnase2_stop_list)
+            prom1_start_list = new_promoter[0]
+            prom1_stop_list = new_promoter[1]
+            prom2_start_list = new_promoter[2]
+            prom2_stop_list = new_promoter[3]
             new_prom1_start = prom1_start_list[-1]
             new_prom1_stop = prom1_stop_list[-1]
             new_prom2_start = prom2_start_list[-1]
             new_prom2_stop = prom2_stop_list[-1]
+
         if mutation == "remove promoter":
-            old_promoter = remove_promoter(new_prom1_start, new_prom1_stop, new_prom2_start, new_prom2_stop)
+            old_promoter = remove_promoter(new_prom1_start, new_prom1_stop, new_prom2_start, new_prom2_stop, prom1_start_list, prom1_stop_list,
+                                            prom2_start_list, prom2_stop_list)
+            prom1_start_list = old_promoter[0]
+            prom1_stop_list = old_promoter[1]
+            prom2_start_list = old_promoter[2]
+            prom2_stop_list = old_promoter[3]
             new_prom1_start = prom1_start_list[-1]
             new_prom1_stop = prom1_stop_list[-1]
             new_prom2_start = prom2_start_list[-1]
             new_prom2_stop = prom2_stop_list[-1]
+
         if mutation == "add rnase":
-            new_rnase = add_ranse(new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start, new_rnase3_stop)
+            new_rnase = add_ranse(new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start, new_rnase3_stop,
+                                    prom1_start_list, prom1_stop_list, prom2_start_list, prom2_stop_list, term1_start_list, term1_stop_list,
+                                    term2_start_list, term2_stop_list, rnase1_start_list, rnase1_stop_list, rnase2_start_list, rnase2_stop_list,
+                                    rnase3_start_list, rnase3_stop_list)
+            rnase1_start_list = new_rnase[0]
+            rnase1_stop_list = new_rnase[1]
+            rnase2_start_list = new_rnase[2]
+            rnase2_stop_list = new_rnase[3]
+            rnase3_start_list = new_rnase[4]
+            rnase3_stop_list = new_rnase[5]
             new_rnase1_start = rnase1_start_list[-1]
             new_rnase1_stop = rnase1_stop_list[-1]
             new_rnase2_start = rnase2_start_list[-1]
             new_rnase2_stop = rnase2_stop_list[-1]
             new_rnase3_start = rnase3_start_list[-1]
             new_rnase3_stop = rnase3_stop_list[-1]
+
         if mutation == "remove rnase":
-            old_rnase = remove_rnase(new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start, new_rnase3_stop)
+            old_rnase = remove_rnase(new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start, new_rnase3_stop,
+                                        rnase1_start_list, rnase1_stop_list, rnase2_start_list, rnase2_stop_list, rnase3_start_list, rnase3_stop_list)
+            rnase1_start_list = old_rnase[0]
+            rnase1_stop_list = old_rnase[1]
+            rnase2_start_list = old_rnase[2]
+            rnase2_stop_list = old_rnase[3]
+            rnase3_start_list = old_rnase[4]
+            rnase3_stop_list = old_rnase[5]
             new_rnase1_start = rnase1_start_list[-1]
             new_rnase1_stop = rnase1_stop_list[-1]
             new_rnase2_start = rnase2_start_list[-1]
             new_rnase2_stop = rnase2_stop_list[-1]
             new_rnase3_start = rnase3_start_list[-1]
             new_rnase3_stop = rnase3_stop_list[-1]
+
         if mutation == "add terminator":
-            new_terminator = add_terminator(new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start, new_term3_stop)
+            new_terminator = add_terminator(new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start, new_term3_stop,
+                                                prom1_start_list, prom1_stop_list, prom2_start_list, prom2_stop_list, term1_start_list, term1_stop_list,
+                                                term2_start_list, term2_stop_list, term3_start_list, term3_stop_list, rnase1_start_list, rnase1_stop_list,
+                                                rnase2_start_list, rnase2_stop_list)
+            term1_start_list = new_terminator[0]
+            term1_stop_list = new_terminator[1]
+            term2_start_list = new_terminator[2]
+            term2_stop_list = new_terminator[3]
+            term3_start_list = new_terminator[4]
+            term3_stop_list = new_terminator[5]
             new_term1_start = term1_start_list[-1]
             new_term1_stop = term1_stop_list[-1]
             new_term2_start = term2_start_list[-1]
             new_term2_stop = term2_stop_list[-1]
             new_term3_start = term3_start_list[-1]
             new_term3_stop = term3_stop_list[-1]
+
         if mutation == "remove terminator":
-            old_terminator = remove_terminator(new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start, new_term3_stop)
+            old_terminator = remove_terminator(new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start, new_term3_stop,
+                                                    term1_start_list, term1_stop_list, term2_start_list, term2_stop_list, term3_start_list, term3_stop_list)
+            term1_start_list = old_terminator[0]
+            term1_stop_list = old_terminator[1]
+            term2_start_list = old_terminator[2]
+            term2_stop_list = old_terminator[3]
+            term3_start_list = old_terminator[4]
+            term3_stop_list = old_terminator[5]
             new_term1_start = term1_start_list[-1]
             new_term1_stop = term1_stop_list[-1]
             new_term2_start = term2_start_list[-1]
@@ -215,7 +234,7 @@ def main():
                                     new_gene2_stop, new_gene3_start, new_gene3_stop, new_prom1_start, new_prom1_stop, new_prom2_start,
                                     new_prom2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
                                     new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                    new_term3_stop)
+                                    new_term3_stop, all_sos_list, sos_list, poly_list, term_list)
         if test > 0:
             f_old = test
         '''if sos_list[-1] == 0:
@@ -264,9 +283,9 @@ def main():
     print("Promoter 1 starts at: ", 1, "and stops at: ", 10)
     print("Added Promoter 2 starts at: ", prom1_start_list[-1], "and stops at: ", prom1_stop_list[-1])
     print("Added Promoter 3 starts at: ", prom2_start_list[-1], "and stops at: ", prom2_stop_list[-1])
-    print("Rnase site 1 starts at: ", rnase3_start_list[-1], "and stops at: ", rnase3_stop_list[-1])
+    print("Rnase site 1 starts at: ", rnase1_start_list[-1], "and stops at: ", rnase1_stop_list[-1])
     print("Rnase site 2 starts at: ", rnase2_start_list[-1], "and stops at: ", rnase2_stop_list[-1])
-    print("Rnase site 3 starts at: ", rnase1_start_list[-1], "and stops at: ", rnase1_stop_list[-1])
+    print("Rnase site 3 starts at: ", rnase3_start_list[-1], "and stops at: ", rnase3_stop_list[-1])
     print("Generations = ", gen)
 
 #Calculates the fitness of the new mutation
@@ -336,7 +355,7 @@ def accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new
                     new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
                     promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
                     new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                    new_term3_stop):
+                    new_term3_stop, all_sos_list, sos_list, poly_list, term_list):
 
     global gen
     probability = 0
@@ -400,7 +419,7 @@ def accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new
     else:
         return 0
 
-def alter_poly_strength(pol_strength):
+def alter_poly_strength(pol_strength, poly_list, all_poly_list):
 
     poly_sigma = 1e10
     #Determining polymerase strength
@@ -411,15 +430,13 @@ def alter_poly_strength(pol_strength):
         poly_eps = np.random.normal(mu, poly_sigma)
         pol_strength = poly_list[-1] + poly_eps
         if pol_strength in all_poly_list:
-            poly_eps = np.random.normal(mu, poly_sigma)
             pol_strength = poly_list[-1] + poly_eps
     if pol_strength in all_poly_list:
-        poly_eps = np.random.normal(mu, poly_sigma)
         pol_strength = poly_list[-1] + poly_eps
     all_poly_list.append(pol_strength)
     return pol_strength
 
-def alter_term_efficiency(term_efficiency):
+def alter_term_efficiency(term_efficiency, term_list, all_term_list):
 
     term_sigma = 1.0
     #Determining terminator polymerase efficiency rate
@@ -430,10 +447,8 @@ def alter_term_efficiency(term_efficiency):
         term_eps = np.random.normal(mu, term_sigma)
         term_efficiency = term_list[-1] + term_eps
         if term_efficiency in all_term_list:
-            term_eps = np.random.normal(mu, term_sigma)
             term_efficiency = term_list[-1] + term_eps
     if term_efficiency in all_term_list:
-        term_eps = np.random.normal(mu, term_sigma)
         term_efficiency = term_list[-1] + term_eps
     all_term_list.append(term_efficiency)
     return term_efficiency
@@ -533,7 +548,9 @@ def alter_gene_length(gene1_start, gene1_stop, gene2_start, gene2_stop, gene3_st
         gene3_stop_list.append(gene3_stop)
 
 
-def add_promoter(prom1_start, prom1_stop, prom2_start, prom2_stop):
+def add_promoter(prom1_start, prom1_stop, prom2_start, prom2_stop, prom1_start_list, prom1_stop_list, prom2_start_list,
+                    prom2_stop_list, term1_start_list, term1_stop_list, term2_start_list, term2_stop_list, rnase1_start_list,
+                    rnase1_stop_list, rnase2_start_list, rnase2_stop_list):
 
     region1a_start = 122
     region1a_stop = 132
@@ -595,8 +612,11 @@ def add_promoter(prom1_start, prom1_stop, prom2_start, prom2_stop):
                 prom2_stop = prom2_start + 9
         prom2_start_list.append(prom2_start)
         prom2_stop_list.append(prom2_stop)
+    prom_list = [prom1_start_list, prom1_stop_list, prom2_start_list, prom2_stop_list]
+    return prom_list
 
-def remove_promoter(promoter1_start, promoter1_stop, promoter2_start, promoter2_stop):
+def remove_promoter(promoter1_start, promoter1_stop, promoter2_start, promoter2_stop, prom1_start_list, prom1_stop_list,
+                    prom2_start_list, prom2_stop_list):
 
     promoter_possibilities = ["promoter1", "promoter2"]
     chosen_promoter = random.choice(promoter_possibilities)
@@ -614,8 +634,13 @@ def remove_promoter(promoter1_start, promoter1_stop, promoter2_start, promoter2_
         promoter2_stop = 0
         prom2_start_list.append(promoter2_start)
         prom2_stop_list.append(promoter2_stop)
+    prom_list = [prom1_start_list, prom1_stop_list, prom2_start_list, prom2_stop_list]
+    return prom_list
 
-def add_ranse(rnase1_start, rnase1_stop, rnase2_start, rnase2_stop, rnase3_start, rnase3_stop):
+def add_ranse(rnase1_start, rnase1_stop, rnase2_start, rnase2_stop, rnase3_start, rnase3_stop, prom1_start_list,
+                prom1_stop_list, prom2_start_list, prom2_stop_list, term1_start_list, term1_stop_list, term2_start_list,
+                term2_stop_list, rnase1_start_list, rnase1_stop_list, rnase2_start_list, rnase2_stop_list, rnase3_start_list,
+                rnase3_stop_list):
 
     region1a_start = 122
     region1a_stop = 132
@@ -637,6 +662,13 @@ def add_ranse(rnase1_start, rnase1_stop, rnase2_start, rnase2_stop, rnase3_start
 
     if chosen_rnase == "rnase1":
         #Adds rnase after first promoter
+        rnase1_start = random.randint(region_start, 15)
+        rnase1_stop = rnase1_start + 10
+        rnase1_start_list.append(rnase1_start)
+        rnase1_stop_list.append(rnase1_stop)
+
+    if chosen_rnase == "rnase2":
+        #Adds rnase after second promoter
         if (prom1_start_list[-1] >= region1a_start) and (prom1_start_list[-1] <= region1a_stop):
             rnase_slots.remove('A')
         if (term1_start_list[-1] >= region1a_start) and (term1_start_list[-1] <= region1a_stop):
@@ -648,25 +680,25 @@ def add_ranse(rnase1_start, rnase1_stop, rnase2_start, rnase2_stop, rnase3_start
         if (term1_start_list[-1] >= region1c_start) and (term1_start_list[-1] <= region1c_start):
             rnase_slots.remove('C')
         if rnase_slots == []:
-            rnase1_start = rnase1_start_list[-1]
-            rnase1_stop = rnase1_stop_list[-1]
+            rnase2_start = rnase2_start_list[-1]
+            rnase2_stop = rnase2_stop_list[-1]
         else:
             available_slot = random.choice(rnase_slots)
             if available_slot == 'A':
-                rnase1_start = random.randint(region1a_start, 122)
-                rnase1_stop = rnase1_start + 10
+                rnase2_start = random.randint(region1a_start, 122)
+                rnase2_stop = rnase2_start + 10
             if available_slot == 'B':
-                rnase1_start = random.randint(region1b_start, 133)
-                rnase1_stop = rnase1_start + 10
+                rnase2_start = random.randint(region1b_start, 133)
+                rnase2_stop = rnase2_start + 10
             if available_slot == 'C':
-                rnase1_start = random.randint(region1c_start, 149)
-                rnase1_stop = rnase1_start + 10
-        rnase1_start_list.append(rnase1_start)
-        rnase1_stop_list.append(rnase1_stop)
+                rnase2_start = random.randint(region1c_start, 149)
+                rnase2_stop = rnase2_start + 10
+        rnase2_start_list.append(rnase2_start)
+        rnase2_stop_list.append(rnase2_stop)
 
 
-    if chosen_rnase == "rnase2":
-        #Adds rnase after second promoter
+    if chosen_rnase == "rnase3":
+        #Adds rnase after third promoter
         if (prom2_start_list[-1] >= region2a_start) and (prom2_start_list[-1] <= region2a_stop):
             rnase_slots.remove('A')
         if (term2_start_list[-1] >= region2a_start) and (term2_start_list[-1] <= region2a_stop):
@@ -678,30 +710,26 @@ def add_ranse(rnase1_start, rnase1_stop, rnase2_start, rnase2_stop, rnase3_start
         if (term2_start_list[-1] >= region2c_start) and (term2_start_list[-1] <= region2c_start):
             rnase_slots.remove('C')
         if rnase_slots == []:
-            rnase2_start = rnase2_start_list[-1]
-            rnase2_stop = rnase2_stop_list[-1]
+            rnase3_start = rnase3_start_list[-1]
+            rnase3_stop = rnase3_stop_list[-1]
         else:
             available_slot = random.choice(rnase_slots)
             if available_slot == 'A':
-                rnase2_start = random.randint(region2a_start, 281)
-                rnase2_stop = rnase1_start + 10
+                rnase3_start = random.randint(region2a_start, 281)
+                rnase3_stop = rnase3_start + 10
             if available_slot == 'B':
-                rnase2_start = random.randint(region2b_start, 292)
-                rnase2_stop = rnase1_start + 10
+                rnase3_start = random.randint(region2b_start, 292)
+                rnase3_stop = rnase3_start + 10
             if available_slot == 'C':
-                rnase2_start = random.randint(region2c_start, 308)
-                rnase2_stop = rnase1_start + 10
-        rnase2_start_list.append(rnase2_start)
-        rnase2_stop_list.append(rnase2_stop)
-
-    if chosen_rnase == "rnase3":
-        #Adds rnase after third promoter
-        rnase3_start = random.randint(region_start, (region_stop-10))
-        rnase3_stop = rnase3_start + 10
+                rnase3_start = random.randint(region2c_start, 308)
+                rnase3_stop = rnase3_start + 10
         rnase3_start_list.append(rnase3_start)
         rnase3_stop_list.append(rnase3_stop)
+    rnase_list = [rnase1_start_list, rnase1_stop_list, rnase2_start_list, rnase2_stop_list, rnase3_start_list, rnase3_stop_list]
+    return rnase_list
 
-def remove_rnase(rnase1_start, rnase1_stop, rnase2_start, rnase2_stop, rnase3_start, rnase3_stop):
+def remove_rnase(rnase1_start, rnase1_stop, rnase2_start, rnase2_stop, rnase3_start, rnase3_stop, rnase1_start_list,
+                    rnase1_stop_list, rnase2_start_list, rnase2_stop_list, rnase3_start_list, rnase3_stop_list):
 
     rnase_possibilities = ["rnase1", "rnase2", "rnase3"]
     chosen_rnase = random.choice(rnase_possibilities)
@@ -726,8 +754,12 @@ def remove_rnase(rnase1_start, rnase1_stop, rnase2_start, rnase2_stop, rnase3_st
         rnase3_stop = 0
         rnase3_start_list.append(rnase3_start)
         rnase3_stop_list.append(rnase3_stop)
+    rnase_list = [rnase1_start_list, rnase1_stop_list, rnase2_start_list, rnase2_stop_list, rnase3_start_list, rnase3_stop_list]
+    return rnase_list
 
-def add_terminator(term1_start, term1_stop, term2_start, term2_stop, term3_start, term3_stop):
+def add_terminator(term1_start, term1_stop, term2_start, term2_stop, term3_start, term3_stop, prom1_start_list, prom1_stop_list,
+                    prom2_start_list, prom2_stop_list, term1_start_list, term1_stop_list, term2_start_list, term2_stop_list,
+                    term3_start_list, term3_stop_list, rnase1_start_list, rnase1_stop_list, rnase2_start_list, rnase2_stop_list):
 
     region1a_start = 122
     region1a_stop = 132
@@ -810,8 +842,11 @@ def add_terminator(term1_start, term1_stop, term2_start, term2_stop, term3_start
         term3_stop = 450
         term3_start_list.append(term3_start)
         term3_stop_list.append(term3_stop)
+    term_list = [term1_start_list, term1_stop_list, term2_start_list, term2_stop_list, term3_start_list, term3_stop_list]
+    return term_list
 
-def remove_terminator(term1_start, term1_stop, term2_start, term2_stop, term3_start, term3_stop):
+def remove_terminator(term1_start, term1_stop, term2_start, term2_stop, term3_start, term3_stop, term1_start_list,
+                        term1_stop_list, term2_start_list, term2_stop_list, term3_start_list, term3_stop_list):
 
     terminator_possibilities = ["terminator1", "terminator2", "terminator3"]
     chosen_terminator = random.choice(terminator_possibilities)
@@ -836,6 +871,8 @@ def remove_terminator(term1_start, term1_stop, term2_start, term2_stop, term3_st
         term3_stop = 0
         term3_start_list.append(term3_start)
         term3_stop_list.append(term3_stop)
+    term_list = [term1_start_list, term1_stop_list, term2_start_list, term2_stop_list, term3_start_list, term3_stop_list]
+    return term_list
 
 #Class containing genome for simulation with new polymerase strength
 class three_genome:

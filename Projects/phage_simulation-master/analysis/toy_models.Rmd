@@ -16,7 +16,7 @@ cbPalette <- c("#CC79A7", "#56B4E9", "#E69F00", "#F0E442", "#0072B2", "#D55E00",
 ## Toy model with RNAse site and promoters
 
 ```{r}
-data <- read_tsv("../data/simulation/three_genes/three_genes_rnase.tsv") %>%
+data <- read_tsv("../data/simulation/three_genes/three_genes_nornase_speed_50.tsv") %>%
   mutate(species = str_replace_all(species, "protein", ""))
 data %>% filter(species %in% c("X", "Y", "Z")) -> data
 line_plot <- ggplot(data, aes(x = time, y = transcript, color=species)) + 
@@ -39,7 +39,7 @@ final_plot <- plot_grid(line_plot, bar_plot_early, bar_plot_late, ncol=3,
 
 final_plot
 
-save_plot("./figures/three_genes_rnase_prom.pdf", final_plot, ncol = 2, base_width = 5.5)
+save_plot("./figures/three_genes_nornase_speed_50.pdf", final_plot, ncol = 2, base_width = 5.5)
 ```
 
 ## Toy model with just promoters
