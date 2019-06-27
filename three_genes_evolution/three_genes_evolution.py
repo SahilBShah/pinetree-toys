@@ -5,6 +5,7 @@ import numpy as np
 import string
 import filecmp
 import math
+import os
 
 #Need to add in the following functions: change numeric values according to biological range, expand genome when adding in components
 
@@ -16,32 +17,50 @@ def main():
     global sigma
     sos_list = [60000]
     poly_list = []
+    poly1_list = []
+    poly2_list = []
     all_poly_list = []
     all_sos_list = []
-    term_list = []
+    term1_efficiency_list = []
+    term2_efficiency_list = []
+    term3_efficiency_list = []
     all_term_list = []
+    ribo1_strength_list = []
+    ribo2_strength_list = []
+    ribo3_strength_list = []
     gene1_start_list = []
     gene2_start_list = []
     gene3_start_list = []
     gene1_stop_list = []
     gene2_stop_list = []
     gene3_stop_list = []
+    gene1_list = []
+    gene2_list = []
+    gene3_list = []
     term1_start_list = [0]
     term1_stop_list = [0]
     term2_start_list = [0]
     term2_stop_list = [0]
     term3_start_list = [0]
     term3_stop_list = [0]
+    term1_list = []
+    term2_list = []
+    term3_list = []
     rnase1_start_list = [0]
     rnase1_stop_list = [0]
     rnase2_start_list = [0]
     rnase2_stop_list = [0]
     rnase3_start_list = [0]
     rnase3_stop_list = [0]
+    rnase1_list = []
+    rnase2_list = []
+    rnase3_list = []
     prom1_start_list = [0]
     prom1_stop_list = [0]
     prom2_start_list = [0]
     prom2_stop_list = [0]
+    prom1_list = []
+    prom2_list = []
     f_old = 1.0
     mu = 0.0
     sigma = 1.0
@@ -80,12 +99,18 @@ def main():
     df = edit_target_file(df)
 
     #Evolution program
-    new_pol_strength = random.randint(1e10, 5e10)
-    new_term_efficiency = random.uniform(0.0, 1.0)
+    new_pol_strength = random.randint(0, 3e10)
+    new_pol1_strength = random.randint(0, 3e10)
+    new_pol2_strength = random.randint(0, 3e10)
+    new_term1_efficiency = random.uniform(0.0, 1.0)
+    new_term2_efficiency = random.uniform(0.0, 1.0)
+    new_term3_efficiency = random.uniform(0.0, 1.0)
     poly_list.append(new_pol_strength)
-    all_poly_list.append(new_pol_strength)
-    term_list.append(new_term_efficiency)
-    all_term_list.append(new_term_efficiency)
+    poly1_list.append(new_pol1_strength)
+    poly2_list.append(new_pol2_strength)
+    term1_efficiency_list.append(new_term1_efficiency)
+    term2_efficiency_list.append(new_term2_efficiency)
+    term3_efficiency_list.append(new_term3_efficiency)
 
     #Determining gene sizes
     '''new_gene1_start = random.randint(25, 449)
@@ -110,21 +135,19 @@ def main():
     gene2_start_list.append(new_gene2_start)
     gene3_start_list.append(new_gene3_start)'''
 
-    '''possibilities = ["alter polymerase strength", "alter terminator efficiency", "alter gene length", "add promoter", "remove promoter", "add rnase",
+    '''possibilities = ["alter polymerase 1 strength", "alter terminator efficiency", "alter gene length", "add promoter", "remove promoter", "add rnase",
                         "remove rnase", "add terminator", "remove terminator"]'''
 
-    possibilities = ["alter polymerase strength", "alter terminator efficiency", "add promoter", "remove promoter", "add rnase",
+    possibilities = ["alter polymerase 1 strength", "add promoter", "remove promoter", "add rnase",
                       "remove rnase", "add terminator", "remove terminator"]
 
-    while i < 1000:
+    while i < 100:
 
         mutation = random.choice(possibilities)
 
-        if mutation == "alter polymerase strength":
-            new_pol_strength = alter_poly_strength(new_pol_strength, poly_list, all_poly_list)
-
-        if mutation == "alter terminator efficiency":
-            new_term_efficiency = alter_term_efficiency(new_term_efficiency, term_list, all_term_list)
+        if mutation == "alter polymerase 1 strength":
+            promoter = "promoter"
+            new_pol_strength = alter_poly_strength(poly_list, poly1_list, poly2_list, promoter)
 
         if mutation == "alter gene length":
             gene_length = alter_gene_length(new_gene1_start, new_gene1_stop, new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop)
@@ -138,7 +161,7 @@ def main():
         if mutation == "add promoter":
             new_promoter = add_promoter(new_prom1_start, new_prom1_stop, new_prom2_start, new_prom2_stop, prom1_start_list, prom1_stop_list,
                                          prom2_start_list, prom2_stop_list, term1_start_list, term1_stop_list, term2_start_list, term2_stop_list,
-                                         rnase1_start_list, rnase1_stop_list, rnase2_start_list, rnase2_stop_list)
+                                         rnase1_start_list, rnase1_stop_list, rnase2_start_list, rnase2_stop_list, poly_list, poly1_list, poly2_list)
             prom1_start_list = new_promoter[0]
             prom1_stop_list = new_promoter[1]
             prom2_start_list = new_promoter[2]
@@ -147,6 +170,8 @@ def main():
             new_prom1_stop = prom1_stop_list[-1]
             new_prom2_start = prom2_start_list[-1]
             new_prom2_stop = prom2_stop_list[-1]
+            new_pol1_strength = new_promoter[-2]
+            new_pol2_strength = new_promoter[-1]
 
         if mutation == "remove promoter":
             old_promoter = remove_promoter(new_prom1_start, new_prom1_stop, new_prom2_start, new_prom2_stop, prom1_start_list, prom1_stop_list,
@@ -198,7 +223,7 @@ def main():
             new_terminator = add_terminator(new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start, new_term3_stop,
                                                 prom1_start_list, prom1_stop_list, prom2_start_list, prom2_stop_list, term1_start_list, term1_stop_list,
                                                 term2_start_list, term2_stop_list, term3_start_list, term3_stop_list, rnase1_start_list, rnase1_stop_list,
-                                                rnase2_start_list, rnase2_stop_list)
+                                                rnase2_start_list, rnase2_stop_list, term1_efficiency_list, term2_efficiency_list, term3_efficiency_list)
             term1_start_list = new_terminator[0]
             term1_stop_list = new_terminator[1]
             term2_start_list = new_terminator[2]
@@ -211,6 +236,9 @@ def main():
             new_term2_stop = term2_stop_list[-1]
             new_term3_start = term3_start_list[-1]
             new_term3_stop = term3_stop_list[-1]
+            new_term1_efficiency = new_terminator[-3]
+            new_term2_efficiency = new_terminator[-2]
+            new_term3_efficiency = new_terminator[-1]
 
         if mutation == "remove terminator":
             old_terminator = remove_terminator(new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start, new_term3_stop,
@@ -230,21 +258,137 @@ def main():
 
         eps = np.random.normal(mu, sigma)
         f_new = f_old * (1.0 + eps)
-        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+        test = accept_mutation(df, f_old, f_new, new_pol_strength, new_pol1_strength, new_pol2_strength, new_term1_efficiency, new_term2_efficiency,
+                                    new_term3_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
                                     new_gene2_stop, new_gene3_start, new_gene3_stop, new_prom1_start, new_prom1_stop, new_prom2_start,
                                     new_prom2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
                                     new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                                    new_term3_stop, all_sos_list, sos_list, poly_list, term_list)
+                                    new_term3_stop, all_sos_list, sos_list, poly_list, poly1_list, poly2_list, term1_efficiency_list, term2_efficiency_list,
+                                    term3_efficiency_list, gene1_list, gene2_list, gene3_list, prom1_list, prom2_list, term1_list, term2_list, term3_list,
+                                    rnase1_list, rnase2_list, rnase3_list)
         if test > 0:
             f_old = test
         '''if sos_list[-1] == 0:
             break'''
+
+        if i == 0:
+            output_file = "gen_0_data.tsv"
+            three_genome.recreated_genome(new_pol_strength, new_pol1_strength, new_pol2_strength, new_term1_efficiency,
+                                            new_term2_efficiency, new_term3_efficiency, new_gene1_start, new_gene1_stop,
+                                            new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
+                                            new_prom1_start, new_prom1_stop, new_prom2_start, new_prom2_stop,
+                                            new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
+                                            new_rnase3_start, new_rnase3_stop, new_term1_start, new_term1_stop,
+                                            new_term2_start, new_term2_stop, new_term3_start, new_term3_stop, output_file)
+            #Gets genome coordinates at the 1st iteration
+            iteration = "0"
+            gene1_list.append(new_gene1_start)
+            gene1_list.append(new_gene1_stop)
+            gene2_list.append(new_gene2_start)
+            gene2_list.append(new_gene2_stop)
+            gene3_list.append(new_gene3_start)
+            gene3_list.append(new_gene3_stop)
+            prom1_list.append(new_prom1_start)
+            prom1_list.append(new_prom1_stop)
+            prom2_list.append(new_prom2_start)
+            prom2_list.append(new_prom2_stop)
+            term1_list.append(new_term1_start)
+            term1_list.append(new_term1_stop)
+            term2_list.append(new_term2_start)
+            term2_list.append(new_term2_stop)
+            term3_list.append(new_term3_start)
+            term3_list.append(new_term3_stop)
+            rnase1_list.append(new_rnase1_start)
+            rnase1_list.append(new_rnase1_stop)
+            rnase2_list.append(new_rnase2_start)
+            rnase2_list.append(new_rnase2_stop)
+            rnase3_list.append(new_rnase3_start)
+            rnase3_list.append(new_rnase3_stop)
+            get_coordinates(gene1_list, gene2_list, gene3_list, prom1_list, prom2_list, term1_list, term2_list, term3_list,
+                                rnase1_list, rnase2_list, rnase3_list, iteration)
+
+        if i == 500:
+            output_file = "gen_500_data.tsv"
+            three_genome.recreated_genome(new_pol_strength, new_pol1_strength, new_pol2_strength, new_term1_efficiency,
+                                            new_term2_efficiency, new_term3_efficiency, new_gene1_start, new_gene1_stop,
+                                            new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
+                                            new_prom1_start, new_prom1_stop, new_prom2_start, new_prom2_stop,
+                                            new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
+                                            new_rnase3_start, new_rnase3_stop, new_term1_start, new_term1_stop,
+                                            new_term2_start, new_term2_stop, new_term3_start, new_term3_stop, output_file)
+            #Gets genome coordinates at the 500th iteration
+            iteration = "500"
+            gene1_list.append(new_gene1_start)
+            gene1_list.append(new_gene1_stop)
+            gene2_list.append(new_gene2_start)
+            gene2_list.append(new_gene2_stop)
+            gene3_list.append(new_gene3_start)
+            gene3_list.append(new_gene3_stop)
+            prom1_list.append(new_prom1_start)
+            prom1_list.append(new_prom1_stop)
+            prom2_list.append(new_prom2_start)
+            prom2_list.append(new_prom2_stop)
+            term1_list.append(new_term1_start)
+            term1_list.append(new_term1_stop)
+            term2_list.append(new_term2_start)
+            term2_list.append(new_term2_stop)
+            term3_list.append(new_term3_start)
+            term3_list.append(new_term3_stop)
+            rnase1_list.append(new_rnase1_start)
+            rnase1_list.append(new_rnase1_stop)
+            rnase2_list.append(new_rnase2_start)
+            rnase2_list.append(new_rnase2_stop)
+            rnase3_list.append(new_rnase3_start)
+            rnase3_list.append(new_rnase3_stop)
+            get_coordinates(gene1_list, gene2_list, gene3_list, prom1_list, prom2_list, term1_list, term2_list, term3_list,
+                                rnase1_list, rnase2_list, rnase3_list, iteration)
+
+        if i == 999:
+            output_file = "gen_1000_data.tsv"
+            three_genome.recreated_genome(new_pol_strength, new_pol1_strength, new_pol2_strength, new_term1_efficiency,
+                                            new_term2_efficiency, new_term3_efficiency, new_gene1_start, new_gene1_stop,
+                                            new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
+                                            new_prom1_start, new_prom1_stop, new_prom2_start, new_prom2_stop,
+                                            new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
+                                            new_rnase3_start, new_rnase3_stop, new_term1_start, new_term1_stop,
+                                            new_term2_start, new_term2_stop, new_term3_start, new_term3_stop, output_file)
+            #Gets genome coordinates at the 1000th iteration
+            iteration = "999"
+            gene1_list.append(new_gene1_start)
+            gene1_list.append(new_gene1_stop)
+            gene2_list.append(new_gene2_start)
+            gene2_list.append(new_gene2_stop)
+            gene3_list.append(new_gene3_start)
+            gene3_list.append(new_gene3_stop)
+            prom1_list.append(new_prom1_start)
+            prom1_list.append(new_prom1_stop)
+            prom2_list.append(new_prom2_start)
+            prom2_list.append(new_prom2_stop)
+            term1_list.append(new_term1_start)
+            term1_list.append(new_term1_stop)
+            term2_list.append(new_term2_start)
+            term2_list.append(new_term2_stop)
+            term3_list.append(new_term3_start)
+            term3_list.append(new_term3_stop)
+            rnase1_list.append(new_rnase1_start)
+            rnase1_list.append(new_rnase1_stop)
+            rnase2_list.append(new_rnase2_start)
+            rnase2_list.append(new_rnase2_stop)
+            rnase3_list.append(new_rnase3_start)
+            rnase3_list.append(new_rnase3_stop)
+            get_coordinates(gene1_list, gene2_list, gene3_list, prom1_list, prom2_list, term1_list, term2_list, term3_list,
+                                rnase1_list, rnase2_list, rnase3_list, iteration)
 
         i+=1
         print("i = ", i)
 
 
     #Exported tsv files
+    '''iteration+=1
+    sim_number = iteration
+    path = "~/pinetree-toys/three_genes_evolution/" + string(sim_number)
+    if not os.path.exists(path):
+        os.makedirs(path)'''
     all_sos_dataframe = pandas.DataFrame(all_sos_list, columns=["Sum_of_Squares"])
     export_csv = all_sos_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/all_sos_data.tsv", index=False)
     sos_dataframe = pandas.DataFrame(sos_list, columns=["Sum_of_Squares"])
@@ -253,10 +397,18 @@ def main():
     export_csv = all_poly_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/all_poly_data.tsv", index=False)
     poly_dataframe = pandas.DataFrame(poly_list, columns=["Polymerase_Rate"])
     export_csv = poly_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/poly_data.tsv", index=False)
+    poly1_dataframe = pandas.DataFrame(poly1_list, columns=["Polymerase_Rate"])
+    export_csv = poly1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/poly1_data.tsv", index=False)
+    poly2_dataframe = pandas.DataFrame(poly2_list, columns=["Polymerase_Rate"])
+    export_csv = poly2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/poly2_data.tsv", index=False)
     all_term_dataframe = pandas.DataFrame(all_term_list, columns=["Terminator Efficiency Rate"])
     export_csv = all_term_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/all_term_data.tsv", index=False)
-    term_dataframe = pandas.DataFrame(term_list, columns=["Terminator_Efficiency_Rate"])
-    export_csv = term_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/term_data.tsv", index=False)
+    term1_efficiency_dataframe = pandas.DataFrame(term1_efficiency_list, columns=["Terminator1_Efficiency_Rate"])
+    export_csv = term1_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/term1_efficiency_data.tsv", index=False)
+    term2_efficiency_dataframe = pandas.DataFrame(term2_efficiency_list, columns=["Terminator2_Efficiency_Rate"])
+    export_csv = term2_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/term2_efficiency_data.tsv", index=False)
+    term3_efficiency_dataframe = pandas.DataFrame(term3_efficiency_list, columns=["Terminator3_Efficiency_Rate"])
+    export_csv = term3_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/term3_efficiency_data.tsv", index=False)
     gene1_start_dataframe = pandas.DataFrame(gene1_start_list, columns=["Gene_Start"])
     export_csv = gene1_start_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gene1_start_data.tsv", index=False)
     gene2_start_dataframe = pandas.DataFrame(gene2_start_list, columns=["Gene_Start"])
@@ -269,8 +421,12 @@ def main():
     export_csv = gene2_stop_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gene2_stop_data.tsv", index=False)
     gene3_stop_dataframe = pandas.DataFrame(gene3_stop_list, columns=["Gene_Stop"])
     export_csv = gene3_stop_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gene3_stop_data.tsv", index=False)
-    print("Final Polymerase Rate: ", poly_list[-1])
-    print("Final Terminator Efficiency Rate: ", term_list[-1])
+    print("Final Polymerase 1 Rate: ", poly_list[-1])
+    print("Final Polymerase 2 Rate: ", poly1_list[-1])
+    print("Final Polymerase 3 Rate: ", poly2_list[-1])
+    print("Final Terminator 1 Efficiency Rate: ", term1_efficiency_list[-1])
+    print("Final Terminator 2 Efficiency Rate: ", term2_efficiency_list[-1])
+    print("Final Terminator 3 Efficiency Rate: ", term3_efficiency_list[-1])
     print("Gene 1 starts at: ", new_gene1_start, "and stops at: ", new_gene1_stop)
     print("Gene 1 Ribosome Binding Site starts at: ", new_gene1_start-15, "and stops at: ", new_gene1_start)
     print("Gene 1 terminator starts at: ", new_term1_start, "and stops at: ", new_term1_stop)
@@ -351,23 +507,29 @@ def edit_target_file(target_file):
     target_file = target_file[target_file.species != 'p2']
     return target_file
 
-def accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
+def accept_mutation(df, f_old, f_new, new_pol_strength, new_pol1_strength, new_pol2_strength, new_term1_efficiency, new_term2_efficiency,
+                    new_term3_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
                     new_gene2_stop, new_gene3_start, new_gene3_stop, promoter1_start, promoter1_stop, promoter2_start,
                     promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
                     new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
-                    new_term3_stop, all_sos_list, sos_list, poly_list, term_list):
+                    new_term3_stop, all_sos_list, sos_list, poly_list, poly1_list, poly2_list, term1_efficiency_list, term2_efficiency_list,
+                    term3_efficiency_list, gene1_list, gene2_list, gene3_list, prom1_list, prom2_list, term1_list, term2_list, term3_list
+                    rnase1_list, rnase2_list, rnase3_list):
 
     global gen
     probability = 0
+    output_file = "three_genes_replicated.tsv"
+    iteration = "best"
 
     if f_new > f_old:
         #Accepting mutation
-        three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
+        three_genome.recreated_genome(new_pol_strength, new_pol1_strength, new_pol2_strength, new_term1_efficiency,
+                                        new_term2_efficiency, new_term3_efficiency, new_gene1_start, new_gene1_stop,
                                         new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
                                         promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
                                         new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
                                         new_rnase3_start, new_rnase3_stop, new_term1_start, new_term1_stop,
-                                        new_term2_start, new_term2_stop, new_term3_start, new_term3_stop)
+                                        new_term2_start, new_term2_stop, new_term3_start, new_term3_stop, output_file)
         #Taking in new file and removing unnecessary rows and columns
         nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
         nf = edit_new_file(nf)
@@ -376,14 +538,44 @@ def accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new
         #Accepts mutation only if sum of squares value decreases
         if sos <= sos_list[-1]:
             poly_list.append(new_pol_strength)
-            term_list.append(new_term_efficiency)
+            poly1_list.append(new_pol1_strength)
+            poly2_list.append(new_pol2_strength)
+            term1_efficiency_list.append(new_term1_efficiency)
+            term2_efficiency_list.append(new_term2_efficiency)
+            term3_efficiency_list.append(new_term3_efficiency)
             sos_list.append(sos)
-            three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
+            three_genome.best_recreated_genome(new_pol_strength, new_pol1_strength, new_pol2_strength, new_term1_efficiency,
+                                                new_term2_efficiency, new_term3_efficiency, new_gene1_start, new_gene1_stop,
                                                 new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
                                                 promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
                                                 new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
                                                 new_rnase3_start, new_rnase3_stop, new_term1_start, new_term1_stop,
                                                 new_term2_start, new_term2_stop, new_term3_start, new_term3_stop)
+            #Gets genome coordinates
+            gene1_list.append(new_gene1_start)
+            gene1_list.append(new_gene1_stop)
+            gene2_list.append(new_gene2_start)
+            gene2_list.append(new_gene2_stop)
+            gene3_list.append(new_gene3_start)
+            gene3_list.append(new_gene3_stop)
+            prom1_list.append(new_prom1_start)
+            prom1_list.append(new_prom1_stop)
+            prom2_list.append(new_prom2_start)
+            prom2_list.append(new_prom2_stop)
+            term1_list.append(new_term1_start)
+            term1_list.append(new_term1_stop)
+            term2_list.append(new_term2_start)
+            term2_list.append(new_term2_stop)
+            term3_list.append(new_term3_start)
+            term3_list.append(new_term3_stop)
+            rnase1_list.append(new_rnase1_start)
+            rnase1_list.append(new_rnase1_stop)
+            rnase2_list.append(new_rnase2_start)
+            rnase2_list.append(new_rnase2_stop)
+            rnase3_list.append(new_rnase3_start)
+            rnase3_list.append(new_rnase3_stop)
+            get_coordinates(gene1_list, gene2_list, gene3_list, prom1_list, prom2_list, term1_list, term2_list, term3_list,
+                                rnase1_list, rnase2_list, rnase3_list, iteration)
             gen+=1
     else:
         #Calculate fitness of new mutation
@@ -391,12 +583,13 @@ def accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new
         f_old = probability
         if probability > random.random():
             #Accepting mutation
-            three_genome.recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
+            three_genome.recreated_genome(new_pol_strength, new_pol1_strength, new_pol2_strength, new_term1_efficiency,
+                                            new_term2_efficiency, new_term3_efficiency, new_gene1_start, new_gene1_stop,
                                             new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
                                             promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
                                             new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
                                             new_rnase3_start, new_rnase3_stop, new_term1_start, new_term1_stop,
-                                            new_term2_start, new_term2_stop, new_term3_start, new_term3_stop)
+                                            new_term2_start, new_term2_stop, new_term3_start, new_term3_stop, output_file)
             #Taking in new file and removing unnecessary rows and columns
             nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
             nf = edit_new_file(nf)
@@ -405,55 +598,119 @@ def accept_mutation(df, f_old, f_new, new_pol_strength, new_term_efficiency, new
             #Accepts mutation only if sum of squares value decreases
             if sos <= sos_list[-1]:
                 poly_list.append(new_pol_strength)
-                term_list.append(new_term_efficiency)
+                poly1_list.append(new_pol1_strength)
+                poly2_list.append(new_pol2_strength)
+                term1_efficiency_list.append(new_term1_efficiency)
+                term2_efficiency_list.append(new_term2_efficiency)
+                term3_efficiency_list.append(new_term3_efficiency)
                 sos_list.append(sos)
-                three_genome.best_recreated_genome(new_pol_strength, new_term_efficiency, new_gene1_start, new_gene1_stop,
+                three_genome.best_recreated_genome(new_pol_strength, new_pol1_strength, new_pol2_strength, new_term1_efficiency,
+                                                    new_term2_efficiency, new_term3_efficiency, new_gene1_start, new_gene1_stop,
                                                     new_gene2_start, new_gene2_stop, new_gene3_start, new_gene3_stop,
                                                     promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
                                                     new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
                                                     new_rnase3_start, new_rnase3_stop, new_term1_start, new_term1_stop,
                                                     new_term2_start, new_term2_stop, new_term3_start, new_term3_stop)
+                #Gets genome coordinates
+                gene1_list.append(new_gene1_start)
+                gene1_list.append(new_gene1_stop)
+                gene2_list.append(new_gene2_start)
+                gene2_list.append(new_gene2_stop)
+                gene3_list.append(new_gene3_start)
+                gene3_list.append(new_gene3_stop)
+                prom1_list.append(new_prom1_start)
+                prom1_list.append(new_prom1_stop)
+                prom2_list.append(new_prom2_start)
+                prom2_list.append(new_prom2_stop)
+                term1_list.append(new_term1_start)
+                term1_list.append(new_term1_stop)
+                term2_list.append(new_term2_start)
+                term2_list.append(new_term2_stop)
+                term3_list.append(new_term3_start)
+                term3_list.append(new_term3_stop)
+                rnase1_list.append(new_rnase1_start)
+                rnase1_list.append(new_rnase1_stop)
+                rnase2_list.append(new_rnase2_start)
+                rnase2_list.append(new_rnase2_stop)
+                rnase3_list.append(new_rnase3_start)
+                rnase3_list.append(new_rnase3_stop)
+                get_coordinates(gene1_list, gene2_list, gene3_list, prom1_list, prom2_list, term1_list, term2_list, term3_list,
+                                    rnase1_list, rnase2_list, rnase3_list, iteration)
                 gen+=1
     if probability > 0:
         return probability
     else:
         return 0
 
-def alter_poly_strength(pol_strength, poly_list, all_poly_list):
+def alter_poly_strength(poly_list, poly1_list, poly2_list, promoter):
 
     poly_sigma = 1e10
-    #Determining polymerase strength
-    poly_eps = np.random.normal(mu, poly_sigma)
-    #Determines new polymerase strength to reduce sum of squares value
-    pol_strength = poly_list[-1] + poly_eps
-    while pol_strength < 0:
-        poly_eps = np.random.normal(mu, poly_sigma)
-        pol_strength = poly_list[-1] + poly_eps
-        if pol_strength in all_poly_list:
-            pol_strength = poly_list[-1] + poly_eps
-    if pol_strength in all_poly_list:
-        pol_strength = poly_list[-1] + poly_eps
-    all_poly_list.append(pol_strength)
-    return pol_strength
 
-def alter_term_efficiency(term_efficiency, term_list, all_term_list):
+    if promoter == "promoter":
+        #Determining polymerase strength
+        poly_eps = np.random.normal(mu, poly_sigma)
+        #Determines new polymerase strength to reduce sum of squares value
+        pol_strength = poly_list[-1] + poly_eps
+        while pol_strength < 0:
+            poly_eps = np.random.normal(mu, poly_sigma)
+            pol_strength = poly_list[-1] + poly_eps
+        return pol_strength
+
+    if promoter == "promoter1":
+        #Determining polymerase strength
+        poly_eps = np.random.normal(mu, poly_sigma)
+        #Determines new polymerase strength to reduce sum of squares value
+        pol1_strength = poly1_list[-1] + poly_eps
+        while pol1_strength < 0:
+            poly_eps = np.random.normal(mu, poly_sigma)
+            pol1_strength = poly1_list[-1] + poly_eps
+        return pol1_strength
+
+    if promoter == "promoter2":
+        #Determining polymerase strength
+        poly_eps = np.random.normal(mu, poly_sigma)
+        #Determines new polymerase strength to reduce sum of squares value
+        pol2_strength = poly2_list[-1] + poly_eps
+        while pol2_strength < 0:
+            poly_eps = np.random.normal(mu, poly_sigma)
+            pol2_strength = poly2_list[-1] + poly_eps
+        return pol2_strength
+
+def alter_term_efficiency(term1_efficiency_list, term2_efficiency_list, term3_efficiency_list, terminator):
 
     term_sigma = 1.0
-    #Determining terminator polymerase efficiency rate
-    term_eps = np.random.normal(mu, term_sigma)
-    #Determines new terminator efficiency value to reduce sum of squares value
-    term_efficiency = term_list[-1] + term_eps
-    while term_efficiency < 0 or term_efficiency > 1:
-        term_eps = np.random.normal(mu, term_sigma)
-        term_efficiency = term_list[-1] + term_eps
-        if term_efficiency in all_term_list:
-            term_efficiency = term_list[-1] + term_eps
-    if term_efficiency in all_term_list:
-        term_efficiency = term_list[-1] + term_eps
-    all_term_list.append(term_efficiency)
-    return term_efficiency
 
-def alter_gene_length(gene1_start, gene1_stop, gene2_start, gene2_stop, gene3_start, gene3_stop):
+    if terminator == "terminator1":
+        #Determining terminator polymerase efficiency rate
+        term_eps = np.random.normal(mu, term_sigma)
+        #Determines new terminator efficiency value to reduce sum of squares value
+        term1_efficiency = term1_efficiency_list[-1] + term_eps
+        while term1_efficiency < 0 or term1_efficiency > 1:
+            term_eps = np.random.normal(mu, term_sigma)
+            term1_efficiency = term1_efficiency_list[-1] + term_eps
+        return term1_efficiency
+
+    if terminator == "terminator2":
+        #Determining terminator polymerase efficiency rate
+        term_eps = np.random.normal(mu, term_sigma)
+        #Determines new terminator efficiency value to reduce sum of squares value
+        term2_efficiency = term2_efficiency_list[-1] + term_eps
+        while term2_efficiency < 0 or term2_efficiency > 1:
+            term_eps = np.random.normal(mu, term_sigma)
+            term2_efficiency = term2_efficiency_list[-1] + term_eps
+        return term2_efficiency
+
+    if terminator == "terminator3":
+        #Determining terminator polymerase efficiency rate
+        term_eps = np.random.normal(mu, term_sigma)
+        #Determines new terminator efficiency value to reduce sum of squares value
+        term3_efficiency = term3_efficiency_list[-1] + term_eps
+        while term3_efficiency < 0 or term3_efficiency > 1:
+            term_eps = np.random.normal(mu, term_sigma)
+            term3_efficiency = term3_efficiency_list[-1] + term_eps
+        return term3_efficiency
+
+'''def alter_gene_length(gene1_start, gene1_stop, gene2_start, gene2_stop, gene3_start, gene3_stop):
 
     gene_sigma = 10.0
     gene_possibilities = ["gene1", "gene2", "gene3"]
@@ -545,12 +802,12 @@ def alter_gene_length(gene1_start, gene1_stop, gene2_start, gene2_stop, gene3_st
             #alter_gene_length3(new_gene3_start, new_gene3_stop)
 
         gene3_start_list.append(gene3_start)
-        gene3_stop_list.append(gene3_stop)
+        gene3_stop_list.append(gene3_stop)'''
 
 
 def add_promoter(prom1_start, prom1_stop, prom2_start, prom2_stop, prom1_start_list, prom1_stop_list, prom2_start_list,
                     prom2_stop_list, term1_start_list, term1_stop_list, term2_start_list, term2_stop_list, rnase1_start_list,
-                    rnase1_stop_list, rnase2_start_list, rnase2_stop_list):
+                    rnase1_stop_list, rnase2_start_list, rnase2_stop_list, poly_list, poly1_list, poly2_list):
 
     region1a_start = 122
     region1a_stop = 132
@@ -560,12 +817,15 @@ def add_promoter(prom1_start, prom1_stop, prom2_start, prom2_stop, prom1_start_l
     region2a_stop = 291
     region2b_start = 292
     region2b_stop = 302
+    pol1_strength = poly1_list[-1]
+    pol2_strength = poly2_list[-1]
     promoter_possibilities = ["promoter1", "promoter2"]
     chosen_promoter = random.choice(promoter_possibilities)
     promoter1_slots = ['A', 'B']
     promoter2_slots = ['A', 'B']
 
     if chosen_promoter == "promoter1":
+        promoter = "promoter1"
         #Adding in a promoter between genes 1 and 2
         if (rnase1_start_list[-1] >= region1a_start) and (rnase1_start_list[-1] <= region1a_stop):
             promoter1_slots.remove('A')
@@ -589,7 +849,10 @@ def add_promoter(prom1_start, prom1_stop, prom2_start, prom2_stop, prom1_start_l
         prom1_start_list.append(prom1_start)
         prom1_stop_list.append(prom1_stop)
 
+        pol1_strength = alter_poly_strength(poly_list, poly1_list, poly2_list, promoter)
+
     if chosen_promoter == "promoter2":
+        promoter = "promoter2"
         #Adding promoter between genes 2 and 3
         if (rnase2_start_list[-1] >= region2a_start) and (rnase2_start_list[-1] <= region2a_stop):
             promoter2_slots.remove('A')
@@ -612,7 +875,10 @@ def add_promoter(prom1_start, prom1_stop, prom2_start, prom2_stop, prom1_start_l
                 prom2_stop = prom2_start + 9
         prom2_start_list.append(prom2_start)
         prom2_stop_list.append(prom2_stop)
-    prom_list = [prom1_start_list, prom1_stop_list, prom2_start_list, prom2_stop_list]
+
+        pol2_strength = alter_poly_strength(poly_list, poly1_list, poly2_list, promoter)
+
+    prom_list = [prom1_start_list, prom1_stop_list, prom2_start_list, prom2_stop_list, pol1_strength, pol2_strength]
     return prom_list
 
 def remove_promoter(promoter1_start, promoter1_stop, promoter2_start, promoter2_stop, prom1_start_list, prom1_stop_list,
@@ -759,7 +1025,8 @@ def remove_rnase(rnase1_start, rnase1_stop, rnase2_start, rnase2_stop, rnase3_st
 
 def add_terminator(term1_start, term1_stop, term2_start, term2_stop, term3_start, term3_stop, prom1_start_list, prom1_stop_list,
                     prom2_start_list, prom2_stop_list, term1_start_list, term1_stop_list, term2_start_list, term2_stop_list,
-                    term3_start_list, term3_stop_list, rnase1_start_list, rnase1_stop_list, rnase2_start_list, rnase2_stop_list):
+                    term3_start_list, term3_stop_list, rnase1_start_list, rnase1_stop_list, rnase2_start_list, rnase2_stop_list,
+                    term1_efficiency_list, term2_efficiency_list, term3_efficiency_list):
 
     region1a_start = 122
     region1a_stop = 132
@@ -773,11 +1040,15 @@ def add_terminator(term1_start, term1_stop, term2_start, term2_stop, term3_start
     region2b_stop = 302
     region2c_start = 303
     region2c_stop = 318
+    term1_efficiency = term1_efficiency_list[-1]
+    term2_efficiency = term2_efficiency_list[-1]
+    term3_efficiency = term3_efficiency_list[-1]
     terminator_possibilities = ["terminator1", "terminator2", "terminator3"]
     chosen_terminator = random.choice(terminator_possibilities)
     terminator_slots = ['A', 'B', 'C']
 
     if chosen_terminator == "terminator1":
+        terminator = "terminator1"
         #Adds terminator after first gene
         if (prom1_start_list[-1] >= region1a_start) and (prom1_start_list[-1] <= region1a_stop):
             terminator_slots.remove('A')
@@ -806,8 +1077,11 @@ def add_terminator(term1_start, term1_stop, term2_start, term2_stop, term3_start
         term1_start_list.append(term1_start)
         term1_stop_list.append(term1_stop)
 
+        term1_efficiency = alter_term_efficiency(term1_efficiency_list, term2_efficiency_list, term3_efficiency_list, terminator)
+
 
     if chosen_terminator == "terminator2":
+        terminator = "terminator2"
         #Adds terminator after second gene
         if (prom2_start_list[-1] >= region2a_start) and (prom2_start_list[-1] <= region2a_stop):
             terminator_slots.remove('A')
@@ -836,13 +1110,19 @@ def add_terminator(term1_start, term1_stop, term2_start, term2_stop, term3_start
         term2_start_list.append(term2_start)
         term2_stop_list.append(term2_stop)
 
+        term2_efficiency = alter_term_efficiency(term1_efficiency_list, term2_efficiency_list, term3_efficiency_list, terminator)
+
     if chosen_terminator == "terminator3":
+        terminator = "terminator3"
         #Adds terminator after third gene
         term3_start = 449
         term3_stop = 450
         term3_start_list.append(term3_start)
         term3_stop_list.append(term3_stop)
-    term_list = [term1_start_list, term1_stop_list, term2_start_list, term2_stop_list, term3_start_list, term3_stop_list]
+
+        term3_efficiency = alter_term_efficiency(term1_efficiency_list, term2_efficiency_list, term3_efficiency_list, terminator)
+
+    term_list = [term1_start_list, term1_stop_list, term2_start_list, term2_stop_list, term3_start_list, term3_stop_list, term1_efficiency, term2_efficiency, term3_efficiency]
     return term_list
 
 def remove_terminator(term1_start, term1_stop, term2_start, term2_stop, term3_start, term3_stop, term1_start_list,
@@ -874,17 +1154,116 @@ def remove_terminator(term1_start, term1_stop, term2_start, term2_stop, term3_st
     term_list = [term1_start_list, term1_stop_list, term2_start_list, term2_stop_list, term3_start_list, term3_stop_list]
     return term_list
 
+def get_coordinates(gene1_list, gene2_list, gene3_list, prom1_list, prom2_list, term1_list, term2_list, term3_list, rnase1_list, rnase2_list, rnase3_list, generation):
+
+    #Gets coordinates of genome and outputs as tsv file
+    if generation == "best":
+        gene1_dataframe = pandas.DataFrame(gene1_list, columns=["Gene_Location"])
+        export_csv = gene1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/gene1_data.tsv", index=False)
+        gene2_dataframe = pandas.DataFrame(gene2_list, columns=["Gene_Location"])
+        export_csv = gene2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/gene2_data.tsv", index=False)
+        gene3_dataframe = pandas.DataFrame(gene3_list, columns=["Gene_Location"])
+        export_csv = gene3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/gene3_data.tsv", index=False)
+        prom1_dataframe = pandas.DataFrame(prom1_list, columns=["Promoter_Location"])
+        export_csv = prom1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/promoter1_data.tsv", index=False)
+        prom2_dataframe = pandas.DataFrame(prom1_list, columns=["Promoter_Location"])
+        export_csv = prom2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/promoter2_data.tsv", index=False)
+        term1_dataframe = pandas.DataFrame(term1_list, columns=["Terminator_Location"])
+        export_csv = term1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/term1_data.tsv", index=False)
+        term2_dataframe = pandas.DataFrame(term2_list, columns=["Terminator_Location"])
+        export_csv = term2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/term2_data.tsv", index=False)
+        term3_dataframe = pandas.DataFrame(term3_list, columns=["Terminator_Location"])
+        export_csv = term3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/term3_data.tsv", index=False)
+        rnase1_dataframe = pandas.DataFrame(rnase1_list, columns=["Rnase_Location"])
+        export_csv = rnase1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/rnase1_data.tsv", index=False)
+        rnase2_dataframe = pandas.DataFrame(rnase2_list, columns=["Rnase_Location"])
+        export_csv = rnase2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/rnase2_data.tsv", index=False)
+        rnase3_dataframe = pandas.DataFrame(rnase3_list, columns=["Rnase_Location"])
+        export_csv = rnase3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/rnase3_data.tsv", index=False)
+
+    if generation == "0":
+        gene1_dataframe = pandas.DataFrame(gene1_list, columns=["Gene_Location"])
+        export_csv = gene1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/gene1_data.tsv", index=False)
+        gene2_dataframe = pandas.DataFrame(gene2_list, columns=["Gene_Location"])
+        export_csv = gene2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/gene2_data.tsv", index=False)
+        gene3_dataframe = pandas.DataFrame(gene3_list, columns=["Gene_Location"])
+        export_csv = gene3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/gene3_data.tsv", index=False)
+        prom1_dataframe = pandas.DataFrame(prom1_list, columns=["Promoter_Location"])
+        export_csv = prom1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/promoter1_data.tsv", index=False)
+        prom2_dataframe = pandas.DataFrame(prom1_list, columns=["Promoter_Location"])
+        export_csv = prom2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/promoter2_data.tsv", index=False)
+        term1_dataframe = pandas.DataFrame(term1_list, columns=["Terminator_Location"])
+        export_csv = term1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/term1_data.tsv", index=False)
+        term2_dataframe = pandas.DataFrame(term2_list, columns=["Terminator_Location"])
+        export_csv = term2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/term2_data.tsv", index=False)
+        term3_dataframe = pandas.DataFrame(term3_list, columns=["Terminator_Location"])
+        export_csv = term3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/term3_data.tsv", index=False)
+        rnase1_dataframe = pandas.DataFrame(rnase1_list, columns=["Rnase_Location"])
+        export_csv = rnase1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/rnase1_data.tsv", index=False)
+        rnase2_dataframe = pandas.DataFrame(rnase2_list, columns=["Rnase_Location"])
+        export_csv = rnase2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/rnase2_data.tsv", index=False)
+        rnase3_dataframe = pandas.DataFrame(rnase3_list, columns=["Rnase_Location"])
+        export_csv = rnase3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/rnase3_data.tsv", index=False)
+
+    if generation == "500":
+        gene1_dataframe = pandas.DataFrame(gene1_list, columns=["Gene_Location"])
+        export_csv = gene1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen500/gene1_data.tsv", index=False)
+        gene2_dataframe = pandas.DataFrame(gene2_list, columns=["Gene_Location"])
+        export_csv = gene2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen500/gene2_data.tsv", index=False)
+        gene3_dataframe = pandas.DataFrame(gene3_list, columns=["Gene_Location"])
+        export_csv = gene3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen500/gene3_data.tsv", index=False)
+        prom1_dataframe = pandas.DataFrame(prom1_list, columns=["Promoter_Location"])
+        export_csv = prom1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen500/promoter1_data.tsv", index=False)
+        prom2_dataframe = pandas.DataFrame(prom1_list, columns=["Promoter_Location"])
+        export_csv = prom2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen500/promoter2_data.tsv", index=False)
+        term1_dataframe = pandas.DataFrame(term1_list, columns=["Terminator_Location"])
+        export_csv = term1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen500/term1_data.tsv", index=False)
+        term2_dataframe = pandas.DataFrame(term2_list, columns=["Terminator_Location"])
+        export_csv = term2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen500/term2_data.tsv", index=False)
+        term3_dataframe = pandas.DataFrame(term3_list, columns=["Terminator_Location"])
+        export_csv = term3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen500/term3_data.tsv", index=False)
+        rnase1_dataframe = pandas.DataFrame(rnase1_list, columns=["Rnase_Location"])
+        export_csv = rnase1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen500/rnase1_data.tsv", index=False)
+        rnase2_dataframe = pandas.DataFrame(rnase2_list, columns=["Rnase_Location"])
+        export_csv = rnase2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen500/rnase2_data.tsv", index=False)
+        rnase3_dataframe = pandas.DataFrame(rnase3_list, columns=["Rnase_Location"])
+        export_csv = rnase3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen500/rnase3_data.tsv", index=False)
+
+    if generation == "1000":
+        gene1_dataframe = pandas.DataFrame(gene1_list, columns=["Gene_Location"])
+        export_csv = gene1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen1000/gene1_data.tsv", index=False)
+        gene2_dataframe = pandas.DataFrame(gene2_list, columns=["Gene_Location"])
+        export_csv = gene2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen1000/gene2_data.tsv", index=False)
+        gene3_dataframe = pandas.DataFrame(gene3_list, columns=["Gene_Location"])
+        export_csv = gene3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen1000/gene3_data.tsv", index=False)
+        prom1_dataframe = pandas.DataFrame(prom1_list, columns=["Promoter_Location"])
+        export_csv = prom1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen1000/promoter1_data.tsv", index=False)
+        prom2_dataframe = pandas.DataFrame(prom1_list, columns=["Promoter_Location"])
+        export_csv = prom2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen1000/promoter2_data.tsv", index=False)
+        term1_dataframe = pandas.DataFrame(term1_list, columns=["Terminator_Location"])
+        export_csv = term1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen1000/term1_data.tsv", index=False)
+        term2_dataframe = pandas.DataFrame(term2_list, columns=["Terminator_Location"])
+        export_csv = term2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen1000/term2_data.tsv", index=False)
+        term3_dataframe = pandas.DataFrame(term3_list, columns=["Terminator_Location"])
+        export_csv = term3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen1000/term3_data.tsv", index=False)
+        rnase1_dataframe = pandas.DataFrame(rnase1_list, columns=["Rnase_Location"])
+        export_csv = rnase1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen1000/rnase1_data.tsv", index=False)
+        rnase2_dataframe = pandas.DataFrame(rnase2_list, columns=["Rnase_Location"])
+        export_csv = rnase2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen1000/rnase2_data.tsv", index=False)
+        rnase3_dataframe = pandas.DataFrame(rnase3_list, columns=["Rnase_Location"])
+        export_csv = rnase3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen1000/rnase3_data.tsv", index=False)
+
 #Class containing genome for simulation with new polymerase strength
 class three_genome:
 
     def __init__(self):
         self.pol_strength = 4e10
 
-    def recreated_genome(pol_strength, term_efficiency, gene1_start, gene1_stop, gene2_start,
-                         gene2_stop, gene3_start, gene3_stop, prom1_start, prom1_stop, prom2_start,
-                         prom2_stop, rnase1_start, rnase1_stop, rnase2_start, rnase2_stop, rnase3_start,
-                         rnase3_stop, term1_start, term1_stop, term2_start, term2_stop, term3_start,
-                         term3_stop):
+    def recreated_genome(pol_strength, pol1_strength, pol2_strength, term1_efficiency, term2_efficiency,
+                         term3_efficiency, gene1_start, gene1_stop, gene2_start, gene2_stop, gene3_start,
+                         gene3_stop, prom1_start, prom1_stop, prom2_start, prom2_stop, rnase1_start,
+                         rnase1_stop, rnase2_start, rnase2_stop, rnase3_start, rnase3_stop, term1_start,
+                         term1_stop, term2_start, term2_stop, term3_start, term3_stop, file_name):
 
         sim = pt.Model(cell_volume=8e-16)
         sim.seed(34)
@@ -900,10 +1279,10 @@ class three_genome:
                              interactions={"rnapol": pol_strength})
         if prom1_start > 0:
             plasmid.add_promoter(name="p2", start=prom1_start, stop=prom1_stop,
-                                 interactions={"rnapol": pol_strength})
+                                 interactions={"rnapol": pol1_strength})
         if prom2_start > 0:
             plasmid.add_promoter(name="p3", start=prom2_start, stop=prom2_stop,
-                                 interactions={"rnapol": pol_strength})
+                                 interactions={"rnapol": pol2_strength})
         if rnase1_start > 0:
             plasmid.add_rnase_site(start=rnase1_start, stop=rnase1_stop)
         if rnase2_start > 0:
@@ -912,13 +1291,13 @@ class three_genome:
             plasmid.add_rnase_site(start=rnase3_start, stop=rnase3_stop)
         if term1_start > 0:
             plasmid.add_terminator(name="t1", start=term1_start, stop=term1_stop,
-                                   efficiency={"rnapol": term_efficiency})
+                                   efficiency={"rnapol": term1_efficiency})
         if term2_start > 0:
             plasmid.add_terminator(name="t2", start=term2_start, stop=term2_stop,
-                                   efficiency={"rnapol": term_efficiency})
+                                   efficiency={"rnapol": term2_efficiency})
         if term3_start > 0:
             plasmid.add_terminator(name="t3", start=term3_start, stop=term3_stop,
-                                   efficiency={"rnapol": term_efficiency})
+                                   efficiency={"rnapol": term3_efficiency})
         plasmid.add_gene(name="proteinX", start=gene1_start, stop=gene1_stop,
                          rbs_start=(gene1_start-15), rbs_stop=gene1_start, rbs_strength=1e7)
 
@@ -928,13 +1307,13 @@ class three_genome:
                          rbs_start=(gene3_start-15), rbs_stop=gene3_start, rbs_strength=1e7)
         sim.register_genome(plasmid)
         sim.simulate(time_limit=240, time_step=1,
-                     output = "three_genes_replicated.tsv")
+                     output = file_name)
 
-    def best_recreated_genome(pol_strength, term_efficiency, gene1_start, gene1_stop, gene2_start,
-                              gene2_stop, gene3_start, gene3_stop, prom1_start, prom1_stop, prom2_start,
-                              prom2_stop, rnase1_start, rnase1_stop, rnase2_start, rnase2_stop, rnase3_start,
-                              rnase3_stop, term1_start, term1_stop, term2_start, term2_stop, term3_start,
-                              term3_stop):
+    def best_recreated_genome(pol_strength, pol1_strength, pol2_strength, term1_efficiency, term2_efficiency,
+                                term3_efficiency, gene1_start, gene1_stop, gene2_start, gene2_stop, gene3_start,
+                                gene3_stop, prom1_start, prom1_stop, prom2_start, prom2_stop, rnase1_start,
+                                rnase1_stop, rnase2_start, rnase2_stop, rnase3_start, rnase3_stop, term1_start,
+                                term1_stop, term2_start, term2_stop, term3_start, term3_stop):
 
         sim = pt.Model(cell_volume=8e-16)
         sim.seed(34)
@@ -950,10 +1329,10 @@ class three_genome:
                              interactions={"rnapol": pol_strength})
         if prom1_start > 0:
             plasmid.add_promoter(name="p2", start=prom1_start, stop=prom1_stop,
-                                 interactions={"rnapol": pol_strength})
+                                 interactions={"rnapol": pol1_strength})
         if prom2_start > 0:
             plasmid.add_promoter(name="p3", start=prom2_start, stop=prom2_stop,
-                                 interactions={"rnapol": pol_strength})
+                                 interactions={"rnapol": pol2_strength})
         if rnase1_start > 0:
             plasmid.add_rnase_site(start=rnase1_start, stop=rnase1_stop)
         if rnase2_start > 0:
@@ -962,13 +1341,13 @@ class three_genome:
             plasmid.add_rnase_site(start=rnase3_start, stop=rnase3_stop)
         if term1_start > 0:
             plasmid.add_terminator(name="t1", start=term1_start, stop=term1_stop,
-                                   efficiency={"rnapol": term_efficiency})
+                                   efficiency={"rnapol": term1_efficiency})
         if term2_start > 0:
             plasmid.add_terminator(name="t2", start=term2_start, stop=term2_stop,
-                                   efficiency={"rnapol": term_efficiency})
+                                   efficiency={"rnapol": term2_efficiency})
         if term3_start > 0:
             plasmid.add_terminator(name="t3", start=term3_start, stop=term3_stop,
-                                   efficiency={"rnapol": term_efficiency})
+                                   efficiency={"rnapol": term3_efficiency})
         plasmid.add_gene(name="proteinX", start=gene1_start, stop=gene1_stop,
                          rbs_start=(gene1_start-15), rbs_stop=gene1_start, rbs_strength=1e7)
 
