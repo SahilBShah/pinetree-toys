@@ -141,7 +141,7 @@ def main():
     possibilities = ["alter polymerase 1 strength", "add promoter", "remove promoter", "add rnase",
                       "remove rnase", "add terminator", "remove terminator"]
 
-    while i < 100:
+    while i < 1000:
 
         mutation = random.choice(possibilities)
 
@@ -265,7 +265,7 @@ def main():
                                     new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
                                     new_term3_stop, all_sos_list, sos_list, poly_list, poly1_list, poly2_list, term1_efficiency_list, term2_efficiency_list,
                                     term3_efficiency_list, gene1_list, gene2_list, gene3_list, prom1_list, prom2_list, term1_list, term2_list, term3_list,
-                                    rnase1_list, rnase2_list, rnase3_list)
+                                    rnase1_list, rnase2_list, rnase3_list, i)
         if test > 0:
             f_old = test
         '''if sos_list[-1] == 0:
@@ -460,10 +460,10 @@ def calc_fitness(variant_fit, orig_fit, Ne):
         return variant_fit
 
     try:
-        p = ((1-pow((xi/xj), 2)) / (1-pow((xi/xj), (2 * float(N)))))
+        resolved = ((1-pow((xi/xj), 2)) / (1-pow((xi/xj), (2 * float(N)))))
     except OverflowError as e:
-        p = 0.0
-    return (p)
+        resolved = 0.0
+    return (resolved)
 
 #Minimizes distance between observed values and regression line from given data
 def sum_of_squares(target_file, new_file):
@@ -513,8 +513,8 @@ def accept_mutation(df, f_old, f_new, new_pol_strength, new_pol1_strength, new_p
                     promoter2_stop, new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start,
                     new_rnase3_stop, new_term1_start, new_term1_stop, new_term2_start, new_term2_stop, new_term3_start,
                     new_term3_stop, all_sos_list, sos_list, poly_list, poly1_list, poly2_list, term1_efficiency_list, term2_efficiency_list,
-                    term3_efficiency_list, gene1_list, gene2_list, gene3_list, prom1_list, prom2_list, term1_list, term2_list, term3_list
-                    rnase1_list, rnase2_list, rnase3_list):
+                    term3_efficiency_list, gene1_list, gene2_list, gene3_list, prom1_list, prom2_list, term1_list, term2_list, term3_list,
+                    rnase1_list, rnase2_list, rnase3_list, i):
 
     global gen
     probability = 0
@@ -537,6 +537,7 @@ def accept_mutation(df, f_old, f_new, new_pol_strength, new_pol1_strength, new_p
         all_sos_list.append(sos)
         #Accepts mutation only if sum of squares value decreases
         if sos <= sos_list[-1]:
+            output = "best_replicated_gen_" + str(i) + ".tsv"
             poly_list.append(new_pol_strength)
             poly1_list.append(new_pol1_strength)
             poly2_list.append(new_pol2_strength)
@@ -550,7 +551,7 @@ def accept_mutation(df, f_old, f_new, new_pol_strength, new_pol1_strength, new_p
                                                 promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
                                                 new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
                                                 new_rnase3_start, new_rnase3_stop, new_term1_start, new_term1_stop,
-                                                new_term2_start, new_term2_stop, new_term3_start, new_term3_stop)
+                                                new_term2_start, new_term2_stop, new_term3_start, new_term3_stop, output)
             #Gets genome coordinates
             gene1_list.append(new_gene1_start)
             gene1_list.append(new_gene1_stop)
@@ -558,10 +559,10 @@ def accept_mutation(df, f_old, f_new, new_pol_strength, new_pol1_strength, new_p
             gene2_list.append(new_gene2_stop)
             gene3_list.append(new_gene3_start)
             gene3_list.append(new_gene3_stop)
-            prom1_list.append(new_prom1_start)
-            prom1_list.append(new_prom1_stop)
-            prom2_list.append(new_prom2_start)
-            prom2_list.append(new_prom2_stop)
+            prom1_list.append(promoter1_start)
+            prom1_list.append(promoter1_stop)
+            prom2_list.append(promoter2_start)
+            prom2_list.append(promoter2_stop)
             term1_list.append(new_term1_start)
             term1_list.append(new_term1_stop)
             term2_list.append(new_term2_start)
@@ -597,6 +598,7 @@ def accept_mutation(df, f_old, f_new, new_pol_strength, new_pol1_strength, new_p
             all_sos_list.append(sos)
             #Accepts mutation only if sum of squares value decreases
             if sos <= sos_list[-1]:
+                output = "best_replicated_gen_" + str(i) + ".tsv"
                 poly_list.append(new_pol_strength)
                 poly1_list.append(new_pol1_strength)
                 poly2_list.append(new_pol2_strength)
@@ -610,7 +612,7 @@ def accept_mutation(df, f_old, f_new, new_pol_strength, new_pol1_strength, new_p
                                                     promoter1_start, promoter1_stop, promoter2_start, promoter2_stop,
                                                     new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop,
                                                     new_rnase3_start, new_rnase3_stop, new_term1_start, new_term1_stop,
-                                                    new_term2_start, new_term2_stop, new_term3_start, new_term3_stop)
+                                                    new_term2_start, new_term2_stop, new_term3_start, new_term3_stop, output)
                 #Gets genome coordinates
                 gene1_list.append(new_gene1_start)
                 gene1_list.append(new_gene1_stop)
@@ -618,10 +620,10 @@ def accept_mutation(df, f_old, f_new, new_pol_strength, new_pol1_strength, new_p
                 gene2_list.append(new_gene2_stop)
                 gene3_list.append(new_gene3_start)
                 gene3_list.append(new_gene3_stop)
-                prom1_list.append(new_prom1_start)
-                prom1_list.append(new_prom1_stop)
-                prom2_list.append(new_prom2_start)
-                prom2_list.append(new_prom2_stop)
+                prom1_list.append(promoter1_start)
+                prom1_list.append(promoter1_stop)
+                prom2_list.append(promoter2_start)
+                prom2_list.append(promoter2_stop)
                 term1_list.append(new_term1_start)
                 term1_list.append(new_term1_stop)
                 term2_list.append(new_term2_start)
@@ -1313,7 +1315,7 @@ class three_genome:
                                 term3_efficiency, gene1_start, gene1_stop, gene2_start, gene2_stop, gene3_start,
                                 gene3_stop, prom1_start, prom1_stop, prom2_start, prom2_stop, rnase1_start,
                                 rnase1_stop, rnase2_start, rnase2_stop, rnase3_start, rnase3_stop, term1_start,
-                                term1_stop, term2_start, term2_stop, term3_start, term3_stop):
+                                term1_stop, term2_start, term2_stop, term3_start, term3_stop, file_name):
 
         sim = pt.Model(cell_volume=8e-16)
         sim.seed(34)
@@ -1357,7 +1359,7 @@ class three_genome:
                          rbs_start=(gene3_start-15), rbs_stop=gene3_start, rbs_strength=1e7)
         sim.register_genome(plasmid)
         sim.simulate(time_limit=240, time_step=1,
-                     output = "best_three_genes_replicated.tsv")
+                     output = file_name)
 
 
 if __name__ == '__main__':
