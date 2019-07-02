@@ -65,7 +65,7 @@ def main():
     f_old = 1.0
     mu = 0.0
     sigma = 1.0
-    Ne = 10
+    Ne = 7
     i = 0
     gen = 0
     new_gene1_start = 26
@@ -633,6 +633,9 @@ def alter_poly_strength(poly_list, poly1_list, poly2_list, promoter):
         while pol_strength < 0:
             poly_eps = np.random.normal(mu, poly_sigma)
             pol_strength = poly_list[-1] + poly_eps
+            if pol_strength > 3e10:
+                poly_eps = np.random.normal(mu, poly_sigma)
+                pol_strength = poly_list[-1] + poly_eps
         return pol_strength
 
     if promoter == "promoter1":
@@ -643,6 +646,9 @@ def alter_poly_strength(poly_list, poly1_list, poly2_list, promoter):
         while pol1_strength < 0:
             poly_eps = np.random.normal(mu, poly_sigma)
             pol1_strength = poly1_list[-1] + poly_eps
+            if pol1_strength > 3e10:
+                poly_eps = np.random.normal(mu, poly_sigma)
+                pol1_strength = poly1_list[-1] + poly_eps
         return pol1_strength
 
     if promoter == "promoter2":
@@ -653,6 +659,9 @@ def alter_poly_strength(poly_list, poly1_list, poly2_list, promoter):
         while pol2_strength < 0:
             poly_eps = np.random.normal(mu, poly_sigma)
             pol2_strength = poly2_list[-1] + poly_eps
+            if pol2_strength > 3e10:
+                poly_eps = np.random.normal(mu, poly_sigma)
+                pol2_strength = poly2_list[-1] + poly_eps
         return pol2_strength
 
 def alter_term_efficiency(term1_efficiency_list, term2_efficiency_list, term3_efficiency_list, terminator):

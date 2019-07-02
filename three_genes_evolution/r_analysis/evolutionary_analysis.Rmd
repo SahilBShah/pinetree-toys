@@ -1,0 +1,46 @@
+---
+title: "evolutionary_analysis"
+author: "Sahil Shah"
+date: "7/2/2019"
+output: pdf_document
+---
+
+Saves sum of squares data
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(cowplot)
+library(dplyr)
+library(gridExtra)
+library(ggplot2)
+
+setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/")
+
+sos_data <- read.table("sos_data.tsv", header=TRUE)
+generation_data <- read.table("sos_iter_data.tsv", header=TRUE)
+sos_data <- cbind(sos_data, generation_data)
+sos_line_plot <- ggplot(sos_data, aes(x=Iteration, y=Sum of Squares)) + geom_point(stat="identity") + geom_line(stat="identity") + ggtitle("Evolution of Sum of Squares")
+all_sos_data <- read.table("all_sos_data.tsv", header=TRUE)
+all_sos_data$ID <- seq.int(nrow(all_sos_data))
+all_sos_line_plot <- ggplot(all_sos_data, aes(x=ID, y=Sum_of_Squares)) geom_point(stat="identity") + geom_line(stat="identity") + ggtitle("All Sum of Squares Values")
+sos_plots <- grid.arrange(sos_line_plot, all_sos_line_plot, nrow=2)
+ggsave("/home/wilkelab/pinetree-toys/three_genes_evolution/sos_graph.pdf", sos_plots, width=20, height=10)
+```
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
