@@ -29,8 +29,8 @@ gen_final2_data <- read.table("best_replicated_gen_2.tsv", header=TRUE)
 gen_final2_data <- filter(gen_final2_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
 gen_final2_line_plot <-  ggplot(gen_final2_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function of Best Genome 2 Found")
   
-my_plot <- grid.arrange(original_line_plot, gen0_line_plot, gen500_line_plot, gen1000_line_plot, gen_final1_line_plot, nrow=2, ncol=3)
+gen_plots <- grid.arrange(original_line_plot, gen0_line_plot, gen500_line_plot, gen1000_line_plot, gen_final1_line_plot, nrow=2, ncol=3)
 grid.arrange(original_line_plot, gen_final1_line_plot, gen_final2_line_plot)
-ggsave("/home/wilkelab/pinetree-toys/three_genes_evolution/gen_graph.pdf", my_plot, width=20, height=10)
+ggsave("/home/wilkelab/pinetree-toys/three_genes_evolution/gen_graphs.pdf", gen_plots, width=20, height=10)
 
 plot.new()

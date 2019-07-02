@@ -18,7 +18,7 @@ setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/")
 sos_data <- read.table("sos_data.tsv", header=TRUE)
 generation_data <- read.table("sos_iter_data.tsv", header=TRUE)
 sos_data <- cbind(sos_data, generation_data)
-sos_line_plot <- ggplot(sos_data, aes(x=Iteration, y=Sum of Squares)) + geom_point(stat="identity") + geom_line(stat="identity") + ggtitle("Evolution of Sum of Squares")
+sos_line_plot <- ggplot(sos_data, aes(x=Iteration, y=Sum_of_Squares)) + geom_point(stat="identity") + geom_line(stat="identity") + ggtitle("Evolution of Sum of Squares")
 all_sos_data <- read.table("all_sos_data.tsv", header=TRUE)
 all_sos_data$ID <- seq.int(nrow(all_sos_data))
 all_sos_line_plot <- ggplot(all_sos_data, aes(x=ID, y=Sum_of_Squares)) geom_point(stat="identity") + geom_line(stat="identity") + ggtitle("All Sum of Squares Values")
@@ -27,20 +27,66 @@ ggsave("/home/wilkelab/pinetree-toys/three_genes_evolution/sos_graph.pdf", sos_p
 ```
 ## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
+Generational Analysis of Mutations
 ```{r cars}
-summary(cars)
+library(cowplot)
+library(dplyr)
+library(gridExtra)
+library(ggplot2)
+
+setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/")
+
+best_files <- list.files("/home/wilkelab/pinetree-toys/three_genes_evolution/", pattern="best_replicated_gen_")
+
+original_data <- read.table("three_genes_test_file.tsv", header=TRUE)
+original_data <- filter(original_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
+original_line_plot <-  ggplot(original_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Original Genome Function")
+
+gen0_data <- read.table("gen_0_data.tsv", header=TRUE)
+gen0_data <- filter(gen0_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
+gen0_line_plot <-  ggplot(gen0_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function at Generation 0")
+  
+gen500_data <- read.table("gen_500_data.tsv", header=TRUE)
+gen500_data <- filter(gen500_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
+gen500_line_plot <-  ggplot(gen500_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function at Generation 500")
+
+gen1000_data <- read.table("gen_1000_data.tsv", header=TRUE)
+gen1000_data <- filter(gen100_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
+gen1000_line_plot <-  ggplot(gen100_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function at Generation 1000")
+
+gen_final1_data <- read.table(best_files[-1], header=TRUE)
+gen_final1_data <- filter(gen_final1_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
+gen_final1_line_plot <-  ggplot(gen_final1_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function of Best Genome Found")
+
+gen_plots <- grid.arrange(original_line_plot, gen0_line_plot, gen500_line_plot, gen1000_line_plot, gen_final1_line_plot, nrow=2, ncol=3)
+ggsave("/home/wilkelab/pinetree-toys/three_genes_evolution/gen_graphs.pdf", gen_plots, width=20, height=10)
+
 ```
-
-## Including Plots
-
-You can also embed plots, for example:
+Evolutionary Analysis of Mutations
 
 ```{r pressure, echo=FALSE}
-plot(pressure)
+library(cowplot)
+library(dplyr)
+library(gridExtra)
+library(ggplot2)
+
+setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/")
+
+best_files <- list.files("/home/wilkelab/pinetree-toys/three_genes_evolution/", pattern="best_replicated_gen_")
+plots_list <- list()
+
+for(i in 1:length(best_files)){
+  file_name <- paste("best", i, sep="")
+  plot_name <- paste("best_plot" + i, sep="") 
+  file_name <- read.table(best_files[i], header=TRUE)
+  file_name <- filter(file_name, species == "proteinX" | species == "proteinY"   | species == "proteinZ")
+  plot_name <- ggplot(file_name, aes(fill=species, color=species, x=time,        y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function at      First Evolution")
+  plot_list.append(file_name)
+}
+
+evo_plot <- grid.arrange(plot_list, nrow=4, ncol=4)
+ggsave("/home/wilkelab/pinetree-toys/three_genes_evolution/evolution_graphs.pdf", evo_plot, width=30, height=30, limitsize=FALSE)
+
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

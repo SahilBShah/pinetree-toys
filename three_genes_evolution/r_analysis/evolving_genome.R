@@ -37,5 +37,5 @@ best8 <- read.table("best_replicated_gen_13635.tsv", header=TRUE)
 best8 <- filter(best8, species == "proteinX" | species == "proteinY" | species == "proteinZ")
 best8_plot <-  ggplot(best8, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function at Eigth Evolution")
 
-my_plot <- grid.arrange(best1_plot, best2_plot, best3_plot, best4_plot, best5_plot, best6_plot, best7_plot, best8_plot, nrow=4, ncol=4)
-ggsave("/home/wilkelab/pinetree-toys/three_genes_evolution/evolution_graph.pdf", my_plot, width=30, height=30, limitsize=FALSE)
+evo_plot <- grid.arrange(best1_plot, best2_plot, best3_plot, best4_plot, best5_plot, best6_plot, best7_plot, best8_plot, nrow=4, ncol=4)
+ggsave("/home/wilkelab/pinetree-toys/three_genes_evolution/evolution_graphs.pdf", evo_plot, width=30, height=30, limitsize=FALSE)
