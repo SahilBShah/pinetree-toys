@@ -97,7 +97,7 @@ def main():
 
     #Taking in target tsv file
     #df = pandas.read_table(input("Enter tsv file name: "), delim_whitespace=True, header=0)
-    df = pandas.read_table("three_genes_test_file.tsv", delim_whitespace=True, header=0)
+    df = pandas.read_table("three_genes_test_file2.tsv", delim_whitespace=True, header=0)
     df = edit_target_file(df)
 
     #Evolution program
@@ -143,7 +143,7 @@ def main():
     possibilities = ["alter polymerase 1 strength", "add promoter", "remove promoter", "add rnase",
                       "remove rnase", "add terminator", "remove terminator"]
 
-    while i < 5000:
+    while i < 20000:
 
         mutation = random.choice(possibilities)
 

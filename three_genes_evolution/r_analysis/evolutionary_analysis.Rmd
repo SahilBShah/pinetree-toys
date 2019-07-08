@@ -8,6 +8,7 @@ output: pdf_document
 Saves sum of squares data
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
 library(cowplot)
 library(dplyr)
 library(gridExtra)
@@ -98,7 +99,7 @@ for(i in 1:length(best_files)){
 }
 
 #evo_plot <- grid.arrange(grobs=plots_list, nrow=ceiling(length(best_files) / 2), ncol=ceiling(length(best_files) / 2), top="Evolutionary Pattern of Gene Transcripts")
-evo_plot <- grid.arrange(target_line_plot, gen0_line_plot, best_plot1, best_plot2, best_plot3, best_plot4, best_plot5, best_plot6, nrow=ceiling(length(best_files) / 2), ncol=ceiling(length(best_files) / 2), top="Evolutionary Pattern of Gene Transcripts")
+evo_plot <- grid.arrange(target_line_plot, gen0_line_plot, best_plot1, best_plot2, best_plot3, best_plot4, best_plot5, best_plot6, best_plot7, best_plot8, best_plot9, best_plot10, best_plot11, best_plot12, best_plot13, best_plot14, best_plot15, best_plot16, best_plot17, best_plot18, genome, nrow=ceiling(length(best_files) / 4), ncol=ceiling(length(best_files) / 4), top="Evolutionary Pattern of Gene Transcripts")
 ggsave("/home/wilkelab/pinetree-toys/three_genes_evolution/evolution_graphs.pdf", evo_plot, width=30, height=30, limitsize=FALSE)
 
 ```
