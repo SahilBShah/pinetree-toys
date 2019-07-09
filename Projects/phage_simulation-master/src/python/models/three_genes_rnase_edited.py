@@ -8,7 +8,7 @@ sim.add_ribosome(copy_number=100, speed=30, footprint=10)
 plasmid = pt.Genome(name="plasmid", length=450,
                     transcript_degradation_rate=1e-2,
                     transcript_degradation_rate_ext=1e-3,
-                    rnase_speed=20,
+                    rnase_speed=45,
                     rnase_footprint=10)
 
 # plasmid = pt.Genome(name="plasmid", length=300)
@@ -33,4 +33,4 @@ plasmid.add_gene(name="proteinZ", start=165 + 150, stop=298 + 150,
 sim.register_genome(plasmid)
 
 sim.simulate(time_limit=240, time_step=1,
-             output="three_genes_rnase.tsv")
+             output="three_genes_rnase_speed_45.tsv")

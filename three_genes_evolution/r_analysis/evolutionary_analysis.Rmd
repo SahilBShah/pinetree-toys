@@ -41,7 +41,7 @@ setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/")
 best_file <- list.files("/home/wilkelab/pinetree-toys/three_genes_evolution/", pattern="best_replicated_gen_")
 best_file <- mixedsort(sort(best_file))
 
-original_data <- read.table("three_genes_test_file.tsv", header=TRUE)
+original_data <- read.table("three_genes_test_file2.tsv", header=TRUE)
 original_data <- filter(original_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
 original_line_plot <-  ggplot(original_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Original Genome Function")
 
@@ -49,11 +49,11 @@ gen0_data <- read.table("gen_0_data.tsv", header=TRUE)
 gen0_data <- filter(gen0_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
 gen0_line_plot <-  ggplot(gen0_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function at Generation 0")
   
-gen500_data <- read.table("gen_500_data.tsv", header=TRUE)
+gen500_data <- read.table("gen_5000_data.tsv", header=TRUE)
 gen500_data <- filter(gen500_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
 gen500_line_plot <-  ggplot(gen500_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function at Generation 500")
 
-gen1000_data <- read.table("gen_1000_data.tsv", header=TRUE)
+gen1000_data <- read.table("gen_10000_data.tsv", header=TRUE)
 gen1000_data <- filter(gen1000_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
 gen1000_line_plot <-  ggplot(gen1000_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function at Generation 1000")
 
@@ -80,9 +80,9 @@ setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/")
 best_files <- list.files("/home/wilkelab/pinetree-toys/three_genes_evolution/", pattern="best_replicated_gen_")
 best_files <- mixedsort(sort(best_files))
 plots_list <- list()
-target_data <- read.table("three_genes_test_file.tsv", header=TRUE)
-target_data <- filter(original_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
-target_line_plot <-  ggplot(original_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Target Genome Function")
+target_data <- read.table("three_genes_test_file2.tsv", header=TRUE)
+target_data <- filter(target_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
+target_line_plot <-  ggplot(target_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Target Genome Function")
 gen0_data <- read.table("gen_0_data.tsv", header=TRUE)
 gen0_data <- filter(gen0_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
 gen0_line_plot <-  ggplot(gen0_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function at Generation 0")
@@ -99,7 +99,7 @@ for(i in 1:length(best_files)){
 }
 
 #evo_plot <- grid.arrange(grobs=plots_list, nrow=ceiling(length(best_files) / 2), ncol=ceiling(length(best_files) / 2), top="Evolutionary Pattern of Gene Transcripts")
-evo_plot <- grid.arrange(target_line_plot, gen0_line_plot, best_plot1, best_plot2, best_plot3, best_plot4, best_plot5, best_plot6, best_plot7, best_plot8, best_plot9, best_plot10, best_plot11, best_plot12, best_plot13, best_plot14, best_plot15, best_plot16, best_plot17, best_plot18, genome, nrow=ceiling(length(best_files) / 4), ncol=ceiling(length(best_files) / 4), top="Evolutionary Pattern of Gene Transcripts")
+evo_plot <- grid.arrange(target_line_plot, gen0_line_plot, best_plot1, best_plot2, best_plot3, best_plot4, best_plot5, best_plot6, best_plot7, best_plot8, best_plot9, best_plot10, nrow=ceiling(length(best_files) / 3), ncol=ceiling(length(best_files) / 3), top="Evolutionary Pattern of Gene Transcripts")
 ggsave("/home/wilkelab/pinetree-toys/three_genes_evolution/evolution_graphs.pdf", evo_plot, width=30, height=30, limitsize=FALSE)
 
 ```
