@@ -426,7 +426,10 @@ def sum_of_squares(target_file, new_file):
 
     sos = 0.0
     for row, row2 in zip(new_file.iterrows(), target_file.iterrows()):
-        sos = sos + (row[1][1] - row2[1][1]) ** 2
+        if row[0][1] == row2[0][1]:
+            sos = sos + (row[1][1] - row2[1][1]) ** 2
+        else:
+
     return sos
 
 #Removes unnecessary rows and columns in produced file
