@@ -17,7 +17,7 @@ for i in range(1, 151):
     transcript_list.append([i, "proteinZ", (0.1 * i)])
     if i == 150:
         proteinZ_list = transcript_list[-1]
-for i in range(151, 241):
+for i in range(151, 240):
     transcript_list.append([i, "proteinX", (0.25 * i)])
     transcript_list.append([i, "proteinY", proteinY_list[-1]])
     transcript_list.append([i, "proteinZ", proteinZ_list[-1]])

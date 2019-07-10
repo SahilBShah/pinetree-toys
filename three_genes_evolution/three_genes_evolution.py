@@ -70,10 +70,6 @@ def main():
     gen = 0
     new_gene1_start = 26
     new_gene1_stop = 121
-    '''new_gene2_start = 178
-    new_gene2_stop = 300
-    new_gene3_start = 315
-    new_gene3_stop = 448'''
     new_gene2_start = 159
     new_gene2_stop = 280
     new_gene3_start = 319
@@ -115,32 +111,6 @@ def main():
     term2_efficiency_list.append(new_term2_efficiency)
     term3_efficiency_list.append(new_term3_efficiency)
 
-    #Determining gene sizes
-    '''new_gene1_start = random.randint(25, 449)
-    new_gene1_stop = random.randint(26, new_gene2_start-15)
-    gene1_stop_list.append(new_gene1_stop)
-    while new_gene1_start > new_gene1_stop:
-        new_gene1_start = random.randint(25, gene1_stop_list[-1])
-        new_gene1_stop = random.randint(26, new_gene2_start-15)
-    new_gene2_start = random.randint(new_gene1_stop+15, 400)
-    new_gene2_stop = random.randint(new_gene2_start+1, new_gene3_stop-15)
-    gene2_stop_list.append(new_gene2_stop)
-    while new_gene2_start > new_gene2_stop:
-        new_gene2_start = random.randint(new_gene1_stop+15, gene2_stop_list[-1])
-        new_gene2_stop = random.randint(new_gene2_start+1, new_gene3_stop-15)
-    new_gene3_start = random.randint(new_gene2_stop+15, 449)
-    new_gene3_stop = random.randint(new_gene3_start+1, 450)
-    gene3_stop_list.append(new_gene3_stop)
-    while new_gene3_start > new_gene3_stop:
-        new_gene3_start = random.randint(new_gene2_stop+15, gene3_stop_list[-1])
-        new_gene3_stop = random.randint(new_gene3_start+1, 450)
-    gene1_start_list.append(new_gene1_start)
-    gene2_start_list.append(new_gene2_start)
-    gene3_start_list.append(new_gene3_start)'''
-
-    '''possibilities = ["alter polymerase 1 strength", "alter terminator efficiency", "alter gene length", "add promoter", "remove promoter", "add rnase",
-                        "remove rnase", "add terminator", "remove terminator"]'''
-
     possibilities = ["alter polymerase 1 strength", "add promoter", "remove promoter", "add rnase",
                       "remove rnase", "add terminator", "remove terminator"]
 
@@ -181,7 +151,7 @@ def main():
             new_prom2_stop = prom2_stop_list[-1]
 
         if mutation == "add rnase":
-            new_rnase = add_ranse(new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start, new_rnase3_stop,
+            new_rnase = add_rnase(new_rnase1_start, new_rnase1_stop, new_rnase2_start, new_rnase2_stop, new_rnase3_start, new_rnase3_stop,
                                     prom1_start_list, prom1_stop_list, prom2_start_list, prom2_stop_list, term1_start_list, term1_stop_list,
                                     term2_start_list, term2_stop_list, rnase1_start_list, rnase1_stop_list, rnase2_start_list, rnase2_stop_list,
                                     rnase3_start_list, rnase3_stop_list)
@@ -424,18 +394,27 @@ def calc_fitness(variant_fit, orig_fit, Ne):
 #Minimizes distance between observed values and regression line from given data
 def sum_of_squares(target_file, new_file):
 
+    #row[1][1] = species name
+    #row[1][2] = transcript
+    #row[1][0] = time
     sos = 0.0
-    for row, row2 in zip(new_file.iterrows(), target_file.iterrows()):
-        if row[0][1] == row2[0][1]:
-            sos = sos + (row[1][1] - row2[1][1]) ** 2
-        else:
-
+    time = 0
+    #target_file = pandas.DataFrame(target_file)
+    for row in new_file.iterrows():
+        for row2 in target_file.iterrows():
+            if row2[1][0] >= (row[1][0] - 1) and row2[1][0] < row[1][0] and row2[1][1] == row[1][1]:
+                sos = sos + (row[1][2] - row2[1][2]) ** 2
+                break
+            time+=1
+            if time == 3:
+                break
+    print("SOS Value = ", sos)
     return sos
 
 #Removes unnecessary rows and columns in produced file
 def edit_new_file(new_file):
 
-    new_file = new_file.drop("time", axis=1)
+    #new_file = new_file.drop("time", axis=1)
     new_file = new_file.drop(columns="protein", axis=1)
     new_file = new_file.drop(columns="ribo_density", axis=1)
     new_file = new_file[new_file.species != '__proteinX_rbs']
@@ -453,10 +432,10 @@ def edit_new_file(new_file):
 def edit_target_file(target_file, name_of_file):
 
     if name_of_file == "random_data.tsv":
-        target_file = target_file.drop("time", axis=1)
+        #target_file = target_file.drop("time", axis=1)
         return target_file
     else:
-        target_file = target_file.drop("time", axis=1)
+        #target_file = target_file.drop("time", axis=1)
         target_file = target_file.drop(columns="protein", axis=1)
         target_file = target_file.drop(columns="ribo_density", axis=1)
         target_file = target_file[target_file.species != '__proteinX_rbs']
@@ -688,101 +667,6 @@ def alter_term_efficiency(term1_efficiency_list, term2_efficiency_list, term3_ef
             term3_efficiency = term3_efficiency_list[-1] + term_eps
         return term3_efficiency
 
-'''def alter_gene_length(gene1_start, gene1_stop, gene2_start, gene2_stop, gene3_start, gene3_stop):
-
-    gene_sigma = 10.0
-    gene_possibilities = ["gene1", "gene2", "gene3"]
-    chosen_gene = random.choice(gene_possibilities)
-    if chosen_gene == "gene1":
-        #Changing gene lengths
-        gene1_eps = np.random.normal(mu, gene_sigma)
-        #Alter gene sizes
-        gene1_start += round(gene1_eps)
-        gene1_stop += round(gene1_eps)
-
-        #If gene size is larger or smaller than genome, redo
-        while gene3_stop > 450 or gene1_start < 26:
-            #gene1_eps = np.random.normal(mu, gene_sigma)
-            gene1_start = gene1_start_list[-1] + round(gene1_eps)
-            gene1_stop = gene1_stop_list[-1] + round(gene1_eps)
-        while (gene1_start > term1_start_list[-1] and gene1_start < term1_stop_list[-1]) or (gene1_stop > term1_start_list[-1] and gene1_stop < term1_stop_list[-1]):
-            #gene1_eps = np.random.normal(mu, gene_sigma)
-            gene1_start = gene1_start_list[-1] + round(gene1_eps)
-            gene1_stop = gene1_stop_list[-1] + round(gene1_eps)
-        while (gene1_start > prom1_start_list[-1] and gene1_start < prom1_stop_list[-1]) or (gene1_stop > prom1_start_list[-1] and gene1_stop < prom1_stop_list[-1]):
-            #gene1_eps = np.random.normal(mu, gene_sigma)
-            gene1_start = gene1_start_list[-1] + round(gene1_eps)
-            gene1_stop = gene1_stop_list[-1] + round(gene1_eps)
-        while (gene1_start > rnase1_start_list[-1] and gene1_start < rnase1_stop_list[-1]) or (gene1_stop > rnase1_start_list[-1] and gene1_stop < rnase1_stop_list[-1]):
-            #gene1_eps = np.random.normal(mu, gene_sigma)
-            gene1_start = gene1_start_list[-1] + round(gene1_eps)
-            gene1_stop = gene1_stop_list[-1] + round(gene1_eps)
-        #if (new_gene1_start > prom1_start_list[-1] and new_gene1_start < prom1_stop_list[-1]) or (new_gene1_stop > prom1_start_list[-1] and new_gene1_stop < prom1_stop_list[-1]) or (new_gene1_start > prom1_start_list[-1] and new_gene1_start < prom1_stop_list[-1]) or (new_gene1_stop > prom1_start_list[-1] and new_gene1_stop < prom1_stop_list[-1]) or (new_gene1_start > rnase1_start_list[-1] and new_gene1_start < rnase1_stop_list[-1]) or (new_gene1_stop > rnase1_start_list[-1] and new_gene1_stop < rnase1_stop_list[-1]) or new_gene3_stop > 450 or new_gene1_start < 26:
-            #alter_gene1_length(new_gene1_start, new_gene1_stop)
-
-        gene1_start_list.append(gene1_start)
-        gene1_stop_list.append(gene1_stop)
-
-    if chosen_gene == "gene2":
-        #Changing gene lengths
-        gene2_eps = np.random.normal(mu, gene_sigma)
-        #Alter gene sizes
-        gene2_start += round(gene2_eps)
-        gene2_stop += round(gene2_eps)
-
-        #If gene size is larger or smaller than genome, redo
-        while gene3_stop > 450 or gene1_start < 26:
-            #gene2_eps = np.random.normal(mu, gene_sigma)
-            gene2_start = gene2_start_list[-1] + round(gene2_eps)
-            gene2_stop = gene2_stop_list[-1] + round(gene2_eps)
-        while (gene2_start > term2_start_list[-1] and gene2_start < term2_stop_list[-1]) or (gene2_stop > term2_start_list[-1] and gene2_stop < term2_stop_list[-1]):
-            #gene2_eps = np.random.normal(mu, gene_sigma)
-            gene2_start = gene2_start_list[-1] + round(gene2_eps)
-            gene2_stop = gene2_stop_list[-1] + round(gene2_eps)
-        while (gene2_start > prom2_start_list[-1] and gene2_start < prom2_stop_list[-1]) or (gene2_stop > prom2_start_list[-1] and gene2_stop < prom2_stop_list[-1]):
-            #gene2_eps = np.random.normal(mu, gene_sigma)
-            gene2_start = gene2_start_list[-1] + round(gene2_eps)
-            gene2_stop = gene2_stop_list[-1] + round(gene2_eps)
-        while (gene2_start > rnase2_start_list[-1] and gene2_start < rnase2_stop_list[-1]) or (gene2_stop > rnase2_start_list[-1] and gene2_stop < rnase2_stop_list[-1]):
-            #gene2_eps = np.random.normal(mu, gene_sigma)
-            gene2_start = gene2_start_list[-1] + round(gene2_eps)
-            gene2_stop = gene2_stop_list[-1] + round(gene2_eps)
-        #if (new_gene2_start > term2_start_list[-1] and new_gene2_start < term2_stop_list[-1]) or (new_gene2_stop > term2_start_list[-1] and new_gene2_stop < term2_stop_list[-1]) or (new_gene2_start > prom2_start_list[-1] and new_gene2_start < prom2_stop_list[-1]) or (new_gene2_stop > prom2_start_list[-1] and new_gene2_stop < prom2_stop_list[-1]) or (new_gene2_start > rnase2_start_list[-1] and new_gene2_start < rnase2_stop_list[-1]) or (new_gene2_stop > rnase2_start_list[-1] and new_gene2_stop < rnase2_stop_list[-1]):
-            #alter_gene2_length(new_gene2_start, new_gene2_stop)
-
-        gene2_start_list.append(gene2_start)
-        gene2_stop_list.append(gene2_stop)
-
-    if chosen_gene == "gene3":
-        #Changing gene lengths
-        gene3_eps = np.random.normal(mu, gene_sigma)
-        #Alter gene sizes
-        gene3_start += round(gene3_eps)
-        gene3_stop += round(gene3_eps)
-        #If gene size is larger or smaller than genome, redo
-        while gene3_stop > 450 or gene1_start < 26:
-            #gene3_eps = np.random.normal(mu, gene_sigma)
-            gene3_start = gene3_start_list[-1] + round(gene3_eps)
-            gene3_stop = gene3_stop_list[-1] + round(gene3_eps)
-        while (gene3_start > term3_start_list[-1] and gene3_start < term3_stop_list[-1]) or (gene3_stop > term3_start_list[-1] and gene3_stop < term3_stop_list[-1]):
-            #gene3_eps = np.random.normal(mu, gene_sigma)
-            gene3_start = gene3_start_list[-1] + round(gene3_eps)
-            gene3_stop = gene3_stop_list[-1] + round(gene3_eps)
-        while (gene3_start > prom2_start_list[-1] and gene3_start < prom2_stop_list[-1]):
-            #gene3_eps = np.random.normal(mu, gene_sigma)
-            gene3_start = gene3_start_list[-1] + round(gene3_eps)
-            gene3_stop = gene3_stop_list[-1] + round(gene3_eps)
-        while (gene3_start > rnase3_start_list[-1] and gene3_start < rnase3_stop_list[-1]) or (gene3_stop > rnase3_start_list[-1] and gene3_stop < rnase3_stop_list[-1]):
-            #gene3_eps = np.random.normal(mu, gene_sigma)
-            gene3_start = gene3_start_list[-1] + round(gene3_eps)
-            gene3_stop = gene3_stop_list[-1] + round(gene3_eps)
-        #if (new_gene3_start > term3_start_list[-1] and new_gene3_start < term3_stop_list[-1]) or (new_gene3_stop > term3_start_list[-1] and new_gene3_stop < term3_stop_list[-1]) or (new_gene3_start > prom2_start_list[-1] and new_gene3_start < prom2_stop_list[-1]) or (new_gene3_start > rnase3_start_list[-1] and new_gene3_start < rnase3_stop_list[-1]) or (new_gene3_stop > rnase3_start_list[-1] and new_gene3_stop < rnase3_stop_list[-1]):
-            #alter_gene_length3(new_gene3_start, new_gene3_stop)
-
-        gene3_start_list.append(gene3_start)
-        gene3_stop_list.append(gene3_stop)'''
-
-
 def add_promoter(prom1_start, prom1_stop, prom2_start, prom2_stop, prom1_start_list, prom1_stop_list, prom2_start_list,
                     prom2_stop_list, term1_start_list, term1_stop_list, term2_start_list, term2_stop_list, rnase1_start_list,
                     rnase1_stop_list, rnase2_start_list, rnase2_stop_list, poly_list, poly1_list, poly2_list):
@@ -879,7 +763,7 @@ def remove_promoter(promoter1_start, promoter1_stop, promoter2_start, promoter2_
         prom2_start_list.append(promoter2_start)
         prom2_stop_list.append(promoter2_stop)
 
-def add_ranse(rnase1_start, rnase1_stop, rnase2_start, rnase2_stop, rnase3_start, rnase3_stop, prom1_start_list,
+def add_rnase(rnase1_start, rnase1_stop, rnase2_start, rnase2_stop, rnase3_start, rnase3_stop, prom1_start_list,
                 prom1_stop_list, prom2_start_list, prom2_stop_list, term1_start_list, term1_stop_list, term2_start_list,
                 term2_stop_list, rnase1_start_list, rnase1_stop_list, rnase2_start_list, rnase2_stop_list, rnase3_start_list,
                 rnase3_stop_list):
