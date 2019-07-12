@@ -6,6 +6,7 @@ import string
 import filecmp
 import math
 import os
+import itertools
 
 #Need to add in the following functions: expand genome when adding in components, simulated annealing
 
@@ -114,7 +115,7 @@ def main():
     possibilities = ["alter polymerase 1 strength", "add promoter", "remove promoter", "add rnase",
                       "remove rnase", "add terminator", "remove terminator"]
 
-    while i < 10000:
+    while i < 1000:
 
         mutation = random.choice(possibilities)
 
@@ -398,17 +399,42 @@ def sum_of_squares(target_file, new_file):
     #row[1][2] = transcript
     #row[1][0] = time
     sos = 0.0
-    time = 0
-    #target_file = pandas.DataFrame(target_file)
-    for row in new_file.iterrows():
-        for row2 in target_file.iterrows():
-            if row2[1][0] >= (row[1][0] - 1) and row2[1][0] < row[1][0] and row2[1][1] == row[1][1]:
-                sos = sos + (row[1][2] - row2[1][2]) ** 2
-                break
-            time+=1
-            if time == 3:
-                break
-    print("SOS Value = ", sos)
+    new_X_file = new_file
+    new_Y_file = new_file
+    new_Z_file = new_file
+    new_X_file = new_X_file[new_X_file.species != 'proteinY']
+    new_X_file = new_X_file[new_X_file.species != 'proteinZ']
+    new_Y_file = new_Y_file[new_Y_file.species != 'proteinX']
+    new_Y_file = new_Y_file[new_Y_file.species != 'proteinZ']
+    new_Z_file = new_Z_file[new_Z_file.species != 'proteinX']
+    new_Z_file = new_Z_file[new_Z_file.species != 'proteinY']
+
+    target_X_file = target_file
+    target_Y_file = target_file
+    target_Z_file = target_file
+    target_X_file = target_X_file[target_X_file.species != 'proteinY']
+    target_X_file = target_X_file[target_X_file.species != 'proteinZ']
+    target_Y_file = target_Y_file[target_Y_file.species != 'proteinX']
+    target_Y_file = target_Y_file[target_Y_file.species != 'proteinZ']
+    target_Z_file = target_Z_file[target_Z_file.species != 'proteinX']
+    target_Z_file = target_Z_file[target_Z_file.species != 'proteinY']
+
+    for row, row2 in zip(new_X_file.iterrows(), target_X_file.iterrows()):
+        if row[1][0] <= row2[1][0] + 0.1 and row[1][0] >= row2[1][0] - 0.1 and row[1][1] == row2[1][1]:
+            sos = sos + (row[1][2] - row2[1][2]) ** 2
+        else:
+            sos = sos + row[1][2] ** 2
+    for row, row2 in zip(new_Y_file.iterrows(), target_Y_file.iterrows()):
+        if row[1][0] <= row2[1][0] + 0.1 and row[1][0] >= row2[1][0] - 0.1 and row[1][1] == row2[1][1]:
+            sos = sos + (row[1][2] - row2[1][2]) ** 2
+        else:
+            sos = sos + row[1][2] ** 2
+    for row, row2 in zip(new_Z_file.iterrows(), target_Z_file.iterrows()):
+        if row[1][0] <= row2[1][0] + 0.1 and row[1][0] >= row2[1][0] - 0.1 and row[1][1] == row2[1][1]:
+            sos = sos + (row[1][2] - row2[1][2]) ** 2
+        else:
+            sos = sos + row[1][2] ** 2
+
     return sos
 
 #Removes unnecessary rows and columns in produced file

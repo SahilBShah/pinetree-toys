@@ -99,7 +99,7 @@ for(i in 1:length(best_files)){
 }
 
 #evo_plot <- grid.arrange(grobs=plots_list, nrow=ceiling(length(best_files) / 2), ncol=ceiling(length(best_files) / 2), top="Evolutionary Pattern of Gene Transcripts")
-evo_plot <- grid.arrange(target_line_plot, gen0_line_plot, best_plot1, best_plot2, best_plot3, best_plot4, best_plot5, nrow=3, ncol=5, top="Evolutionary Pattern of Gene Transcripts")
+evo_plot <- grid.arrange(target_line_plot, gen0_line_plot, best_plot1, best_plot2, best_plot3, best_plot4, best_plot5, best_plot6, best_plot7, best_plot8, best_plot9, best_plot10, nrow=3, ncol=5, top="Evolutionary Pattern of Gene Transcripts")
 ggsave("/home/wilkelab/pinetree-toys/three_genes_evolution/evolution_graphs.pdf", evo_plot, width=30, height=30, limitsize=FALSE)
 
 ```
