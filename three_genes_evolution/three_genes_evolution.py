@@ -1,5 +1,5 @@
 import pinetree as pt
-import pandas
+import pandas as pd
 import random
 import numpy as np
 import string
@@ -94,8 +94,7 @@ def main():
 
     #Taking in target tsv file
     df_name = input("Enter tsv file name: ")
-    df = pandas.read_table(df_name, delim_whitespace=True, header=0)
-    #df = pandas.read_table("three_genes_test_file2.tsv", delim_whitespace=True, header=0)
+    df = pd.read_csv(df_name, header=0, sep='\t')
     df = edit_target_file(df, df_name)
 
     #Evolution program
@@ -115,7 +114,7 @@ def main():
     possibilities = ["alter polymerase 1 strength", "add promoter", "remove promoter", "add rnase",
                       "remove rnase", "add terminator", "remove terminator"]
 
-    while i < 1000:
+    while i < 2:
 
         mutation = random.choice(possibilities)
 
@@ -334,40 +333,40 @@ def main():
     path = "~/pinetree-toys/three_genes_evolution/" + string(sim_number)
     if not os.path.exists(path):
         os.makedirs(path)'''
-    all_sos_dataframe = pandas.DataFrame(all_sos_list, columns=["Sum_of_Squares"])
+    all_sos_dataframe = pd.DataFrame(all_sos_list, columns=["Sum_of_Squares"])
     export_csv = all_sos_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/all_sos_data.tsv", index=False)
     sos_list.remove(60000)
-    sos_dataframe = pandas.DataFrame(data=sos_list, columns=["Sum_of_Squares"])
+    sos_dataframe = pd.DataFrame(data=sos_list, columns=["Sum_of_Squares"])
     export_csv = sos_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/sos_data.tsv", index=False)
-    iter_dataframe = pandas.DataFrame(data=iter_list, columns=["Iteration"])
+    iter_dataframe = pd.DataFrame(data=iter_list, columns=["Iteration"])
     export_csv = iter_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/sos_iter_data.tsv", index=False)
-    all_poly_dataframe = pandas.DataFrame(all_poly_list, columns=["Polymerase_Rate"])
+    all_poly_dataframe = pd.DataFrame(all_poly_list, columns=["Polymerase_Rate"])
     export_csv = all_poly_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/all_poly_data.tsv", index=False)
-    poly_dataframe = pandas.DataFrame(poly_list, columns=["Polymerase_Rate"])
+    poly_dataframe = pd.DataFrame(poly_list, columns=["Polymerase_Rate"])
     export_csv = poly_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/poly_data.tsv", index=False)
-    poly1_dataframe = pandas.DataFrame(poly1_list, columns=["Polymerase_Rate"])
+    poly1_dataframe = pd.DataFrame(poly1_list, columns=["Polymerase_Rate"])
     export_csv = poly1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/poly1_data.tsv", index=False)
-    poly2_dataframe = pandas.DataFrame(poly2_list, columns=["Polymerase_Rate"])
+    poly2_dataframe = pd.DataFrame(poly2_list, columns=["Polymerase_Rate"])
     export_csv = poly2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/poly2_data.tsv", index=False)
-    all_term_dataframe = pandas.DataFrame(all_term_list, columns=["Terminator Efficiency Rate"])
+    all_term_dataframe = pd.DataFrame(all_term_list, columns=["Terminator Efficiency Rate"])
     export_csv = all_term_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/all_term_data.tsv", index=False)
-    term1_efficiency_dataframe = pandas.DataFrame(term1_efficiency_list, columns=["Terminator1_Efficiency_Rate"])
+    term1_efficiency_dataframe = pd.DataFrame(term1_efficiency_list, columns=["Terminator1_Efficiency_Rate"])
     export_csv = term1_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/term1_efficiency_data.tsv", index=False)
-    term2_efficiency_dataframe = pandas.DataFrame(term2_efficiency_list, columns=["Terminator2_Efficiency_Rate"])
+    term2_efficiency_dataframe = pd.DataFrame(term2_efficiency_list, columns=["Terminator2_Efficiency_Rate"])
     export_csv = term2_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/term2_efficiency_data.tsv", index=False)
-    term3_efficiency_dataframe = pandas.DataFrame(term3_efficiency_list, columns=["Terminator3_Efficiency_Rate"])
+    term3_efficiency_dataframe = pd.DataFrame(term3_efficiency_list, columns=["Terminator3_Efficiency_Rate"])
     export_csv = term3_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/term3_efficiency_data.tsv", index=False)
-    gene1_start_dataframe = pandas.DataFrame(gene1_start_list, columns=["Gene_Start"])
+    gene1_start_dataframe = pd.DataFrame(gene1_start_list, columns=["Gene_Start"])
     export_csv = gene1_start_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gene1_start_data.tsv", index=False)
-    gene2_start_dataframe = pandas.DataFrame(gene2_start_list, columns=["Gene_Start"])
+    gene2_start_dataframe = pd.DataFrame(gene2_start_list, columns=["Gene_Start"])
     export_csv = gene2_start_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gene2_start_data.tsv", index=False)
-    gene3_start_dataframe = pandas.DataFrame(gene3_start_list, columns=["Gene Start"])
+    gene3_start_dataframe = pd.DataFrame(gene3_start_list, columns=["Gene Start"])
     export_csv = gene3_start_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gene3_start_data.tsv", index=False)
-    gene1_stop_dataframe = pandas.DataFrame(gene1_stop_list, columns=["Gene_Stop"])
+    gene1_stop_dataframe = pd.DataFrame(gene1_stop_list, columns=["Gene_Stop"])
     export_csv = gene1_stop_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gene1_stop_data.tsv", index=False)
-    gene2_stop_dataframe = pandas.DataFrame(gene2_stop_list, columns=["Gene_Stop"])
+    gene2_stop_dataframe = pd.DataFrame(gene2_stop_list, columns=["Gene_Stop"])
     export_csv = gene2_stop_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gene2_stop_data.tsv", index=False)
-    gene3_stop_dataframe = pandas.DataFrame(gene3_stop_list, columns=["Gene_Stop"])
+    gene3_stop_dataframe = pd.DataFrame(gene3_stop_list, columns=["Gene_Stop"])
     export_csv = gene3_stop_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gene3_stop_data.tsv", index=False)
     print("Generations = ", gen)
 
@@ -395,84 +394,35 @@ def calc_fitness(variant_fit, orig_fit, Ne):
 #Minimizes distance between observed values and regression line from given data
 def sum_of_squares(target_file, new_file):
 
-    #row[1][1] = species name
-    #row[1][2] = transcript
-    #row[1][0] = time
-    sos = 0.0
-    new_X_file = new_file
-    new_Y_file = new_file
-    new_Z_file = new_file
-    new_X_file = new_X_file[new_X_file.species != 'proteinY']
-    new_X_file = new_X_file[new_X_file.species != 'proteinZ']
-    new_Y_file = new_Y_file[new_Y_file.species != 'proteinX']
-    new_Y_file = new_Y_file[new_Y_file.species != 'proteinZ']
-    new_Z_file = new_Z_file[new_Z_file.species != 'proteinX']
-    new_Z_file = new_Z_file[new_Z_file.species != 'proteinY']
-
-    target_X_file = target_file
-    target_Y_file = target_file
-    target_Z_file = target_file
-    target_X_file = target_X_file[target_X_file.species != 'proteinY']
-    target_X_file = target_X_file[target_X_file.species != 'proteinZ']
-    target_Y_file = target_Y_file[target_Y_file.species != 'proteinX']
-    target_Y_file = target_Y_file[target_Y_file.species != 'proteinZ']
-    target_Z_file = target_Z_file[target_Z_file.species != 'proteinX']
-    target_Z_file = target_Z_file[target_Z_file.species != 'proteinY']
-
-    for row, row2 in zip(new_X_file.iterrows(), target_X_file.iterrows()):
-        if row[1][0] <= row2[1][0] + 0.1 and row[1][0] >= row2[1][0] - 0.1 and row[1][1] == row2[1][1]:
-            sos = sos + (row[1][2] - row2[1][2]) ** 2
-        else:
-            sos = sos + row[1][2] ** 2
-    for row, row2 in zip(new_Y_file.iterrows(), target_Y_file.iterrows()):
-        if row[1][0] <= row2[1][0] + 0.1 and row[1][0] >= row2[1][0] - 0.1 and row[1][1] == row2[1][1]:
-            sos = sos + (row[1][2] - row2[1][2]) ** 2
-        else:
-            sos = sos + row[1][2] ** 2
-    for row, row2 in zip(new_Z_file.iterrows(), target_Z_file.iterrows()):
-        if row[1][0] <= row2[1][0] + 0.1 and row[1][0] >= row2[1][0] - 0.1 and row[1][1] == row2[1][1]:
-            sos = sos + (row[1][2] - row2[1][2]) ** 2
-        else:
-            sos = sos + row[1][2] ** 2
-
+    df = new_file
+    df1 = target_file
+    df_diff = df - df1
+    df_squared = df_diff ** 2
+    sum_df_squared = df_squared.sum()
+    sos = sum_df_squared[0] + sum_df_squared[1] + sum_df_squared[2]
+    print("SOS value = ", sos)
     return sos
 
 #Removes unnecessary rows and columns in produced file
 def edit_new_file(new_file):
 
-    #new_file = new_file.drop("time", axis=1)
-    new_file = new_file.drop(columns="protein", axis=1)
-    new_file = new_file.drop(columns="ribo_density", axis=1)
-    new_file = new_file[new_file.species != '__proteinX_rbs']
-    new_file = new_file[new_file.species != '__proteinY_rbs']
-    new_file = new_file[new_file.species != '__proteinZ_rbs']
-    new_file = new_file[new_file.species != '__ribosome']
-    new_file = new_file[new_file.species != '__rnase_site']
-    new_file = new_file[new_file.species != '__rnase_site_ext']
-    new_file = new_file[new_file.species != 'rnapol']
-    new_file = new_file[new_file.species != 'p1']
-    new_file = new_file[new_file.species != 'p2']
+    new_file = new_file[new_file['species'].isin(['proteinX', 'proteinY', 'proteinZ'])]
+    new_file = new_file[['time', 'species', 'transcript']]
+    new_file['time'] = new_file['time'].round().astype(int)
+    new_file = new_file.pivot(index='time', columns='species', values='transcript')
+    new_file = new_file.fillna(0.0)
     return new_file
 
 #Removes unnecessary rows and columns in target file
 def edit_target_file(target_file, name_of_file):
 
     if name_of_file == "random_data.tsv":
-        #target_file = target_file.drop("time", axis=1)
         return target_file
     else:
-        #target_file = target_file.drop("time", axis=1)
-        target_file = target_file.drop(columns="protein", axis=1)
-        target_file = target_file.drop(columns="ribo_density", axis=1)
-        target_file = target_file[target_file.species != '__proteinX_rbs']
-        target_file = target_file[target_file.species != '__proteinY_rbs']
-        target_file = target_file[target_file.species != '__proteinZ_rbs']
-        target_file = target_file[target_file.species != '__ribosome']
-        target_file = target_file[target_file.species != '__rnase_site']
-        target_file = target_file[target_file.species != '__rnase_site_ext']
-        target_file = target_file[target_file.species != 'rnapol']
-        target_file = target_file[target_file.species != 'p1']
-        target_file = target_file[target_file.species != 'p2']
+        target_file = target_file[target_file['species'].isin(['proteinX', 'proteinY', 'proteinZ'])]
+        target_file = target_file[['time', 'species', 'transcript']]
+        target_file = target_file.pivot(index='time', columns='species', values='transcript')
+        target_file = target_file.fillna(0.0)
         return target_file
 
 def accept_mutation(df, f_old, f_new, new_pol_strength, new_pol1_strength, new_pol2_strength, new_term1_efficiency, new_term2_efficiency,
@@ -499,7 +449,7 @@ def accept_mutation(df, f_old, f_new, new_pol_strength, new_pol1_strength, new_p
                                         new_rnase3_start, new_rnase3_stop, new_term1_start, new_term1_stop,
                                         new_term2_start, new_term2_stop, new_term3_start, new_term3_stop, output_file)
         #Taking in new file and removing unnecessary rows and columns
-        nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
+        nf = pd.read_csv("three_genes_replicated.tsv", header=0, sep='\t')
         nf = edit_new_file(nf)
         sos = sum_of_squares(df, nf)
         all_sos_list.append(sos)
@@ -562,7 +512,7 @@ def accept_mutation(df, f_old, f_new, new_pol_strength, new_pol1_strength, new_p
                                             new_rnase3_start, new_rnase3_stop, new_term1_start, new_term1_stop,
                                             new_term2_start, new_term2_stop, new_term3_start, new_term3_stop, output_file)
             #Taking in new file and removing unnecessary rows and columns
-            nf = pandas.read_table("three_genes_replicated.tsv", delim_whitespace=True, header=0)
+            nf = pd.read_csv("three_genes_replicated.tsv", header=0, sep='\t')
             nf = edit_new_file(nf)
             sos = sum_of_squares(df, nf)
             all_sos_list.append(sos)
@@ -1052,39 +1002,39 @@ def get_coordinates(gene1_list, gene2_list, gene3_list, prom1_list, prom2_list, 
         best_term1_eff_list.append(term1_eff_list[-1])
         best_term2_eff_list.append(term2_eff_list[-1])
         best_term3_eff_list.append(term3_eff_list[-1])
-        gene1_dataframe = pandas.DataFrame(gene1_list, columns=["Gene_Location"])
+        gene1_dataframe = pd.DataFrame(gene1_list, columns=["Gene_Location"])
         export_csv = gene1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/gene1_data.tsv", index=False)
-        gene2_dataframe = pandas.DataFrame(gene2_list, columns=["Gene_Location"])
+        gene2_dataframe = pd.DataFrame(gene2_list, columns=["Gene_Location"])
         export_csv = gene2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/gene2_data.tsv", index=False)
-        gene3_dataframe = pandas.DataFrame(gene3_list, columns=["Gene_Location"])
+        gene3_dataframe = pd.DataFrame(gene3_list, columns=["Gene_Location"])
         export_csv = gene3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/gene3_data.tsv", index=False)
-        prom1_dataframe = pandas.DataFrame(prom1_list, columns=["Promoter_Location"])
+        prom1_dataframe = pd.DataFrame(prom1_list, columns=["Promoter_Location"])
         export_csv = prom1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/promoter1_data.tsv", index=False)
-        prom2_dataframe = pandas.DataFrame(prom2_list, columns=["Promoter_Location"])
+        prom2_dataframe = pd.DataFrame(prom2_list, columns=["Promoter_Location"])
         export_csv = prom2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/promoter2_data.tsv", index=False)
-        term1_dataframe = pandas.DataFrame(term1_list, columns=["Terminator_Location"])
+        term1_dataframe = pd.DataFrame(term1_list, columns=["Terminator_Location"])
         export_csv = term1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/term1_data.tsv", index=False)
-        term2_dataframe = pandas.DataFrame(term2_list, columns=["Terminator_Location"])
+        term2_dataframe = pd.DataFrame(term2_list, columns=["Terminator_Location"])
         export_csv = term2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/term2_data.tsv", index=False)
-        term3_dataframe = pandas.DataFrame(term3_list, columns=["Terminator_Location"])
+        term3_dataframe = pd.DataFrame(term3_list, columns=["Terminator_Location"])
         export_csv = term3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/term3_data.tsv", index=False)
-        rnase1_dataframe = pandas.DataFrame(rnase1_list, columns=["Rnase_Location"])
+        rnase1_dataframe = pd.DataFrame(rnase1_list, columns=["Rnase_Location"])
         export_csv = rnase1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/rnase1_data.tsv", index=False)
-        rnase2_dataframe = pandas.DataFrame(rnase2_list, columns=["Rnase_Location"])
+        rnase2_dataframe = pd.DataFrame(rnase2_list, columns=["Rnase_Location"])
         export_csv = rnase2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/rnase2_data.tsv", index=False)
-        rnase3_dataframe = pandas.DataFrame(rnase3_list, columns=["Rnase_Location"])
+        rnase3_dataframe = pd.DataFrame(rnase3_list, columns=["Rnase_Location"])
         export_csv = rnase3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/rnase3_data.tsv", index=False)
-        poly_dataframe = pandas.DataFrame(best_poly_list, columns=["Polymerase_Rate"])
+        poly_dataframe = pd.DataFrame(best_poly_list, columns=["Polymerase_Rate"])
         export_csv = poly_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/poly_data.tsv", index=False)
-        poly1_dataframe = pandas.DataFrame(best_poly1_list, columns=["Polymerase_Rate"])
+        poly1_dataframe = pd.DataFrame(best_poly1_list, columns=["Polymerase_Rate"])
         export_csv = poly1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/poly1_data.tsv", index=False)
-        poly2_dataframe = pandas.DataFrame(best_poly2_list, columns=["Polymerase_Rate"])
+        poly2_dataframe = pd.DataFrame(best_poly2_list, columns=["Polymerase_Rate"])
         export_csv = poly2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/poly2_data.tsv", index=False)
-        term1_efficiency_dataframe = pandas.DataFrame(best_term1_eff_list, columns=["Terminator1_Efficiency_Rate"])
+        term1_efficiency_dataframe = pd.DataFrame(best_term1_eff_list, columns=["Terminator1_Efficiency_Rate"])
         export_csv = term1_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/term1_efficiency_data.tsv", index=False)
-        term2_efficiency_dataframe = pandas.DataFrame(best_term2_eff_list, columns=["Terminator2_Efficiency_Rate"])
+        term2_efficiency_dataframe = pd.DataFrame(best_term2_eff_list, columns=["Terminator2_Efficiency_Rate"])
         export_csv = term2_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/term2_efficiency_data.tsv", index=False)
-        term3_efficiency_dataframe = pandas.DataFrame(best_term3_eff_list, columns=["Terminator3_Efficiency_Rate"])
+        term3_efficiency_dataframe = pd.DataFrame(best_term3_eff_list, columns=["Terminator3_Efficiency_Rate"])
         export_csv = term3_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome/term3_efficiency_data.tsv", index=False)
 
     if generation == "0":
@@ -1094,39 +1044,39 @@ def get_coordinates(gene1_list, gene2_list, gene3_list, prom1_list, prom2_list, 
         best_term1_eff_list.append(term1_eff_list[-1])
         best_term2_eff_list.append(term2_eff_list[-1])
         best_term3_eff_list.append(term3_eff_list[-1])
-        gene1_dataframe = pandas.DataFrame(gene1_list, columns=["Gene_Location"])
+        gene1_dataframe = pd.DataFrame(gene1_list, columns=["Gene_Location"])
         export_csv = gene1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/gene1_data.tsv", index=False)
-        gene2_dataframe = pandas.DataFrame(gene2_list, columns=["Gene_Location"])
+        gene2_dataframe = pd.DataFrame(gene2_list, columns=["Gene_Location"])
         export_csv = gene2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/gene2_data.tsv", index=False)
-        gene3_dataframe = pandas.DataFrame(gene3_list, columns=["Gene_Location"])
+        gene3_dataframe = pd.DataFrame(gene3_list, columns=["Gene_Location"])
         export_csv = gene3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/gene3_data.tsv", index=False)
-        prom1_dataframe = pandas.DataFrame(prom1_list, columns=["Promoter_Location"])
+        prom1_dataframe = pd.DataFrame(prom1_list, columns=["Promoter_Location"])
         export_csv = prom1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/promoter1_data.tsv", index=False)
-        prom2_dataframe = pandas.DataFrame(prom2_list, columns=["Promoter_Location"])
+        prom2_dataframe = pd.DataFrame(prom2_list, columns=["Promoter_Location"])
         export_csv = prom2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/promoter2_data.tsv", index=False)
-        term1_dataframe = pandas.DataFrame(term1_list, columns=["Terminator_Location"])
+        term1_dataframe = pd.DataFrame(term1_list, columns=["Terminator_Location"])
         export_csv = term1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/term1_data.tsv", index=False)
-        term2_dataframe = pandas.DataFrame(term2_list, columns=["Terminator_Location"])
+        term2_dataframe = pd.DataFrame(term2_list, columns=["Terminator_Location"])
         export_csv = term2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/term2_data.tsv", index=False)
-        term3_dataframe = pandas.DataFrame(term3_list, columns=["Terminator_Location"])
+        term3_dataframe = pd.DataFrame(term3_list, columns=["Terminator_Location"])
         export_csv = term3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/term3_data.tsv", index=False)
-        rnase1_dataframe = pandas.DataFrame(rnase1_list, columns=["Rnase_Location"])
+        rnase1_dataframe = pd.DataFrame(rnase1_list, columns=["Rnase_Location"])
         export_csv = rnase1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/rnase1_data.tsv", index=False)
-        rnase2_dataframe = pandas.DataFrame(rnase2_list, columns=["Rnase_Location"])
+        rnase2_dataframe = pd.DataFrame(rnase2_list, columns=["Rnase_Location"])
         export_csv = rnase2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/rnase2_data.tsv", index=False)
-        rnase3_dataframe = pandas.DataFrame(rnase3_list, columns=["Rnase_Location"])
+        rnase3_dataframe = pd.DataFrame(rnase3_list, columns=["Rnase_Location"])
         export_csv = rnase3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/rnase3_data.tsv", index=False)
-        poly_dataframe = pandas.DataFrame(best_poly_list, columns=["Polymerase_Rate"])
+        poly_dataframe = pd.DataFrame(best_poly_list, columns=["Polymerase_Rate"])
         export_csv = poly_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/poly_data.tsv", index=False)
-        poly1_dataframe = pandas.DataFrame(best_poly1_list, columns=["Polymerase_Rate"])
+        poly1_dataframe = pd.DataFrame(best_poly1_list, columns=["Polymerase_Rate"])
         export_csv = poly1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/poly1_data.tsv", index=False)
-        poly2_dataframe = pandas.DataFrame(best_poly2_list, columns=["Polymerase_Rate"])
+        poly2_dataframe = pd.DataFrame(best_poly2_list, columns=["Polymerase_Rate"])
         export_csv = poly2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/poly2_data.tsv", index=False)
-        term1_efficiency_dataframe = pandas.DataFrame(best_term1_eff_list, columns=["Terminator1_Efficiency_Rate"])
+        term1_efficiency_dataframe = pd.DataFrame(best_term1_eff_list, columns=["Terminator1_Efficiency_Rate"])
         export_csv = term1_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/term1_efficiency_data.tsv", index=False)
-        term2_efficiency_dataframe = pandas.DataFrame(best_term2_eff_list, columns=["Terminator2_Efficiency_Rate"])
+        term2_efficiency_dataframe = pd.DataFrame(best_term2_eff_list, columns=["Terminator2_Efficiency_Rate"])
         export_csv = term2_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/term2_efficiency_data.tsv", index=False)
-        term3_efficiency_dataframe = pandas.DataFrame(best_term3_eff_list, columns=["Terminator3_Efficiency_Rate"])
+        term3_efficiency_dataframe = pd.DataFrame(best_term3_eff_list, columns=["Terminator3_Efficiency_Rate"])
         export_csv = term3_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen0/term3_efficiency_data.tsv", index=False)
 
     if generation == "5000":
@@ -1136,39 +1086,39 @@ def get_coordinates(gene1_list, gene2_list, gene3_list, prom1_list, prom2_list, 
         best_term1_eff_list.append(term1_eff_list[-1])
         best_term2_eff_list.append(term2_eff_list[-1])
         best_term3_eff_list.append(term3_eff_list[-1])
-        gene1_dataframe = pandas.DataFrame(gene1_list, columns=["Gene_Location"])
+        gene1_dataframe = pd.DataFrame(gene1_list, columns=["Gene_Location"])
         export_csv = gene1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/gene1_data.tsv", index=False)
-        gene2_dataframe = pandas.DataFrame(gene2_list, columns=["Gene_Location"])
+        gene2_dataframe = pd.DataFrame(gene2_list, columns=["Gene_Location"])
         export_csv = gene2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/gene2_data.tsv", index=False)
-        gene3_dataframe = pandas.DataFrame(gene3_list, columns=["Gene_Location"])
+        gene3_dataframe = pd.DataFrame(gene3_list, columns=["Gene_Location"])
         export_csv = gene3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/gene3_data.tsv", index=False)
-        prom1_dataframe = pandas.DataFrame(prom1_list, columns=["Promoter_Location"])
+        prom1_dataframe = pd.DataFrame(prom1_list, columns=["Promoter_Location"])
         export_csv = prom1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/promoter1_data.tsv", index=False)
-        prom2_dataframe = pandas.DataFrame(prom2_list, columns=["Promoter_Location"])
+        prom2_dataframe = pd.DataFrame(prom2_list, columns=["Promoter_Location"])
         export_csv = prom2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/promoter2_data.tsv", index=False)
-        term1_dataframe = pandas.DataFrame(term1_list, columns=["Terminator_Location"])
+        term1_dataframe = pd.DataFrame(term1_list, columns=["Terminator_Location"])
         export_csv = term1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/term1_data.tsv", index=False)
-        term2_dataframe = pandas.DataFrame(term2_list, columns=["Terminator_Location"])
+        term2_dataframe = pd.DataFrame(term2_list, columns=["Terminator_Location"])
         export_csv = term2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/term2_data.tsv", index=False)
-        term3_dataframe = pandas.DataFrame(term3_list, columns=["Terminator_Location"])
+        term3_dataframe = pd.DataFrame(term3_list, columns=["Terminator_Location"])
         export_csv = term3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/term3_data.tsv", index=False)
-        rnase1_dataframe = pandas.DataFrame(rnase1_list, columns=["Rnase_Location"])
+        rnase1_dataframe = pd.DataFrame(rnase1_list, columns=["Rnase_Location"])
         export_csv = rnase1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/rnase1_data.tsv", index=False)
-        rnase2_dataframe = pandas.DataFrame(rnase2_list, columns=["Rnase_Location"])
+        rnase2_dataframe = pd.DataFrame(rnase2_list, columns=["Rnase_Location"])
         export_csv = rnase2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/rnase2_data.tsv", index=False)
-        rnase3_dataframe = pandas.DataFrame(rnase3_list, columns=["Rnase_Location"])
+        rnase3_dataframe = pd.DataFrame(rnase3_list, columns=["Rnase_Location"])
         export_csv = rnase3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/rnase3_data.tsv", index=False)
-        poly_dataframe = pandas.DataFrame(best_poly_list, columns=["Polymerase_Rate"])
+        poly_dataframe = pd.DataFrame(best_poly_list, columns=["Polymerase_Rate"])
         export_csv = poly_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/poly_data.tsv", index=False)
-        poly1_dataframe = pandas.DataFrame(best_poly1_list, columns=["Polymerase_Rate"])
+        poly1_dataframe = pd.DataFrame(best_poly1_list, columns=["Polymerase_Rate"])
         export_csv = poly1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/poly1_data.tsv", index=False)
-        poly2_dataframe = pandas.DataFrame(best_poly2_list, columns=["Polymerase_Rate"])
+        poly2_dataframe = pd.DataFrame(best_poly2_list, columns=["Polymerase_Rate"])
         export_csv = poly2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/poly2_data.tsv", index=False)
-        term1_efficiency_dataframe = pandas.DataFrame(best_term1_eff_list, columns=["Terminator1_Efficiency_Rate"])
+        term1_efficiency_dataframe = pd.DataFrame(best_term1_eff_list, columns=["Terminator1_Efficiency_Rate"])
         export_csv = term1_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/term1_efficiency_data.tsv", index=False)
-        term2_efficiency_dataframe = pandas.DataFrame(best_term2_eff_list, columns=["Terminator2_Efficiency_Rate"])
+        term2_efficiency_dataframe = pd.DataFrame(best_term2_eff_list, columns=["Terminator2_Efficiency_Rate"])
         export_csv = term2_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/term2_efficiency_data.tsv", index=False)
-        term3_efficiency_dataframe = pandas.DataFrame(best_term3_eff_list, columns=["Terminator3_Efficiency_Rate"])
+        term3_efficiency_dataframe = pd.DataFrame(best_term3_eff_list, columns=["Terminator3_Efficiency_Rate"])
         export_csv = term3_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen5000/term3_efficiency_data.tsv", index=False)
 
     if generation == "10000":
@@ -1178,39 +1128,39 @@ def get_coordinates(gene1_list, gene2_list, gene3_list, prom1_list, prom2_list, 
         best_term1_eff_list.append(term1_eff_list[-1])
         best_term2_eff_list.append(term2_eff_list[-1])
         best_term3_eff_list.append(term3_eff_list[-1])
-        gene1_dataframe = pandas.DataFrame(gene1_list, columns=["Gene_Location"])
+        gene1_dataframe = pd.DataFrame(gene1_list, columns=["Gene_Location"])
         export_csv = gene1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/gene1_data.tsv", index=False)
-        gene2_dataframe = pandas.DataFrame(gene2_list, columns=["Gene_Location"])
+        gene2_dataframe = pd.DataFrame(gene2_list, columns=["Gene_Location"])
         export_csv = gene2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/gene2_data.tsv", index=False)
-        gene3_dataframe = pandas.DataFrame(gene3_list, columns=["Gene_Location"])
+        gene3_dataframe = pd.DataFrame(gene3_list, columns=["Gene_Location"])
         export_csv = gene3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/gene3_data.tsv", index=False)
-        prom1_dataframe = pandas.DataFrame(prom1_list, columns=["Promoter_Location"])
+        prom1_dataframe = pd.DataFrame(prom1_list, columns=["Promoter_Location"])
         export_csv = prom1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/promoter1_data.tsv", index=False)
-        prom2_dataframe = pandas.DataFrame(prom2_list, columns=["Promoter_Location"])
+        prom2_dataframe = pd.DataFrame(prom2_list, columns=["Promoter_Location"])
         export_csv = prom2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/promoter2_data.tsv", index=False)
-        term1_dataframe = pandas.DataFrame(term1_list, columns=["Terminator_Location"])
+        term1_dataframe = pd.DataFrame(term1_list, columns=["Terminator_Location"])
         export_csv = term1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/term1_data.tsv", index=False)
-        term2_dataframe = pandas.DataFrame(term2_list, columns=["Terminator_Location"])
+        term2_dataframe = pd.DataFrame(term2_list, columns=["Terminator_Location"])
         export_csv = term2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/term2_data.tsv", index=False)
-        term3_dataframe = pandas.DataFrame(term3_list, columns=["Terminator_Location"])
+        term3_dataframe = pd.DataFrame(term3_list, columns=["Terminator_Location"])
         export_csv = term3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/term3_data.tsv", index=False)
-        rnase1_dataframe = pandas.DataFrame(rnase1_list, columns=["Rnase_Location"])
+        rnase1_dataframe = pd.DataFrame(rnase1_list, columns=["Rnase_Location"])
         export_csv = rnase1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/rnase1_data.tsv", index=False)
-        rnase2_dataframe = pandas.DataFrame(rnase2_list, columns=["Rnase_Location"])
+        rnase2_dataframe = pd.DataFrame(rnase2_list, columns=["Rnase_Location"])
         export_csv = rnase2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/rnase2_data.tsv", index=False)
-        rnase3_dataframe = pandas.DataFrame(rnase3_list, columns=["Rnase_Location"])
+        rnase3_dataframe = pd.DataFrame(rnase3_list, columns=["Rnase_Location"])
         export_csv = rnase3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/rnase3_data.tsv", index=False)
-        poly_dataframe = pandas.DataFrame(best_poly_list, columns=["Polymerase_Rate"])
+        poly_dataframe = pd.DataFrame(best_poly_list, columns=["Polymerase_Rate"])
         export_csv = poly_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/poly_data.tsv", index=False)
-        poly1_dataframe = pandas.DataFrame(best_poly1_list, columns=["Polymerase_Rate"])
+        poly1_dataframe = pd.DataFrame(best_poly1_list, columns=["Polymerase_Rate"])
         export_csv = poly1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/poly1_data.tsv", index=False)
-        poly2_dataframe = pandas.DataFrame(best_poly2_list, columns=["Polymerase_Rate"])
+        poly2_dataframe = pd.DataFrame(best_poly2_list, columns=["Polymerase_Rate"])
         export_csv = poly2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/poly2_data.tsv", index=False)
-        term1_efficiency_dataframe = pandas.DataFrame(best_term1_eff_list, columns=["Terminator1_Efficiency_Rate"])
+        term1_efficiency_dataframe = pd.DataFrame(best_term1_eff_list, columns=["Terminator1_Efficiency_Rate"])
         export_csv = term1_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/term1_efficiency_data.tsv", index=False)
-        term2_efficiency_dataframe = pandas.DataFrame(best_term2_eff_list, columns=["Terminator2_Efficiency_Rate"])
+        term2_efficiency_dataframe = pd.DataFrame(best_term2_eff_list, columns=["Terminator2_Efficiency_Rate"])
         export_csv = term2_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/term2_efficiency_data.tsv", index=False)
-        term3_efficiency_dataframe = pandas.DataFrame(best_term3_eff_list, columns=["Terminator3_Efficiency_Rate"])
+        term3_efficiency_dataframe = pd.DataFrame(best_term3_eff_list, columns=["Terminator3_Efficiency_Rate"])
         export_csv = term3_efficiency_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/gen10000/term3_efficiency_data.tsv", index=False)
 
 #Class containing genome for simulation with new polymerase strength
