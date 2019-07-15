@@ -1,0 +1,15 @@
+species	start	stop	new_strength	previous_strength	value
+geneX	26	121	N/A	N/A	N/A
+geneY	159	280	N/A	N/A	N/A
+geneZ	319	449	N/A	N/A	N/A
+promoter1	1	10	0.0	0.0	N/A
+promoter2	0	0	0.0	0.0	N/A
+promoter3	0	0	0.0	0.0	N/A
+rnase1	0	0	N/A	N/A	N/A
+rnase2	0	0	N/A	N/A	N/A
+rnase3	0	0	N/A	N/A	N/A
+terminator1	0	0	0.0	0.0	N/A
+terminator2	0	0	0.0	0.0	N/A
+terminator3	0	0	0.0	0.0	N/A
+f_old	N/A	N/A	N/A	N/A	0.0
+f_new	N/A	N/A	N/A	N/A	0.0
