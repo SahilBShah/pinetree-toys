@@ -114,7 +114,7 @@ def main():
     possibilities = ["alter polymerase 1 strength", "add promoter", "remove promoter", "add rnase",
                       "remove rnase", "add terminator", "remove terminator"]
 
-    while i < 2:
+    while i < 5000:
 
         mutation = random.choice(possibilities)
 
@@ -400,7 +400,6 @@ def sum_of_squares(target_file, new_file):
     df_squared = df_diff ** 2
     sum_df_squared = df_squared.sum()
     sos = sum_df_squared[0] + sum_df_squared[1] + sum_df_squared[2]
-    print("SOS value = ", sos)
     return sos
 
 #Removes unnecessary rows and columns in produced file
@@ -416,14 +415,11 @@ def edit_new_file(new_file):
 #Removes unnecessary rows and columns in target file
 def edit_target_file(target_file, name_of_file):
 
-    if name_of_file == "random_data.tsv":
-        return target_file
-    else:
-        target_file = target_file[target_file['species'].isin(['proteinX', 'proteinY', 'proteinZ'])]
-        target_file = target_file[['time', 'species', 'transcript']]
-        target_file = target_file.pivot(index='time', columns='species', values='transcript')
-        target_file = target_file.fillna(0.0)
-        return target_file
+    target_file = target_file[target_file['species'].isin(['proteinX', 'proteinY', 'proteinZ'])]
+    target_file = target_file[['time', 'species', 'transcript']]
+    target_file = target_file.pivot(index='time', columns='species', values='transcript')
+    target_file = target_file.fillna(0.0)
+    return target_file
 
 def accept_mutation(df, f_old, f_new, new_pol_strength, new_pol1_strength, new_pol2_strength, new_term1_efficiency, new_term2_efficiency,
                     new_term3_efficiency, new_gene1_start, new_gene1_stop, new_gene2_start,
