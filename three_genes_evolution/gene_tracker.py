@@ -27,6 +27,13 @@ writer.writerow(["terminator2", 0, 0, 0.0, 0.0, "N/A"])
 writer.writerow(["terminator3", 0, 0, 0.0, 0.0, "N/A"])
 writer.writerow(["f_old", "N/A", "N/A", "N/A", "N/A", 0.0])
 writer.writerow(["f_new", "N/A", "N/A", "N/A", "N/A", 0.0])
+writer.writerow(["region1", 11, 25, "N/A", "N/A", "N/A"])
+writer.writerow(["region2a", 122, 132, "N/A", "N/A", "N/A"])
+writer.writerow(["region2b", 133, 143, "N/A", "N/A", "N/A"])
+writer.writerow(["region2c", 144, 159, "N/A", "N/A", "N/A"])
+writer.writerow(["region3a", 281, 291, "N/A", "N/A", "N/A"])
+writer.writerow(["region3b", 292, 302, "N/A", "N/A", "N/A"])
+writer.writerow(["region3c", 303, 318, "N/A", "N/A", "N/A"])
 
 file.close()
 

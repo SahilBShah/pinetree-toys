@@ -148,9 +148,10 @@ def edit_target_file(target_file, name_of_file):
 def accept_mutation(df, genome_tracker, i):
 
     global gen
-    output_file = "three_genes_replicated.tsv" + str(i)
+    output_file = "three_genes_replicated" + str(i) + ".tsv"
 
-    if f_new > f_old:
+    #f_new > f_old
+    if genome_tracker['value'][13] > genome_tracker['value'][12]:
         #Accepting mutation
         three_genome.recreated_genome(genome_tracker, output_file)
         #Taking in new file and removing unnecessary rows and columns
@@ -164,3 +165,180 @@ def accept_mutation(df, genome_tracker, i):
             genome_ouput_file = "genome_tracker" + str(i)
             save_file(genome_coordinates, genome_output_file)
             sos_list.append(sos)
+            gen+=1
+    else:
+        #Calculate fitness of new mutation
+        probability = calc_fitness(f_new, f_old, Ne)
+        #f_old
+        genome_tracker['value'][12] = probability
+        if probability > random.random():
+            #Accepting mutation
+            three_genome.recreated_genome(genome_tracker, output_file)
+            #Taking in new file and removing unnecessary rows and columns
+            nf = pd.read_csv("three_genes_replicated.tsv", header=0, sep='\t')
+            nf = edit_new_file(nf)
+            sos = calc_sum_of_squares(df, nf)
+            all_sos_list.append(sos)
+            #Accepts mutation only if sum of squares value decreases
+            if sos <= sos_list[-1]:
+                save_file(nf)
+                genome_ouput_file = "genome_tracker" + str(i)
+                save_file(genome_coordinates, genome_output_file)
+                sos_list.append(sos)
+                gen+=1
+
+def alter_poly_strength(genome_tracker):
+
+    poly_sigma = 1e5
+
+    if promoter == "promoter":
+        #Determining polymerase strength
+        poly_eps = np.random.normal(mu, poly_sigma)
+        #Determines new polymerase strength to reduce sum of squares value
+        pol_strength = genome_tracker['strength'][3] + poly_eps
+        while pol_strength < 0:
+            poly_eps = np.random.normal(mu, poly_sigma)
+            pol_strength = genome_tracker['strength'][3] + poly_eps
+            if pol_strength > 3e10:
+                poly_eps = np.random.normal(mu, poly_sigma)
+                pol_strength = genome_tracker['strength'][3] + poly_eps
+        genome_tracker['strength'][3] = pol_strength
+
+    if promoter == "promoter1":
+        #Determining polymerase strength
+        poly_eps = np.random.normal(mu, poly_sigma)
+        #Determines new polymerase strength to reduce sum of squares value
+        pol1_strength = genome_tracker['strength'][4] + poly_eps
+        while pol_strength < 0:
+            poly_eps = np.random.normal(mu, poly_sigma)
+            pol1_strength = genome_tracker['strength'][4] + poly_eps
+            if pol1_strength > 3e10:
+                poly_eps = np.random.normal(mu, poly_sigma)
+                pol1_strength = genome_tracker['strength'][4] + poly_eps
+        genome_tracker['strength'][4] = pol1_strength
+
+    if promoter == "promoter2":
+        #Determining polymerase strength
+        poly_eps = np.random.normal(mu, poly_sigma)
+        #Determines new polymerase strength to reduce sum of squares value
+        pol2_strength = genome_tracker['strength'][5] + poly_eps
+        while pol2_strength < 0:
+            poly_eps = np.random.normal(mu, poly_sigma)
+            pol2_strength = genome_tracker['strength'][5] + poly_eps
+            if pol2_strength > 3e10:
+                poly_eps = np.random.normal(mu, poly_sigma)
+                pol2_strength = genome_tracker['strength'][5] + poly_eps
+        genome_tracker['strength'][5] = pol2_strength
+
+def alter_term_efficiency(genome_tracker):
+
+    term_sigma = 1.0
+
+    if terminator == "terminator1":
+        #Determining terminator polymerase efficiency rate
+        term_eps = np.random.normal(mu, term_sigma)
+        #Determines new terminator efficiency value to reduce sum of squares value
+        term1_efficiency = genome_tracker['strength'][9] + term_eps
+        while term1_efficiency < 0 or term1_efficiency > 1:
+            term_eps = np.random.normal(mu, term_sigma)
+            term1_efficiency = genome_tracker['strength'][9] + term_eps
+        genome_tracker['strength'][9] = term1_efficiency
+
+    if terminator == "terminator2":
+        #Determining terminator polymerase efficiency rate
+        term_eps = np.random.normal(mu, term_sigma)
+        #Determines new terminator efficiency value to reduce sum of squares value
+        term2_efficiency = genome_tracker['strength'][10] + term_eps
+        while term2_efficiency < 0 or term2_efficiency > 1:
+            term_eps = np.random.normal(mu, term_sigma)
+            term2_efficiency = genome_tracker['strength'][10] + term_eps
+        genome_tracker['strength'][10] = term2_efficiency
+
+    if terminator == "terminator3":
+        #Determining terminator polymerase efficiency rate
+        term_eps = np.random.normal(mu, term_sigma)
+        #Determines new terminator efficiency value to reduce sum of squares value
+        term3_efficiency = genome_tracker['strength'][11] + term_eps
+        while term3_efficiency < 0 or term3_efficiency > 1:
+            term_eps = np.random.normal(mu, term_sigma)
+            term3_efficiency = genome_tracker['strength'][11] + term_eps
+        genome_tracker['strength'][11] = term3_efficiency
+
+def add_promoter(genome_tracker):
+    promoter_possibilities = ["promoter1", "promoter2"]
+    chosen_promoter = random.choice(promoter_possibilities)
+    promoter1_slots = ['A', 'B']
+    promoter2_slots = ['A', 'B']
+
+    if chosen_promoter == "promoter1":
+        promoter = "promoter1"
+        #Adding in a promoter between genes 1 and 2
+        if (genome_tracker['start'][6] >= genome_tracker['start'][15]) and (genome_tracker['start'][6] <= genome_tracker['stop'][15]):
+            promoter1_slots.remove('A')
+        if (genome_tracker['start'][9] >= genome_tracker['start'][15]) and (genome_tracker['start'][9] <= genome_tracker['stop'][15]):
+            promoter1_slots.remove('A')
+        if (genome_tracker['start'][6] >= genome_tracker['start'][16]) and (genome_tracker['start'][6] <= genome_tracker['stop'][16]):
+            promoter1_slots.remove('B')
+        if (genome_tracker['start'][9] >= genome_tracker['start'][16]) and (genome_tracker['stop'][9] <= genome_tracker['stop'][16]):
+            promoter1_slots.remove('B')
+        if promoter1_slots == []:
+            continue
+        else:
+            available_slot = random.choice(promoter1_slots)
+            if available_slot == 'A':
+                prom1_start, genome_tracker['start'][4] = random.randint(genome_tracker['start'][15], 123)
+                prom1_stop, genome_tracker['stop'][4] = prom1_start + 9
+            if available_slot == 'B':
+                prom1_start, genome_tracker['start'][4] = random.randint(genome_tracker['start'][16], 134)
+                prom1_stop, genome_tracker['stop'][4] = prom1_start + 9
+
+        genome_tracker['previous_strength'][4] = genome_tracker['new_strength'][4]
+        genome_tracker['new_strength'][4] = alter_poly_strength(genome_tracker)
+
+    if chosen_promoter == "promoter2":
+        promoter = "promoter2"
+        #Adding promoter between genes 2 and 3
+        if (genome_tracker['start'][7] >= genome_tracker['start'][18]) and (genome_tracker['start'][7] <= genome_tracker['stop'][18]):
+            promoter2_slots.remove('A')
+        if (term2_start_list[-1] >= genome_tracker['start'][18]) and (term2_start_list[-1] <= genome_tracker['stop'][18]):
+            promoter2_slots.remove('A')
+        if (genome_tracker['start'][7] >= genome_tracker['start'][19]) and (genome_tracker['start'][7] <= genome_tracker['stop'][19]):
+            promoter2_slots.remove('B')
+        if (genome_tracker['start'][10] >= genome_tracker['start'][19]) and (genome_tracker['start'][10] <= genome_tracker['stop'][19]):
+            promoter2_slots.remove('B')
+        if promoter2_slots == []:
+            continue
+        else:
+            available_slot = random.choice(promoter2_slots)
+            if available_slot == 'A':
+                prom2_start, genome_tracker['start'][5] = random.randint(genome_tracker['start'][18], 282)
+                prom2_stop, genome_tracker['stop'][5] = prom2_start + 9
+            if available_slot == 'B':
+                prom2_start, genome_tracker['start'][5] = random.randint(genome_tracker['start'][19], 293)
+                prom2_stop, genome_tracker['stop'][5] = prom2_start + 9
+
+        genome_tracker['previous_strength'][5] = genome_tracker['new_strength'][5]
+        genome_tracker['new_strength'][5] = alter_poly_strength(genome_tracker)
+
+def remove_promoter(genome_tracker):
+
+    promoter_possibilities = ["promoter1", "promoter2"]
+    chosen_promoter = random.choice(promoter_possibilities)
+
+    if chosen_promoter == "promoter1":
+        #Removing promoter between genes 1 and 2
+        genome_tracker['start'][4] = 0
+        genome_tracker['stop'][4] = 0
+
+    if chosen_promoter == "promoter2":
+        #Removing promoter between genes 2 and 3
+        genome_tracker['start'][5] = 0
+        genome_tracker['stop'][5] = 0
+
+def add_rnase(genome_tracker):
+
+    rnase_possibilities = ["rnase1", "rnase2", "rnase3"]
+    chosen_rnase = random.choice(rnase_possibilities)
+    rnase_slots = ['A', 'B', 'C']
+
+    
