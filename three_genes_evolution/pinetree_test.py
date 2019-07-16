@@ -1,6 +1,7 @@
 import pinetree as pt
+import gc
 
-for i in range(20000):
+for i in range(30000):
     #Creating starting three genes sequence
     sim = pt.Model(cell_volume=8e-16)
     sim.seed(34)
@@ -31,4 +32,7 @@ for i in range(20000):
     sim.register_genome(plasmid)
     sim.simulate(time_limit=240, time_step=1,
                  output = "memory_leak_test.tsv")
+    del sim
+    del plasmid
+    gc.collect()
     print("i = ", i)
