@@ -1,7 +1,7 @@
-import pinetree as pt
 import gc
 
 for i in range(30000):
+    import pinetree as pt
     #Creating starting three genes sequence
     sim = pt.Model(cell_volume=8e-16)
     sim.seed(34)

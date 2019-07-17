@@ -30,13 +30,14 @@ def main():
     genome_tracker['value'].values[12] = 1.0
 
     #Setting random strengths for promoters and terminators
-    genome_tracker['new_strength'].values[3] = genome_tracker['previous_strength'].values[3] = random.randint(0, 3e10)
+    genome_tracker['previous_strength'].values[3] = genome_tracker['current_strength'].values[3]
+    genome_tracker['current_strength'].values[3] = random.randint(0, 3e10)
 
     possibilities = ["alter polymerase 1 strength", "add promoter", "remove promoter", "add rnase",
                       "remove rnase", "add terminator", "remove terminator"]
 
     #Start of evolution program
-    while i < 1000:
+    while i < 10000:
 
         mutation = random.choice(possibilities)
 
@@ -187,7 +188,7 @@ def accept_mutation(df, genome_tracker, i):
             if sos <= sos_list[-1]:
                 output_file_name = "three_genes_replicated_" + str(i) + ".tsv"
                 save_file(nf, output_file_name)
-                save_file(genome_coordinates, genome_output_file_name)
+                save_file(genome_tracker, genome_output_file_name)
                 sos_list.append(sos)
                 gen+=1
 
@@ -199,40 +200,40 @@ def alter_poly_strength(genome_tracker, which_promoter):
         #Determining polymerase strength
         poly_eps = np.random.normal(mu, poly_sigma)
         #Determines new polymerase strength to reduce sum of squares value
-        pol_strength = genome_tracker['new_strength'].values[3] + poly_eps
+        pol_strength = genome_tracker['current_strength'].values[3] + poly_eps
         while pol_strength < 0:
             poly_eps = np.random.normal(mu, poly_sigma)
-            pol_strength = genome_tracker['new_strength'].values[3] + poly_eps
+            pol_strength = genome_tracker['current_strength'].values[3] + poly_eps
             if pol_strength > 3e10:
                 poly_eps = np.random.normal(mu, poly_sigma)
-                pol_strength = genome_tracker['new_strength'].values[3] + poly_eps
-        genome_tracker['new_strength'].values[3] = pol_strength
+                pol_strength = genome_tracker['current_strength'].values[3] + poly_eps
+        genome_tracker['current_strength'].values[3] = pol_strength
 
     if which_promoter == "promoter1":
         #Determining polymerase strength
         poly_eps = np.random.normal(mu, poly_sigma)
         #Determines new polymerase strength to reduce sum of squares value
-        pol1_strength = genome_tracker['new_strength'].values[4] + poly_eps
+        pol1_strength = genome_tracker['current_strength'].values[4] + poly_eps
         while pol1_strength < 0:
             poly_eps = np.random.normal(mu, poly_sigma)
-            pol1_strength = genome_tracker['new_strength'].values[4] + poly_eps
+            pol1_strength = genome_tracker['current_strength'].values[4] + poly_eps
             if pol1_strength > 3e10:
                 poly_eps = np.random.normal(mu, poly_sigma)
-                pol1_strength = genome_tracker['new_strength'].values[4] + poly_eps
-        genome_tracker['new_strength'].values[4] = pol1_strength
+                pol1_strength = genome_tracker['current_strength'].values[4] + poly_eps
+        genome_tracker['current_strength'].values[4] = pol1_strength
 
     if which_promoter == "promoter2":
         #Determining polymerase strength
         poly_eps = np.random.normal(mu, poly_sigma)
         #Determines new polymerase strength to reduce sum of squares value
-        pol2_strength = genome_tracker['new_strength'].values[5] + poly_eps
+        pol2_strength = genome_tracker['current_strength'].values[5] + poly_eps
         while pol2_strength < 0:
             poly_eps = np.random.normal(mu, poly_sigma)
-            pol2_strength = genome_tracker['new_strength'].values[5] + poly_eps
+            pol2_strength = genome_tracker['current_strength'].values[5] + poly_eps
             if pol2_strength > 3e10:
                 poly_eps = np.random.normal(mu, poly_sigma)
-                pol2_strength = genome_tracker['new_strength'].values[5] + poly_eps
-        genome_tracker['new_strength'].values[5] = pol2_strength
+                pol2_strength = genome_tracker['current_strength'].values[5] + poly_eps
+        genome_tracker['current_strength'].values[5] = pol2_strength
 
 def alter_term_efficiency(genome_tracker, which_terminator):
 
@@ -242,31 +243,31 @@ def alter_term_efficiency(genome_tracker, which_terminator):
         #Determining terminator polymerase efficiency rate
         term_eps = np.random.normal(mu, term_sigma)
         #Determines new terminator efficiency value to reduce sum of squares value
-        term1_efficiency = genome_tracker['new_strength'].values[9] + term_eps
+        term1_efficiency = genome_tracker['current_strength'].values[9] + term_eps
         while term1_efficiency < 0 or term1_efficiency > 1:
             term_eps = np.random.normal(mu, term_sigma)
-            term1_efficiency = genome_tracker['new_strength'].values[9] + term_eps
-        genome_tracker['new_strength'].values[9] = term1_efficiency
+            term1_efficiency = genome_tracker['current_strength'].values[9] + term_eps
+        genome_tracker['current_strength'].values[9] = term1_efficiency
 
     if which_terminator == "terminator2":
         #Determining terminator polymerase efficiency rate
         term_eps = np.random.normal(mu, term_sigma)
         #Determines new terminator efficiency value to reduce sum of squares value
-        term2_efficiency = genome_tracker['new_strength'].values[10] + term_eps
+        term2_efficiency = genome_tracker['current_strength'].values[10] + term_eps
         while term2_efficiency < 0 or term2_efficiency > 1:
             term_eps = np.random.normal(mu, term_sigma)
-            term2_efficiency = genome_tracker['new_strength'].values[10] + term_eps
-        genome_tracker['new_strength'].values[10] = term2_efficiency
+            term2_efficiency = genome_tracker['current_strength'].values[10] + term_eps
+        genome_tracker['current_strength'].values[10] = term2_efficiency
 
     if which_terminator == "terminator3":
         #Determining terminator polymerase efficiency rate
         term_eps = np.random.normal(mu, term_sigma)
         #Determines new terminator efficiency value to reduce sum of squares value
-        term3_efficiency = genome_tracker['new_strength'].values[11] + term_eps
+        term3_efficiency = genome_tracker['current_strength'].values[11] + term_eps
         while term3_efficiency < 0 or term3_efficiency > 1:
             term_eps = np.random.normal(mu, term_sigma)
-            term3_efficiency = genome_tracker['new_strength'].values[11] + term_eps
-        genome_tracker['new_strength'].values[11] = term3_efficiency
+            term3_efficiency = genome_tracker['current_strength'].values[11] + term_eps
+        genome_tracker['current_strength'].values[11] = term3_efficiency
 
 def add_promoter(genome_tracker):
 
@@ -297,8 +298,8 @@ def add_promoter(genome_tracker):
                 prom1_start = genome_tracker['start'].values[4] = random.randint(genome_tracker['start'].values[16], 134)
                 prom1_stop = genome_tracker['stop'].values[4] = prom1_start + 9
 
-        genome_tracker['previous_strength'].values[4] = genome_tracker['new_strength'].values[4]
-        genome_tracker['new_strength'].values[4] = alter_poly_strength(genome_tracker, chosen_promoter)
+        genome_tracker['previous_strength'].values[4] = genome_tracker['current_strength'].values[4]
+        alter_poly_strength(genome_tracker, chosen_promoter)
 
     if chosen_promoter == "promoter2":
         #Adding promoter between genes 2 and 3
@@ -322,8 +323,8 @@ def add_promoter(genome_tracker):
                 prom2_start = genome_tracker['start'].values[5] = random.randint(genome_tracker['start'].values[19], 293)
                 prom2_stop = genome_tracker['stop'].values[5] = prom2_start + 9
 
-        genome_tracker['previous_strength'].values[5] = genome_tracker['new_strength'].values[5]
-        genome_tracker['new_strength'].values[5] = alter_poly_strength(genome_tracker, chosen_promoter)
+        genome_tracker['previous_strength'].values[5] = genome_tracker['current_strength'].values[5]
+        alter_poly_strength(genome_tracker, chosen_promoter)
 
 def remove_promoter(genome_tracker):
 
@@ -458,8 +459,8 @@ def add_terminator(genome_tracker):
                 term1_start = genome_tracker['start'].values[9] = random.randint(genome_tracker['start'].values[17], 158)
                 term1_stop = genome_tracker['stop'].values[9] = term1_start + 1
 
-        genome_tracker['previous_strength'].values[9] = genome_tracker['new_strength'].values[9]
-        genome_tracker['new_strength'].values[9] = alter_term_efficiency(genome_tracker, chosen_terminator)
+        genome_tracker['previous_strength'].values[9] = genome_tracker['current_strength'].values[9]
+        alter_term_efficiency(genome_tracker, chosen_terminator)
 
     if chosen_terminator == "terminator2":
         #Adds terminator after second gene
@@ -488,16 +489,16 @@ def add_terminator(genome_tracker):
                 term2_start = genome_tracker['start'].values[10] = random.randint(genome_tracker['start'].values[17], 317)
                 term2_stop = genome_tracker['stop'].values[10] = term2_start + 1
 
-        genome_tracker['previous_strength'].values[10] = genome_tracker['new_strength'].values[10]
-        genome_tracker['new_strength'].values[10] = alter_term_efficiency(genome_tracker, chosen_terminator)
+        genome_tracker['previous_strength'].values[10] = genome_tracker['current_strength'].values[10]
+        alter_term_efficiency(genome_tracker, chosen_terminator)
 
     if chosen_terminator == "terminator3":
         #Adds terminator after third gene
         genome_tracker['start'].values[11] = 449
         genome_tracker['stop'].values[11] = 450
 
-        genome_tracker['previous_strength'].values[11] = genome_tracker['new_strength'].values[11]
-        genome_tracker['new_strength'].values[11] = alter_term_efficiency(genome_tracker, chosen_terminator)
+        genome_tracker['previous_strength'].values[11] = genome_tracker['current_strength'].values[11]
+        alter_term_efficiency(genome_tracker, chosen_terminator)
 
 def remove_terminator(genome_tracker):
 
@@ -508,22 +509,22 @@ def remove_terminator(genome_tracker):
         #Removes terminator after first gene
         genome_tracker['start'].values[9] = 0
         genome_tracker['stop'].values[9] = 0
-        genome_tracker['previous_strength'].values[9] = genome_tracker['new_strength'].values[9]
-        genome_tracker['new_strength'].values[9] = 0.0
+        genome_tracker['previous_strength'].values[9] = genome_tracker['current_strength'].values[9]
+        genome_tracker['current_strength'].values[9] = 0.0
 
     if chosen_terminator == "terminator2":
         #Removes terminator after second gene
         genome_tracker['start'].values[10] = 0
         genome_tracker['stop'].values[10] = 0
-        genome_tracker['previous_strength'].values[10] = genome_tracker['new_strength'].values[10]
-        genome_tracker['new_strength'].values[10] = 0.0
+        genome_tracker['previous_strength'].values[10] = genome_tracker['current_strength'].values[10]
+        genome_tracker['current_strength'].values[10] = 0.0
 
     if chosen_terminator == "terminator3":
         #Removes terminator after third gene
         genome_tracker['start'].values[11] = 0
         genome_tracker['stop'].values[11] = 0
-        genome_tracker['previous_strength'].values[11] = genome_tracker['new_strength'].values[11]
-        genome_tracker['new_strength'].values[11] = 0.0
+        genome_tracker['previous_strength'].values[11] = genome_tracker['current_strength'].values[11]
+        genome_tracker['current_strength'].values[11] = 0.0
 
 def save_file(file, file_name):
 
@@ -545,13 +546,13 @@ def simulate_genome(genome_tracker, file_name):
                         rnase_speed=20,
                         rnase_footprint=10)
     plasmid.add_promoter(name="p1", start=1, stop=10,
-                         interactions={"rnapol": genome_tracker['new_strength'].values[3]})
+                         interactions={"rnapol": genome_tracker['current_strength'].values[3]})
     if genome_tracker['start'].values[4] > 0:
         plasmid.add_promoter(name="p2", start=genome_tracker['start'].values[4], stop=genome_tracker['stop'].values[4],
-                             interactions={"rnapol": genome_tracker['new_strength'].values[4]})
+                             interactions={"rnapol": genome_tracker['current_strength'].values[4]})
     if genome_tracker['start'].values[5] > 0:
         plasmid.add_promoter(name="p3", start=genome_tracker['start'].values[5], stop=genome_tracker['stop'].values[5],
-                             interactions={"rnapol": genome_tracker['new_strength'].values[5]})
+                             interactions={"rnapol": genome_tracker['current_strength'].values[5]})
     if genome_tracker['start'].values[6] > 0:
         plasmid.add_rnase_site(start=genome_tracker['start'].values[6], stop=genome_tracker['stop'].values[6])
     if genome_tracker['start'].values[7] > 0:
@@ -560,16 +561,15 @@ def simulate_genome(genome_tracker, file_name):
         plasmid.add_rnase_site(start=genome_tracker['start'].values[8], stop=genome_tracker['stop'].values[8])
     if genome_tracker['start'].values[9] > 0:
         plasmid.add_terminator(name="t1", start=genome_tracker['start'].values[9], stop=genome_tracker['stop'].values[9],
-                               efficiency={"rnapol": genome_tracker['new_strength'].values[9]})
+                               efficiency={"rnapol": genome_tracker['current_strength'].values[9]})
     if genome_tracker['start'].values[10] > 0:
         plasmid.add_terminator(name="t2", start=genome_tracker['start'].values[10], stop=genome_tracker['stop'].values[10],
-                               efficiency={"rnapol": genome_tracker['new_strength'].values[10]})
+                               efficiency={"rnapol": genome_tracker['current_strength'].values[10]})
     if genome_tracker['start'].values[11] > 0:
         plasmid.add_terminator(name="t3", start=genome_tracker['start'].values[11], stop=genome_tracker['stop'].values[11],
-                               efficiency={"rnapol": genome_tracker['new_strength'].values[11]})
+                               efficiency={"rnapol": genome_tracker['current_strength'].values[11]})
     plasmid.add_gene(name="proteinX", start=genome_tracker['start'].values[0], stop=genome_tracker['stop'].values[0],
                      rbs_start=(genome_tracker['start'].values[0]-15), rbs_stop=genome_tracker['start'].values[0], rbs_strength=1e7)
-
     plasmid.add_gene(name="proteinY", start=genome_tracker['start'].values[1], stop=genome_tracker['stop'].values[1],
                      rbs_start=(genome_tracker['start'].values[1]-15), rbs_stop=genome_tracker['start'].values[1], rbs_strength=1e7)
     plasmid.add_gene(name="proteinZ", start=genome_tracker['start'].values[2], stop=genome_tracker['stop'].values[2],

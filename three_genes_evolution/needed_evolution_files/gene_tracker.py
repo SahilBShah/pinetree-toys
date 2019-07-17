@@ -12,7 +12,7 @@ export_csv = tracker_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/gen
 
 file = open("gene_tracker.tsv", "w")
 writer = csv.writer(file, delimiter='\t')
-writer.writerow(["species", "start", "stop", "new_strength", "previous_strength", "value"])
+writer.writerow(["species", "start", "stop", "current_strength", "previous_strength", "value"])
 writer.writerow(["geneX", 26, 121, 0, 0, 0])
 writer.writerow(["geneY", 159, 280, 0, 0, 0])
 writer.writerow(["geneZ", 319, 449, 0, 0, 0])

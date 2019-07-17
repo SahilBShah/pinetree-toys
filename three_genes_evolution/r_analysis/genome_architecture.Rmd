@@ -15,7 +15,7 @@ library(ggplot2)
 library(gtools)
 
 #Final genome data
-setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/genome_coordinates/best_genome")
+setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/")
 
 gene1 <- read.table("gene1_data.tsv", header=TRUE)
 gene2 <- read.table("gene2_data.tsv", header=TRUE)
@@ -28,9 +28,6 @@ terminator3 <- read.table("term3_data.tsv", header=TRUE)
 rnase1 <- read.table("rnase1_data.tsv", header=TRUE)
 rnase2 <- read.table("rnase2_data.tsv", header=TRUE)
 rnase3 <- read.table("rnase3_data.tsv", header=TRUE)
-
-y1 <- 1
-y2 <- 2
 
 #Draw promoters
 if((promoter1[1, 1] >= 122) & (promoter1[2, 1] <= 132)){

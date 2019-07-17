@@ -38,7 +38,7 @@ library(gtools)
 
 setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/")
 
-best_file <- list.files("/home/wilkelab/pinetree-toys/three_genes_evolution/", pattern="best_replicated_gen_")
+best_file <- list.files("/home/wilkelab/pinetree-toys/three_genes_evolution/", pattern="three_genes_replicated_")
 best_file <- mixedsort(sort(best_file))
 
 original_data <- read.table("random_data.tsv", header=TRUE)
@@ -77,7 +77,7 @@ library(gtools)
 
 setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/")
 
-best_files <- list.files("/home/wilkelab/pinetree-toys/three_genes_evolution/", pattern="best_replicated_gen_")
+best_files <- list.files("/home/wilkelab/pinetree-toys/three_genes_evolution/", pattern="three_genes_replicated_")
 best_files <- mixedsort(sort(best_files))
 plots_list <- list()
 target_data <- read.table("random_data.tsv", header=TRUE)
