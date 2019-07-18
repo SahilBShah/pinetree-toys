@@ -27,6 +27,7 @@ def main():
     df = pd.read_csv(df_name, header=0, sep='\t')
     df = edit_target_file(df, df_name)
     genome_tracker = pd.read_csv("gene_tracker.tsv", header=0, sep='\t')
+    #12 - f_old
     genome_tracker['value'].values[12] = 1.0
 
     #Setting random strengths for promoters and terminators
@@ -67,23 +68,30 @@ def main():
         genome_tracker['value'].values[13] = genome_tracker['value'].values[12] * (1.0 + eps)
         accept_mutation(df, genome_tracker, i)
 
-        if i == 0:
-            output_file_name = "gen_0_data.tsv"
-            genome_output_file_name = "genome_tracker_" + str(i) + ".tsv"
+        if i in [0, 4999, 9999]:
+            output_file_name = "gen_{}_data.tsv".format(i)
+            genome_output_file_name = "genome_tracker_{}.tsv".format(i)
             simulate_genome(genome_tracker, output_file_name)
             save_file(genome_tracker, genome_output_file_name)
 
-        if i == 4999:
-            output_file_name = "gen_5000_data.tsv"
-            genome_output_file_name = "genome_tracker_" + str(i) + ".tsv"
-            simulate_genome(genome_tracker, output_file_name)
-            save_file(genome_tracker, genome_output_file_name)
 
-        if i == 9999:
-            output_file_name = "gen_10000_data.tsv"
-            genome_output_file_name = "genome_tracker_" + str(i) + ".tsv"
-            simulate_genome(genome_tracker, output_file_name)
-            save_file(genome_tracker, genome_output_file_name)
+        # if i == 0:
+        #     output_file_name = "gen_0_data.tsv"
+        #     genome_output_file_name = "genome_tracker_" + str(i) + ".tsv"
+        #     simulate_genome(genome_tracker, output_file_name)
+        #     save_file(genome_tracker, genome_output_file_name)
+        #
+        # if i == 4999:
+        #     output_file_name = "gen_5000_data.tsv"
+        #     genome_output_file_name = "genome_tracker_" + str(i) + ".tsv"
+        #     simulate_genome(genome_tracker, output_file_name)
+        #     save_file(genome_tracker, genome_output_file_name)
+        #
+        # if i == 9999:
+        #     output_file_name = "gen_10000_data.tsv"
+        #     genome_output_file_name = "genome_tracker_" + str(i) + ".tsv"
+        #     simulate_genome(genome_tracker, output_file_name)
+        #     save_file(genome_tracker, genome_output_file_name)
 
         i+=1
         print("i =", i)
@@ -119,7 +127,9 @@ def calc_fitness(variant_fit, orig_fit, Ne):
 
 #Minimizes distance between observed values and regression line from given data
 def calc_sum_of_squares(target_file, new_file):
+    """
 
+    """
     df = new_file
     df1 = target_file
     df_diff = df - df1
@@ -133,7 +143,8 @@ def edit_new_file(new_file):
 
     new_file = new_file[new_file['species'].isin(['proteinX', 'proteinY', 'proteinZ'])]
     new_file = new_file[['time', 'species', 'transcript']]
-    new_file['time'] = new_file['time'].round().astype(int)
+    if type(new_file['time']) == float:
+        new_file['time'] = new_file['time'].round().astype(int)
     new_file = new_file.pivot(index='time', columns='species', values='transcript')
     new_file = new_file.fillna(0.0)
     return new_file
@@ -195,6 +206,10 @@ def accept_mutation(df, genome_tracker, i):
 def alter_poly_strength(genome_tracker, which_promoter):
 
     poly_sigma = 1e5
+    if which_promoter == "promoter":
+        index = 3
+    elif which_promoter == "promoter1":
+        index = 4
 
     if which_promoter == "promoter":
         #Determining polymerase strength
