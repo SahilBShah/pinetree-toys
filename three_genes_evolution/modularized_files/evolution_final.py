@@ -19,15 +19,10 @@ input_files_list = evolution_setup.genome_setup()
 df = input_files_list[0]
 genome_tracker = input_files_list[1]
 
-#Setting random strengths for promoters and terminators
-genome_tracker.loc[('promoter1'), ('previous_strength')] = genome_tracker.loc[('promoter1'), ('current_strength')]
-genome_tracker.loc[('promoter1'), ('current_strength')] = random.randint(0, 3e10)
-
-possibilities = [mutation_choices.modify_promoter(genome_tracker), mutation_choices.modify_rnase(genome_tracker), mutation_choices.modify_terminator(genome_tracker)]
-
 #Start of evolution program
 while i < 10001:
 
+    possibilities = [mutation_choices.modify_promoter(genome_tracker), mutation_choices.modify_rnase(genome_tracker), mutation_choices.modify_terminator(genome_tracker)]
     random.choice(possibilities)
 
     eps = np.random.normal(mu, sigma)

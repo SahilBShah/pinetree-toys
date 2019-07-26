@@ -5,7 +5,7 @@ def calc_fitness(variant_fit, orig_fit):
 
     xi = orig_fit
     xj = variant_fit
-    Ne = 50
+    Ne = 10
 
     if xj == xi:
         return(1.0 / float(Ne))

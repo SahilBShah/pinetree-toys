@@ -86,6 +86,7 @@ def calc_sum_of_squares(target_file, new_file):
     df_squared = df_diff ** 2
     sum_df_squared = df_squared.sum()
     sos = sum_df_squared[0] + sum_df_squared[1] + sum_df_squared[2]
+    print(sos)
     return sos
 
 #Removes unnecessary rows and columns in produced file
@@ -93,8 +94,7 @@ def rearrange_file(file):
 
     file = file[file['species'].isin(['proteinX', 'proteinY', 'proteinZ'])]
     file = file[['time', 'species', 'transcript']]
-    if type(file['time']) == float:
-        file['time'] = file['time'].round().astype(int)
+    file['time'] = file['time'].round().astype(int)
     file = file.pivot(index='time', columns='species', values='transcript')
     file = file.fillna(0.0)
     return file
@@ -107,7 +107,7 @@ def test_mutation(df, genome_tracker, i):
     if i in [1, 5000, 10000]:
         output_file_name = "gen_{}_data.tsv".format(i)
         genome_output_file_name = "genome_tracker_{}.tsv".format(i)
-        simulate_genome(genome_tracker, output_file_name)
+        genome_start.simulate_genome(genome_tracker, output_file_name)
         save_file(genome_tracker, genome_output_file_name)
 
     #f_new > f_old
@@ -124,11 +124,13 @@ def test_mutation(df, genome_tracker, i):
 def accept_mutation(df, genome_tracker, i):
 
     global gen
+    global sos_list
+    global all_sos_list
     output_file_name = "three_genes_replicated.tsv"
     genome_output_file_name = "genome_tracker_" + str(i) +".tsv"
 
     #Accepting mutation
-    simulate_genome(genome_tracker, output_file_name)
+    genome_start.simulate_genome(genome_tracker, output_file_name)
     #Taking in new file and removing unnecessary rows and columns
     nf = pd.read_csv("three_genes_replicated.tsv", header=0, sep='\t')
     nf = rearrange_file(nf)
@@ -140,6 +142,7 @@ def accept_mutation(df, genome_tracker, i):
         save_file(nf, output_file_name)
         save_file(genome_tracker, genome_output_file_name)
         sos_list.append(sos)
+        print(sos_list)
         gen+=1
 
 def modify_promoter(genome_tracker):

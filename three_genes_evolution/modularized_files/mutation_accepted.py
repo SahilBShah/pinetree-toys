@@ -6,12 +6,12 @@ import save
 import genome_simulator
 import csv
 
+global gen
 global sos_list
 global all_sos_list
-global gen
+gen = 0
 sos_list = [60000]
 all_sos_list = []
-gen = 0
 
 def accept_mutation(df, genome_tracker, i):
 
