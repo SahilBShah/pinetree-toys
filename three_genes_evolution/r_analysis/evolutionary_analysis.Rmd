@@ -14,7 +14,7 @@ library(dplyr)
 library(gridExtra)
 library(ggplot2)
 
-setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/")
+setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/modularized_files")
 
 sos_data <- read.table("sos_data.tsv", header=TRUE)
 generation_data <- read.table("sos_iter_data.tsv", header=TRUE)
@@ -45,9 +45,9 @@ original_data <- read.table("random_data.tsv", header=TRUE)
 original_data <- filter(original_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
 original_line_plot <-  ggplot(original_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Original Genome Function")
 
-gen0_data <- read.table("gen_0_data.tsv", header=TRUE)
-gen0_data <- filter(gen0_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
-gen0_line_plot <-  ggplot(gen0_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function at Generation 0")
+gen1_data <- read.table("gen_1_data.tsv", header=TRUE)
+gen1_data <- filter(gen0_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
+gen1_line_plot <-  ggplot(gen1_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function at Generation 1")
   
 gen5000_data <- read.table("gen_5000_data.tsv", header=TRUE)
 gen5000_data <- filter(gen5000_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
@@ -62,7 +62,7 @@ gen_final1_data <- read.table(final_data, header=TRUE)
 gen_final1_data <- filter(gen_final1_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
 gen_final1_line_plot <-  ggplot(gen_final1_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function of Best Genome Found")
 
-gen_plots <- grid.arrange(original_line_plot, gen0_line_plot, gen5000_line_plot, gen10000_line_plot, gen_final1_line_plot, nrow=2, ncol=3, top="Generational Pattern of Gene Transcripts")
+gen_plots <- grid.arrange(original_line_plot, gen1_line_plot, gen5000_line_plot, gen10000_line_plot, gen_final1_line_plot, nrow=2, ncol=3, top="Generational Pattern of Gene Transcripts")
 ggsave("/home/wilkelab/pinetree-toys/three_genes_evolution/gen_graphs.pdf", gen_plots, width=20, height=10)
 
 ```
@@ -75,7 +75,7 @@ library(gridExtra)
 library(ggplot2)
 library(gtools)
 
-setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/")
+setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/modularized_files")
 
 best_files <- list.files("/home/wilkelab/pinetree-toys/three_genes_evolution/", pattern="three_genes_replicated_")
 best_files <- mixedsort(sort(best_files))
@@ -83,9 +83,9 @@ plots_list <- list()
 target_data <- read.table("random_data.tsv", header=TRUE)
 target_data <- filter(target_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
 target_line_plot <-  ggplot(target_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Target Genome Function")
-gen0_data <- read.table("gen_0_data.tsv", header=TRUE)
-gen0_data <- filter(gen0_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
-gen0_line_plot <-  ggplot(gen0_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function at Generation 0")
+gen1_data <- read.table("gen_1_data.tsv", header=TRUE)
+gen1_data <- filter(gen1_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
+gen1_line_plot <-  ggplot(gen1_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Genome Function at Generation 1")
 
 for(i in 1:length(best_files)){
   best <- "best"
@@ -99,7 +99,7 @@ for(i in 1:length(best_files)){
 }
 
 #evo_plot <- grid.arrange(grobs=plots_list, nrow=ceiling(length(best_files) / 2), ncol=ceiling(length(best_files) / 2), top="Evolutionary Pattern of Gene Transcripts")
-evo_plot <- grid.arrange(target_line_plot, gen0_line_plot, best_plot1, best_plot2, best_plot3, best_plot4, best_plot5, best_plot6, best_plot7, best_plot8, best_plot9, best_plot10, nrow=3, ncol=5, top="Evolutionary Pattern of Gene Transcripts")
+evo_plot <- grid.arrange(target_line_plot, gen1_line_plot, best_plot1, best_plot2, best_plot3, best_plot4, best_plot5, best_plot6, best_plot7, best_plot8, best_plot9, best_plot10, nrow=3, ncol=5, top="Evolutionary Pattern of Gene Transcripts")
 ggsave("/home/wilkelab/pinetree-toys/three_genes_evolution/evolution_graphs.pdf", evo_plot, width=30, height=30, limitsize=FALSE)
 
 ```
