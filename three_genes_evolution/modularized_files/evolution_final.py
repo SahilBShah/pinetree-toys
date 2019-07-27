@@ -20,7 +20,7 @@ df = input_files_list[0]
 genome_tracker = input_files_list[1]
 
 #Start of evolution program
-while i < 5001:
+while i < 10001:
 
     possibilities = [mutation_choices.modify_promoter(genome_tracker), mutation_choices.modify_rnase(genome_tracker), mutation_choices.modify_terminator(genome_tracker)]
     random.choice(possibilities)
