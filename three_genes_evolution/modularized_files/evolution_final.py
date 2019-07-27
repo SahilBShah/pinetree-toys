@@ -20,7 +20,7 @@ df = input_files_list[0]
 genome_tracker = input_files_list[1]
 
 #Start of evolution program
-while i < 10001:
+while i < 5001:
 
     possibilities = [mutation_choices.modify_promoter(genome_tracker), mutation_choices.modify_rnase(genome_tracker), mutation_choices.modify_terminator(genome_tracker)]
     random.choice(possibilities)
@@ -32,11 +32,13 @@ while i < 10001:
     i+=1
     print("i =", i)
 
-from mutation_accepted import gen, sos_list, all_sos_list
+from mutation_accepted import gen, sos_list, all_sos_list, sos_iter_list
 #Exported tsv files
 all_sos_dataframe = pd.DataFrame(all_sos_list, columns=["Sum_of_Squares"])
-export_csv = all_sos_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/all_sos_data.tsv", index=False)
+export_csv = all_sos_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/modularized_files/all_sos_data.tsv", index=False)
 sos_list.remove(60000)
 sos_dataframe = pd.DataFrame(data=sos_list, columns=["Sum_of_Squares"])
-export_csv = sos_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/sos_data.tsv", index=False)
+export_csv = sos_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/modularized_files/sos_data.tsv", index=False)
+sos_iter_dataframe = pd.DataFrame(data=sos_iter_list, columns=['Iteration'])
+export_csv = sos_iter_dataframe.to_csv('~/pinetree-toys/three_genes_evolution/modularized_files/sos_iter_data.tsv', index=False)
 print("Generations =", gen)

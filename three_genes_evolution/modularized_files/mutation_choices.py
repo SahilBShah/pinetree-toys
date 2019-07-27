@@ -6,6 +6,9 @@ global mu
 mu = 0.0
 
 def modify_promoter(genome_tracker):
+    """
+    Promoters are either added with randomized polymerase strengths or removed from the genome all together.
+    """
 
     promoter_modification = ['add', 'remove']
     chosen_modification = random.choice(promoter_modification)
@@ -73,6 +76,9 @@ def modify_promoter(genome_tracker):
         genome_tracker.loc[(chosen_promoter), ('stop')] = 0
 
 def modify_rnase(genome_tracker):
+    """
+    Rnases are added or removed.
+    """
 
     rnase_modification = ['remove', 'add']
     chosen_modification = random.choice(rnase_modification)
@@ -136,6 +142,9 @@ def modify_rnase(genome_tracker):
         genome_tracker.loc[(chosen_rnase), ('stop')] = 0
 
 def modify_terminator(genome_tracker):
+    """
+    Terminators are either added with randomized terminator efficiencies or removed all together.
+    """
 
     terminator_modification = ['remove', 'add']
     chosen_modification = random.choice(terminator_modification)

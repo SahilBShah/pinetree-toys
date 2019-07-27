@@ -6,6 +6,9 @@ import fitness_score
 import random
 
 def test_mutation(df, genome_tracker, i):
+    """
+    Mutation is tested to either be accepted or rejected based on calculated fitness values or based on a probability to allow for some neutral mutations to be accepted.
+    """
 
     if i in [1, 5000, 10000]:
         output_file_name = "gen_{}_data.tsv".format(i)

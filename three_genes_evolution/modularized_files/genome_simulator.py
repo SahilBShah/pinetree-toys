@@ -1,6 +1,9 @@
 import pinetree as pt
 
 def simulate_genome(genome_tracker, file_name):
+    """
+    Calls the PineTree simulator to run genome simulations and outputs a file containing all relevant information to be compared to target input file.
+    """
 
     genome_tracker['start'] = genome_tracker['start'].astype(int)
     genome_tracker['stop'] = genome_tracker['stop'].astype(int)
