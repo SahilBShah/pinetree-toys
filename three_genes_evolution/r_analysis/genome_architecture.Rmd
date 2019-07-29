@@ -16,9 +16,9 @@ library(gtools)
 
 
 #Final genome data
-setwd("/home/wilkelab/pinetree-toys/three_genes_evolution/modularized_files/")
+setwd("/home/sahil/pinetree-toys/three_genes_evolution/modularized_files/")
 
-genome <- read.table("genome_tracker_8255.tsv", header=TRUE)
+genome <- read.table("genome_tracker_5972.tsv", header=TRUE)
 
 y1 = 1
 y2 = 2
@@ -162,5 +162,5 @@ final_genome_plot
 
 genome_plot <- grid.arrange(final_genome_plot, nrow=1, ncol=1)
 
-ggsave("/home/wilkelab/pinetree-toys/three_genes_evolution/modularized_files/genome_architecture.pdf", genome_plot, width=30, height=30, limitsize=FALSE)
+ggsave("/home/sahil/pinetree-toys/three_genes_evolution/modularized_files/genome_architecture.pdf", genome_plot, width=30, height=30, limitsize=FALSE)
 ```
