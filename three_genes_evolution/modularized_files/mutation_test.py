@@ -12,7 +12,7 @@ def test_mutation(df, genome_tracker, i):
 
     if i in [1, 5000, 10000]:
         output_file_name = "gen_{}_data.tsv".format(i)
-        genome_output_file_name = "genome_tracker_{}.tsv".format(i)
+        genome_output_file_name = "genome_{}_tracker.tsv".format(i)
         genome_simulator.simulate_genome(genome_tracker, output_file_name)
         save.save_file(genome_tracker, genome_output_file_name)
 

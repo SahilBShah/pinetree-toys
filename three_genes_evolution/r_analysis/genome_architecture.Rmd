@@ -18,7 +18,9 @@ library(gtools)
 #Final genome data
 setwd("/home/sahil/pinetree-toys/three_genes_evolution/modularized_files/")
 
-genome <- read.table("genome_tracker_10853.tsv", header=TRUE)
+best_files <- list.files("/home/sahil/pinetree-toys/three_genes_evolution/modularized_files/", pattern="genome_tracker_")
+best_files <- mixedsort(sort(best_files))
+genome <- read.table(last(best_files), header=TRUE)
 
 y1 = 1
 y2 = 2
