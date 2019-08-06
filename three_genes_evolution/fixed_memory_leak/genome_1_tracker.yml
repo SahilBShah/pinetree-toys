@@ -1,6 +1,0 @@
-f_new	f_old	geneX	geneY	geneZ	output_file_name	promoter1	promoter2	promoter3	region1	region2a	region2b	region2c	region3a	region3b	region3c	rnase1	rnase2	rnase3	terminator1	terminator2	terminator3
-0.0	0				gen_1_data.tsv	0.0	39940.52835459087	0.0											0.0	0.0	0.0
-0.0	0				gen_1_data.tsv	0.0	0.0	0.0											0.0	0.0	0.0
-0.0	0				gen_1_data.tsv		0.0														
-0.0	0	26.0	159.0	319.0	gen_1_data.tsv	1.0	122.0	0.0	11.0	122.0	133.0	144.0	281.0	292.0	303.0	0.0	145.0	0.0	0.0	0.0	0.0
-0.0	0	121.0	280.0	449.0	gen_1_data.tsv	10.0	131.0	0.0	25.0	132.0	143.0	159.0	291.0	302.0	318.0	0.0	155.0	0.0	0.0	0.0	0.0

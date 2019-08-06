@@ -1,4 +1,3 @@
-#!/usr/bin/anaconda/python3.7
 import pinetree as pt
 import yaml
 
