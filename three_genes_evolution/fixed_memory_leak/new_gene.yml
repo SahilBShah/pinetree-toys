@@ -9,7 +9,7 @@ geneY:
 geneZ:
   start: 319
   stop: 449
-output_file_name: placeholder
+output_file_name: three_genes_replicated.tsv
 promoter1:
   current_strength: 0
   prev_strength: 0

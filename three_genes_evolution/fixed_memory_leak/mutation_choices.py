@@ -5,6 +5,7 @@ import pandas as pd
 global mu
 mu = 0.0
 
+
 def modify_promoter(genome_tracker):
     """
     Promoters are either added with randomized polymerase strengths or removed from the genome all together.

@@ -1,11 +1,12 @@
+#!/usr/bin/anaconda/python3.7
 import pinetree as pt
 import yaml
 
-with open('gene.yml') as f:
+with open('new_gene.yml') as f:
     genome_tracker = yaml.safe_load(f)
 
-genome_tracker['start'] = genome_tracker['start'].astype(int)
-genome_tracker['stop'] = genome_tracker['stop'].astype(int)
+#genome_tracker['start'] = genome_tracker['start'].astype(int)
+#genome_tracker['stop'] = genome_tracker['stop'].astype(int)
 sim = pt.Model(cell_volume=8e-16)
 sim.seed(34)
 sim.add_polymerase(name="rnapol", copy_number=4, speed=40, footprint=10)
@@ -22,7 +23,7 @@ if genome_tracker['promoter2']['start'] > 0:
     plasmid.add_promoter(name="p2", start=genome_tracker['promoter2']['start'], stop=genome_tracker['promoter2']['stop'],
                          interactions={"rnapol": genome_tracker['promoter2']['current_strength']})
 if genome_tracker['promoter3']['start'] > 0:
-    plasmid.add_promoter(name="p3", start=genome_tracker['promoter3']['start'], stop=genome_tracker['promoter3')]['stop'],
+    plasmid.add_promoter(name="p3", start=genome_tracker['promoter3']['start'], stop=genome_tracker['promoter3']['stop'],
                          interactions={"rnapol": genome_tracker['promoter3']['current_strength']})
 if genome_tracker['rnase1']['start'] > 0:
     plasmid.add_rnase_site(start=genome_tracker['rnase1']['start'], stop=genome_tracker['rnase1']['stop'])
@@ -46,6 +47,6 @@ plasmid.add_gene(name="proteinY", start=genome_tracker['geneY']['start'], stop=g
 plasmid.add_gene(name="proteinZ", start=genome_tracker['geneZ']['start'], stop=genome_tracker['geneZ']['stop'],
                  rbs_start=(genome_tracker['geneZ']['start']-15), rbs_stop=genome_tracker['geneZ']['start'], rbs_strength=1e7)
 sim.register_genome(plasmid)
-sim.simulate(time_limit=240, time_step=1, output=file_name)
+sim.simulate(time_limit=240, time_step=1, output=genome_tracker['output_file_name'])
 
-genome_tracker.close()
+f.close()

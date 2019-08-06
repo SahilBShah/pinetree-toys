@@ -23,7 +23,7 @@ def create_yaml():
                 region3a = dict(start=281, stop=291),
                 region3b = dict(start=292, stop=302),
                 region3c = dict(start=303, stop=318),
-                output_file_name = "placeholder"
+                output_file_name = "three_genes_replicated.tsv"
     )
 
     with open('new_gene.yml', 'w') as outfile:

@@ -6,10 +6,10 @@ import mutation_accepted
 import fitness_score
 import sum_of_squares
 import mutation_choices
-import genome_simulator
 import random
 import numpy as np
 import pandas as pd
+import yaml
 
 mu = 0.0
 sigma = 1.0
@@ -20,14 +20,13 @@ df = input_files_list[0]
 genome_tracker = input_files_list[1]
 
 #Start of evolution program
-while i < 14001:
+while i < 50001:
 
-    with open('gene.yml') as f:
+    with open('new_gene.yml') as f:
         genome_tracker = yaml.safe_load(f)
     possibilities = [mutation_choices.modify_promoter(genome_tracker), mutation_choices.modify_rnase(genome_tracker), mutation_choices.modify_terminator(genome_tracker)]
     random.choice(possibilities)
-    genome_tracker.close()
-    save.save_file(genome_tracker, "gene.yml")
+    f.close()
 
     eps = np.random.normal(mu, sigma)
     genome_tracker['f_new'] = genome_tracker['f_old'] * (1.0 + eps)

@@ -3,8 +3,9 @@ import string
 import file_setup
 import sum_of_squares
 import save
-import genome_simulator
 import csv
+import os_genome
+import os
 
 global gen
 global sos_list
@@ -22,11 +23,11 @@ def accept_mutation(df, genome_tracker, i):
 
     global gen
 
-    output_file_name = "three_genes_replicated.tsv"
-    genome_output_file_name = "genome_tracker_" + str(i) +".tsv"
+    genome_tracker['output_file_name'] = "three_genes_replicated.tsv"
+    genome_output_file_name = "genome_tracker_" + str(i) +".yml"
 
     #Accepting mutation
-    genome_simulator.simulate_genome(genome_tracker, output_file_name)
+    os_genome.pt_call()
     #Taking in new file and removing unnecessary rows and columns
     nf = pd.read_csv("three_genes_replicated.tsv", header=0, sep='\t')
     saveable_nf = nf = pd.read_csv("three_genes_replicated.tsv", header=0, sep='\t')
@@ -35,7 +36,7 @@ def accept_mutation(df, genome_tracker, i):
     all_sos_list.append(sos)
     #Accepts mutation only if sum of squares value decreases
     if sos <= sos_list[-1]:
-        output_file_name = "three_genes_replicated_" + str(i) + ".tsv"
+        genome_tracker['output_file_name'] = "three_genes_replicated_" + str(i) + ".tsv"
         save.save_file(saveable_nf, output_file_name)
         save.save_file(genome_tracker, genome_output_file_name)
         sos_list.append(sos)

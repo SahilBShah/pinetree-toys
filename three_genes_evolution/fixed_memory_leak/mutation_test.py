@@ -1,9 +1,10 @@
 import sum_of_squares
 import mutation_accepted
-import genome_simulator
 import save
 import fitness_score
 import random
+import os_genome
+import os
 
 def test_mutation(df, genome_tracker, i):
     """
@@ -11,9 +12,9 @@ def test_mutation(df, genome_tracker, i):
     """
 
     if i in [1, 5000, 10000]:
-        output_file_name = "gen_{}_data.tsv".format(i)
-        genome_output_file_name = "genome_{}_tracker.tsv".format(i)
-        genome_simulator.simulate_genome(genome_tracker, output_file_name)
+        genome_tracker['output_file_name'] = "gen_{}_data.tsv".format(i)
+        genome_output_file_name = "genome_{}_tracker.yml".format(i)
+        os_genome.pt_call()
         save.save_file(genome_tracker, genome_output_file_name)
 
     if genome_tracker['f_new'] > genome_tracker['f_old']:
