@@ -17,27 +17,27 @@ plasmid = pt.Genome(name="plasmid", length=450,
 
 plasmid.add_promoter(name="p1", start=1, stop=10,
                      interactions={"rnapol": 2e10})
-plasmid.add_promoter(name="p1", start=122, stop=132,
-                     interactions={"rnapol": 2e10})
-plasmid.add_promoter(name="p1", start=292, stop=302,
-                     interactions={"rnapol": 2e10})
-plasmid.add_terminator(name="t1", start=449, stop=450,
-                       efficiency={"rnapol": 1.0})
+#plasmid.add_promoter(name="p1", start=122, stop=132,
+                     #interactions={"rnapol": 2e10})
+#plasmid.add_promoter(name="p1", start=292, stop=302,
+                     #interactions={"rnapol": 2e10})
+#plasmid.add_terminator(name="t1", start=449, stop=450,
+                       #efficiency={"rnapol": 1.0})
 
 plasmid.add_gene(name="proteinX", start=26, stop=121,
                  rbs_start=11, rbs_stop=26, rbs_strength=1e7)
 
 plasmid.add_gene(name="proteinY", start=159, stop=280,
                  rbs_start=144, rbs_stop=159, rbs_strength=1e7)
-plasmid.add_rnase_site(start=133, stop=143)
-plasmid.add_rnase_site(start=281, stop=291)
+#plasmid.add_rnase_site(start=133, stop=143)
+#plasmid.add_rnase_site(start=281, stop=291)
 plasmid.add_gene(name="proteinZ", start=319, stop=449,
                  rbs_start=303, rbs_stop=318, rbs_strength=1e7)
 sim.register_genome(plasmid)
 sim.simulate(time_limit=240, time_step=1,
-             output = "three_genes_test_file3.tsv")
+             output = "three_genes_test_file.tsv")
 
-gene1_list = [26, 121]
+'''gene1_list = [26, 121]
 gene2_list = [159, 280]
 gene3_list = [319, 449]
 prom1_list = [122, 132]
@@ -70,4 +70,4 @@ export_csv = rnase1_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/geno
 rnase2_dataframe = pandas.DataFrame(data=rnase2_list, columns=["Rnase_Location"])
 export_csv = rnase2_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/target_genome/rnase2_data.tsv", index=False)
 rnase3_dataframe = pandas.DataFrame(rnase3_list, columns=["Rnase_Location"])
-export_csv = rnase3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/target_genome/rnase3_data.tsv", index=False)
+export_csv = rnase3_dataframe.to_csv("~/pinetree-toys/three_genes_evolution/genome_coordinates/target_genome/rnase3_data.tsv", index=False)'''

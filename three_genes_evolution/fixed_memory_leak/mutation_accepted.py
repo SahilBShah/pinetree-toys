@@ -4,14 +4,16 @@ import file_setup
 import sum_of_squares
 import save
 import csv
-import os_genome
-import os
+from os_genome import call_pt
+import yaml
 
 global gen
+global accepted
 global sos_list
 global all_sos_list
 global sos_iter_list
 gen = 0
+accepted = 0
 sos_list = [60000]
 all_sos_list = []
 sos_iter_list = []
@@ -22,12 +24,15 @@ def accept_mutation(df, genome_tracker, i):
     """
 
     global gen
+    global accepted
 
     genome_tracker['output_file_name'] = "three_genes_replicated.tsv"
+    with open('new_gene.yml', 'w') as f:
+        yaml.dump(genome_tracker, f)
     genome_output_file_name = "genome_tracker_" + str(i) +".yml"
 
     #Accepting mutation
-    os_genome.pt_call()
+    call_pt.pt_call()
     #Taking in new file and removing unnecessary rows and columns
     nf = pd.read_csv("three_genes_replicated.tsv", header=0, sep='\t')
     saveable_nf = nf = pd.read_csv("three_genes_replicated.tsv", header=0, sep='\t')
@@ -37,8 +42,14 @@ def accept_mutation(df, genome_tracker, i):
     #Accepts mutation only if sum of squares value decreases
     if sos <= sos_list[-1]:
         genome_tracker['output_file_name'] = "three_genes_replicated_" + str(i) + ".tsv"
-        save.save_file(saveable_nf, output_file_name)
-        save.save_file(genome_tracker, genome_output_file_name)
+        with open('new_gene.yml', 'w') as f:
+            yaml.dump(genome_tracker, f)
+        save.save_file(saveable_nf, genome_tracker['output_file_name'])
+        with open(genome_output_file_name, 'w') as f:
+            yaml.dump(genome_tracker, f)
         sos_list.append(sos)
         sos_iter_list.append(i)
         gen+=1
+    accepted+=1
+
+    f.close()

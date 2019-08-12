@@ -1,0 +1,72 @@
+f_new: 2.2883262363182652e-15
+f_old: 6.197778838128767e-16
+geneX:
+  start: 26
+  stop: 121
+geneY:
+  start: 159
+  stop: 280
+geneZ:
+  start: 319
+  stop: 449
+output_file_name: three_genes_replicated_313.tsv
+promoter1:
+  current_strength: 9026195980.398956
+  prev_strength: 9026197221.656515
+  start: 1
+  stop: 10
+promoter2:
+  current_strength: 310961.82407138264
+  prev_strength: 423473.99246424035
+  start: 122
+  stop: 131
+promoter3:
+  current_strength: 135483.74479687723
+  prev_strength: 195935.0526897087
+  start: 282
+  stop: 291
+region1:
+  start: 11
+  stop: 25
+region2a:
+  start: 122
+  stop: 132
+region2b:
+  start: 133
+  stop: 143
+region2c:
+  start: 144
+  stop: 159
+region3a:
+  start: 281
+  stop: 291
+region3b:
+  start: 292
+  stop: 302
+region3c:
+  start: 303
+  stop: 318
+rnase1:
+  start: 0
+  stop: 0
+rnase2:
+  start: 0
+  stop: 0
+rnase3:
+  start: 0
+  stop: 0
+terminator1:
+  current_strength: 0.5235751191422128
+  prev_strength: 0.5235751191422128
+  start: 133
+  stop: 134
+terminator2:
+  current_strength: 0.35621183216745783
+  prev_strength: 0.35621183216745783
+  start: 293
+  stop: 294
+terminator3:
+  current_strength: 0.2667285524216777
+  prev_strength: 0.2667285524216777
+  start: 449
+  stop: 450
