@@ -14,18 +14,21 @@ library(dplyr)
 library(gridExtra)
 library(ggplot2)
 
-setwd("/home/sahil/pinetree-toys/three_genes_evolution/fixed_memory_leak/latest_version")
+setwd("/home/sahil/pinetree-toys/three_genes_evolution/fixed_memory_leak/latest_version/")
 
-sos_data <- read.table("sos_data.tsv", header=TRUE)
-generation_data <- read.table("sos_iter_data.tsv", header=TRUE)
-sos_data <- cbind(sos_data, generation_data)
-sos_line_plot <- ggplot(sos_data, aes(x=Iteration, y=Sum_of_Squares)) + geom_point(stat="identity") + geom_line(stat="identity") + ggtitle("Evolution of Sum of Squares") + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-panel.background = element_blank(), axis.line = element_line(colour = "black"))
+#sos_data <- read.table("sos_data.tsv", header=TRUE)
+#generation_data <- read.table("sos_iter_data.tsv", header=TRUE)
+#sos_data <- cbind(sos_data, generation_data)
+#sos_line_plot <- ggplot(sos_data, aes(x=Iteration, y=Sum_of_Squares)) + geom_point(stat="identity") + geom_line(stat="identity") + ggtitle("Evolution of Sum of Squares") + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+#panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
 all_sos_data <- read.table("all_sos_data.tsv", header=TRUE)
-all_sos_data$ID <- seq.int(nrow(all_sos_data))
-all_sos_line_plot <- ggplot(all_sos_data, aes(x=ID, y=Sum_of_Squares)) + geom_point(stat="identity") + geom_line(stat="identity") + ggtitle("All Sum of Squares Values") + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+generation_data <- read.table("sos_iter_data.tsv", header=TRUE)
+all_sos_data <- cbind(all_sos_data, generation_data)
+#all_sos_data$ID <- seq.int(nrow(all_sos_data))
+all_sos_line_plot <- ggplot(all_sos_data, aes(x=Iteration, y=Sum_of_Squares)) + geom_point(stat="identity") + geom_line(stat="identity") + ggtitle("All Sum of Squares Values") + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
 panel.background = element_blank(), axis.line = element_line(colour = "black"))
-sos_plots <- grid.arrange(sos_line_plot, all_sos_line_plot, nrow=2, top="Sum of Squares Data")
+sos_plots <- grid.arrange(all_sos_line_plot, nrow=2, top="Sum of Squares Data")
 ggsave("/home/sahil/pinetree-toys/three_genes_evolution/fixed_memory_leak/latest_version/sos_graphs.pdf", sos_plots, width=20, height=10)
 ```
 ## R Markdown
@@ -81,6 +84,7 @@ library(dplyr)
 library(gridExtra)
 library(ggplot2)
 library(gtools)
+library(reshape2)
 
 setwd("/home/sahil/pinetree-toys/three_genes_evolution/fixed_memory_leak/latest_version")
 
@@ -108,7 +112,7 @@ for(i in 1:length(best_files)){
 }
 
 #evo_plot <- grid.arrange(grobs=plots_list, nrow=ceiling(length(best_files) / 2), ncol=ceiling(length(best_files) / 2), top="Evolutionary Pattern of Gene Transcripts")
-evo_plot <- grid.arrange(target_line_plot, gen1_line_plot, best_plot1, best_plot2, best_plot3, best_plot4, best_plot5, best_plot6, best_plot7, best_plot8, best_plot9, best_plot10, best_plot11, best_plot12, best_plot13, best_plot14, best_plot15, best_plot16, best_plot17, best_plot18, best_plot19, nrow=7, ncol=3, top="Evolutionary Pattern of Gene Transcripts")
+evo_plot <- grid.arrange(target_line_plot, gen1_line_plot, best_plot1, best_plot2, best_plot3, best_plot4, best_plot5, best_plot6, best_plot7, best_plot8, best_plot9, best_plot10, best_plot11, best_plot12, best_plot13, nrow=5, ncol=3, top="Evolutionary Pattern of Gene Transcripts")
 ggsave("/home/sahil/pinetree-toys/three_genes_evolution/fixed_memory_leak/latest_version/evolution_graphs.pdf", evo_plot, width=30, height=30, limitsize=FALSE)
 
 ```

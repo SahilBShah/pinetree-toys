@@ -1,0 +1,72 @@
+f_new: 6.15554453079198e-106
+f_old: 1.743163261151825e-105
+geneX:
+  start: 26
+  stop: 121
+geneY:
+  start: 159
+  stop: 280
+geneZ:
+  start: 319
+  stop: 449
+output_file_name: gen_5000_data.tsv
+promoter1:
+  current_strength: 10851117195.963919
+  prev_strength: 10851002906.863415
+  start: 1
+  stop: 10
+promoter2:
+  current_strength: 1439434.2992664014
+  prev_strength: 1409742.21071348
+  start: 133
+  stop: 142
+promoter3:
+  current_strength: 1541446.9394848226
+  prev_strength: 1632871.6735666736
+  start: 0
+  stop: 0
+region1:
+  start: 11
+  stop: 25
+region2a:
+  start: 122
+  stop: 132
+region2b:
+  start: 133
+  stop: 143
+region2c:
+  start: 144
+  stop: 159
+region3a:
+  start: 281
+  stop: 291
+region3b:
+  start: 292
+  stop: 302
+region3c:
+  start: 303
+  stop: 318
+rnase1:
+  start: 0
+  stop: 0
+rnase2:
+  start: 122
+  stop: 132
+rnase3:
+  start: 281
+  stop: 291
+terminator1:
+  current_strength: 0.6070340229610836
+  prev_strength: 0.6070340229610836
+  start: 149
+  stop: 150
+terminator2:
+  current_strength: 0.19633157674801288
+  prev_strength: 0.19633157674801288
+  start: 315
+  stop: 316
+terminator3:
+  current_strength: 0.734418731957943
+  prev_strength: 0.734418731957943
+  start: 449
+  stop: 450

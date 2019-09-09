@@ -7,7 +7,7 @@ global mu
 mu = 0.0
 
 
-def modify_promoter(genome_tracker):
+def modify_promoter(genome_tracker_new):
     """
     Promoters are either added with randomized polymerase strengths or removed from the genome all together.
     """
@@ -37,51 +37,51 @@ def modify_promoter(genome_tracker):
 
         if chosen_promoter != "promoter1":
             #Adding in a promoter between genes 1 and 2
-            if (genome_tracker[rnase]['start'] >= genome_tracker[regionA]['start']) and (genome_tracker[rnase]['start'] <= genome_tracker[regionA]['stop']):
+            if (genome_tracker_new[rnase]['start'] >= genome_tracker_new[regionA]['start']) and (genome_tracker_new[rnase]['start'] <= genome_tracker_new[regionA]['stop']):
                 promoter_slots.remove('A')
-            if (genome_tracker[terminator]['start'] >= genome_tracker[regionA]['start']) and (genome_tracker[terminator]['start'] <= genome_tracker[regionA]['stop']):
+            if (genome_tracker_new[terminator]['start'] >= genome_tracker_new[regionA]['start']) and (genome_tracker_new[terminator]['start'] <= genome_tracker_new[regionA]['stop']):
                 promoter_slots.remove('A')
-            if (genome_tracker[rnase]['start'] >= genome_tracker[regionB]['start']) and (genome_tracker[rnase]['start'] <= genome_tracker[regionB]['stop']):
+            if (genome_tracker_new[rnase]['start'] >= genome_tracker_new[regionB]['start']) and (genome_tracker_new[rnase]['start'] <= genome_tracker_new[regionB]['stop']):
                 promoter_slots.remove('B')
-            if (genome_tracker[terminator]['start'] >= genome_tracker[regionB]['start']) and (genome_tracker[terminator]['stop'] <= genome_tracker[regionB]['stop']):
+            if (genome_tracker_new[terminator]['start'] >= genome_tracker_new[regionB]['start']) and (genome_tracker_new[terminator]['stop'] <= genome_tracker_new[regionB]['stop']):
                 promoter_slots.remove('B')
             if promoter_slots == []:
-                genome_tracker[chosen_promoter]['start'] = 0
-                genome_tracker[chosen_promoter]['stop'] = 0
+                genome_tracker_new[chosen_promoter]['start'] = 0
+                genome_tracker_new[chosen_promoter]['stop'] = 0
             else:
                 available_slot = random.choice(promoter_slots)
                 if available_slot == 'A':
-                    prom_start = genome_tracker[chosen_promoter]['start'] = random.randint(genome_tracker[regionA]['start'], gene_endA)
-                    prom_stop = genome_tracker[chosen_promoter]['stop'] = prom_start + 9
+                    prom_start = genome_tracker_new[chosen_promoter]['start'] = random.randint(genome_tracker_new[regionA]['start'], gene_endA)
+                    prom_stop = genome_tracker_new[chosen_promoter]['stop'] = prom_start + 9
                 if available_slot == 'B':
-                    prom_start = genome_tracker[chosen_promoter]['start'] = random.randint(genome_tracker[regionB]['start'], gene_endB)
-                    prom_stop = genome_tracker[chosen_promoter]['stop'] = prom_start + 9
+                    prom_start = genome_tracker_new[chosen_promoter]['start'] = random.randint(genome_tracker_new[regionB]['start'], gene_endB)
+                    prom_stop = genome_tracker_new[chosen_promoter]['stop'] = prom_start + 9
 
         #Determining polymerase strength
         poly_eps = np.random.normal(mu, poly_sigma)
         #Determines new polymerase strength to reduce sum of squares value
-        pol_strength = genome_tracker[chosen_promoter]['current_strength'] + poly_eps
+        pol_strength = genome_tracker_new[chosen_promoter]['current_strength'] + poly_eps
         while pol_strength < 0:
             poly_eps = np.random.normal(mu, poly_sigma)
-            pol_strength = genome_tracker[chosen_promoter]['current_strength'] + poly_eps
+            pol_strength = genome_tracker_new[chosen_promoter]['current_strength'] + poly_eps
             if pol_strength > 3e10:
                 poly_eps = np.random.normal(mu, poly_sigma)
-                pol_strength = genome_tracker[chosen_promoter]['current_strength'] + poly_eps
-        genome_tracker[chosen_promoter]['prev_strength'] = genome_tracker[chosen_promoter]['current_strength']
-        genome_tracker[chosen_promoter]['current_strength'] = pol_strength
+                pol_strength = genome_tracker_new[chosen_promoter]['current_strength'] + poly_eps
+        genome_tracker_new[chosen_promoter]['prev_strength'] = genome_tracker_new[chosen_promoter]['current_strength']
+        genome_tracker_new[chosen_promoter]['current_strength'] = pol_strength
 
     if chosen_modification == 'remove':
         promoter_possibilities = ['promoter2', 'promoter3']
         chosen_promoter = random.choice(promoter_possibilities)
         #Removing promoters
-        genome_tracker[chosen_promoter]['start'] = 0
-        genome_tracker[chosen_promoter]['stop'] = 0
+        genome_tracker_new[chosen_promoter]['start'] = 0
+        genome_tracker_new[chosen_promoter]['stop'] = 0
 
     with open('new_gene.yml', 'w') as f:
-        yaml.dump(genome_tracker, f)
+        yaml.dump(genome_tracker_new, f)
     f.close()
 
-def modify_rnase(genome_tracker):
+def modify_rnase(genome_tracker_new):
     """
     Rnases are added or removed.
     """
@@ -114,44 +114,44 @@ def modify_rnase(genome_tracker):
 
         if chosen_rnase == "rnase1":
             #Adds rnase after first promoter
-            rnase1_start = genome_tracker['rnase1']['start'] = random.randint(genome_tracker['region1']['start'], 15)
-            rnase1_stop = genome_tracker['rnase1']['stop'] = rnase1_start + 10
+            rnase1_start = genome_tracker_new['rnase1']['start'] = random.randint(genome_tracker_new['region1']['start'], 15)
+            rnase1_stop = genome_tracker_new['rnase1']['stop'] = rnase1_start + 10
         else:
             #Adds rnase after second promoter
-            if (genome_tracker[promoter]['start'] >= genome_tracker[regionA]['start']) and (genome_tracker[promoter]['start'] <= genome_tracker[regionA]['stop']):
+            if (genome_tracker_new[promoter]['start'] >= genome_tracker_new[regionA]['start']) and (genome_tracker_new[promoter]['start'] <= genome_tracker_new[regionA]['stop']):
                 rnase_slots.remove('A')
-            if (genome_tracker[terminator]['start'] >= genome_tracker[regionA]['start']) and (genome_tracker[terminator]['start'] <= genome_tracker[regionA]['stop']):
+            if (genome_tracker_new[terminator]['start'] >= genome_tracker_new[regionA]['start']) and (genome_tracker_new[terminator]['start'] <= genome_tracker_new[regionA]['stop']):
                 rnase_slots.remove('A')
-            if (genome_tracker[promoter]['start'] >= genome_tracker[regionB]['start']) and (genome_tracker[promoter]['start'] <= genome_tracker[regionB]['stop']):
+            if (genome_tracker_new[promoter]['start'] >= genome_tracker_new[regionB]['start']) and (genome_tracker_new[promoter]['start'] <= genome_tracker_new[regionB]['stop']):
                 rnase_slots.remove('B')
-            if (genome_tracker[terminator]['start'] >= genome_tracker[regionB]['start']) and (genome_tracker[terminator]['start'] <= genome_tracker[regionB]['stop']):
+            if (genome_tracker_new[terminator]['start'] >= genome_tracker_new[regionB]['start']) and (genome_tracker_new[terminator]['start'] <= genome_tracker_new[regionB]['stop']):
                 rnase_slots.remove('B')
-            if (genome_tracker[terminator]['start'] >= genome_tracker[regionC]['start']) and (genome_tracker[terminator]['start'] <= genome_tracker[regionC]['stop']):
+            if (genome_tracker_new[terminator]['start'] >= genome_tracker_new[regionC]['start']) and (genome_tracker_new[terminator]['start'] <= genome_tracker_new[regionC]['stop']):
                 rnase_slots.remove('C')
             if rnase_slots == []:
-                genome_tracker[chosen_rnase]['start'] = 0
-                genome_tracker[chosen_rnase]['stop'] = 0
+                genome_tracker_new[chosen_rnase]['start'] = 0
+                genome_tracker_new[chosen_rnase]['stop'] = 0
             else:
                 available_slot = random.choice(rnase_slots)
                 if available_slot == 'A':
-                    rnase_start = genome_tracker[chosen_rnase]['start'] = random.randint(genome_tracker[regionA]['start'], gene_endA)
-                    rnase_stop = genome_tracker[chosen_rnase]['stop'] = rnase_start + 10
+                    rnase_start = genome_tracker_new[chosen_rnase]['start'] = random.randint(genome_tracker_new[regionA]['start'], gene_endA)
+                    rnase_stop = genome_tracker_new[chosen_rnase]['stop'] = rnase_start + 10
                 if available_slot == 'B':
-                    rnase_start = genome_tracker[chosen_rnase]['start'] = random.randint(genome_tracker[regionB]['start'], gene_endB)
-                    rnase_stop = genome_tracker[chosen_rnase]['stop'] = rnase_start + 10
+                    rnase_start = genome_tracker_new[chosen_rnase]['start'] = random.randint(genome_tracker_new[regionB]['start'], gene_endB)
+                    rnase_stop = genome_tracker_new[chosen_rnase]['stop'] = rnase_start + 10
                 if available_slot == 'C':
-                    rnase_start = genome_tracker[chosen_rnase]['start'] = random.randint(genome_tracker[regionC]['start'], gene_endC)
-                    rnase_stop = genome_tracker[chosen_rnase]['stop'] = rnase_start + 10
+                    rnase_start = genome_tracker_new[chosen_rnase]['start'] = random.randint(genome_tracker_new[regionC]['start'], gene_endC)
+                    rnase_stop = genome_tracker_new[chosen_rnase]['stop'] = rnase_start + 10
 
     if chosen_modification == 'remove':
-        genome_tracker[chosen_rnase]['start'] = 0
-        genome_tracker[chosen_rnase]['stop'] = 0
+        genome_tracker_new[chosen_rnase]['start'] = 0
+        genome_tracker_new[chosen_rnase]['stop'] = 0
 
     with open('new_gene.yml', 'w') as f:
-        yaml.dump(genome_tracker, f)
+        yaml.dump(genome_tracker_new, f)
     f.close()
 
-def modify_terminator(genome_tracker):
+def modify_terminator(genome_tracker_new):
     """
     Terminators are either added with randomized terminator efficiencies or removed all together.
     """
@@ -185,51 +185,51 @@ def modify_terminator(genome_tracker):
 
         if chosen_terminator == "terminator3":
             #Adds terminator after third gene
-            genome_tracker[chosen_terminator]['start'] = 449
-            genome_tracker[chosen_terminator]['stop'] = 450
+            genome_tracker_new[chosen_terminator]['start'] = 449
+            genome_tracker_new[chosen_terminator]['stop'] = 450
         else:
             #Adds terminator after first gene
-            if (genome_tracker[promoter]['start'] >= genome_tracker[regionA]['start']) and (genome_tracker[promoter]['start'] <= genome_tracker[regionA]['stop']):
+            if (genome_tracker_new[promoter]['start'] >= genome_tracker_new[regionA]['start']) and (genome_tracker_new[promoter]['start'] <= genome_tracker_new[regionA]['stop']):
                 terminator_slots.remove('A')
-            if (genome_tracker[rnase]['start'] >= genome_tracker[regionA]['start']) and (genome_tracker[rnase]['start'] <= genome_tracker[regionA]['stop']):
+            if (genome_tracker_new[rnase]['start'] >= genome_tracker_new[regionA]['start']) and (genome_tracker_new[rnase]['start'] <= genome_tracker_new[regionA]['stop']):
                 terminator_slots.remove('A')
-            if (genome_tracker[promoter]['start'] >= genome_tracker[regionB]['start']) and (genome_tracker[promoter]['start'] <= genome_tracker[regionB]['stop']):
+            if (genome_tracker_new[promoter]['start'] >= genome_tracker_new[regionB]['start']) and (genome_tracker_new[promoter]['start'] <= genome_tracker_new[regionB]['stop']):
                 terminator_slots.remove('B')
-            if (genome_tracker[rnase]['start'] >= genome_tracker[regionB]['start']) and (genome_tracker[rnase]['start'] <= genome_tracker[regionB]['stop']):
+            if (genome_tracker_new[rnase]['start'] >= genome_tracker_new[regionB]['start']) and (genome_tracker_new[rnase]['start'] <= genome_tracker_new[regionB]['stop']):
                 terminator_slots.remove('B')
-            if (genome_tracker[rnase]['start'] >= genome_tracker[regionC]['start']) and (genome_tracker[rnase]['start'] <= genome_tracker[regionC]['stop']):
+            if (genome_tracker_new[rnase]['start'] >= genome_tracker_new[regionC]['start']) and (genome_tracker_new[rnase]['start'] <= genome_tracker_new[regionC]['stop']):
                 terminator_slots.remove('C')
             if terminator_slots == []:
-                genome_tracker[chosen_terminator]['start'] = 0
-                genome_tracker[chosen_terminator]['stop'] = 0
+                genome_tracker_new[chosen_terminator]['start'] = 0
+                genome_tracker_new[chosen_terminator]['stop'] = 0
             else:
                 available_slot = random.choice(terminator_slots)
                 if available_slot == 'A':
-                    term_start = genome_tracker[chosen_terminator]['start'] = random.randint(genome_tracker[regionA]['start'], gene_endA)
-                    term_stop = genome_tracker[chosen_terminator]['stop'] = term_start + 1
+                    term_start = genome_tracker_new[chosen_terminator]['start'] = random.randint(genome_tracker_new[regionA]['start'], gene_endA)
+                    term_stop = genome_tracker_new[chosen_terminator]['stop'] = term_start + 1
                 if available_slot == 'B':
-                    term_start = genome_tracker[chosen_terminator]['start'] = random.randint(genome_tracker[regionB]['start'], gene_endB)
-                    term_stop = genome_tracker[chosen_terminator]['stop'] = term_start + 1
+                    term_start = genome_tracker_new[chosen_terminator]['start'] = random.randint(genome_tracker_new[regionB]['start'], gene_endB)
+                    term_stop = genome_tracker_new[chosen_terminator]['stop'] = term_start + 1
                 if available_slot == 'C':
-                    term_start = genome_tracker[chosen_terminator]['start'] = random.randint(genome_tracker[regionC]['start'], gene_endC)
-                    term_stop = genome_tracker[chosen_terminator]['stop'] = term_start + 1
+                    term_start = genome_tracker_new[chosen_terminator]['start'] = random.randint(genome_tracker_new[regionC]['start'], gene_endC)
+                    term_stop = genome_tracker_new[chosen_terminator]['stop'] = term_start + 1
 
         #Determining terminator polymerase efficiency rate
         term_eps = np.random.normal(mu, term_sigma)
         #Determines new terminator efficiency value to reduce sum of squares value
-        term_efficiency = genome_tracker[chosen_terminator]['current_strength'] + term_eps
+        term_efficiency = genome_tracker_new[chosen_terminator]['current_strength'] + term_eps
         while term_efficiency < 0 or term_efficiency > 1:
             term_eps = np.random.normal(mu, term_sigma)
-            term_efficiency = genome_tracker[chosen_terminator]['current_strength'] + term_eps
-        genome_tracker[chosen_terminator]['current_strength'] = term_efficiency
-        genome_tracker[chosen_terminator]['prev_strength'] = genome_tracker[chosen_terminator]['current_strength']
+            term_efficiency = genome_tracker_new[chosen_terminator]['current_strength'] + term_eps
+        genome_tracker_new[chosen_terminator]['current_strength'] = term_efficiency
+        genome_tracker_new[chosen_terminator]['prev_strength'] = genome_tracker_new[chosen_terminator]['current_strength']
 
     if terminator_modification == 'remove':
-        genome_tracker[chosen_terminator]['start'] = 0
-        genome_tracker[chosen_terminator]['stop'] = 0
-        genome_tracker[chosen_terminator]['prev_strength'] = genome_tracker[chosen_terminator]['current_strength']
-        genome_tracker[chosen_terminator]['current_strength'] = 0.0
+        genome_tracker_new[chosen_terminator]['start'] = 0
+        genome_tracker_new[chosen_terminator]['stop'] = 0
+        genome_tracker_new[chosen_terminator]['prev_strength'] = genome_tracker_new[chosen_terminator]['current_strength']
+        genome_tracker_new[chosen_terminator]['current_strength'] = 0.0
 
     with open('new_gene.yml', 'w') as f:
-        yaml.dump(genome_tracker, f)
+        yaml.dump(genome_tracker_new, f)
     f.close()

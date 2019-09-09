@@ -18,8 +18,6 @@ def create_yaml():
                 terminator1 = dict(start=0, stop=0, current_strength=0, prev_strength=0),
                 terminator2 = dict(start=0, stop=0, current_strength=0, prev_strength=0),
                 terminator3 = dict(start=0, stop=0, current_strength=0, prev_strength=0),
-                f_old = 0,
-                f_new = 0,
                 region1 = dict(start=11, stop=25),
                 region2a = dict(start=122, stop=132),
                 region2b = dict(start=133, stop=143),

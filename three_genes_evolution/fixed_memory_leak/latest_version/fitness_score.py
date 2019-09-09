@@ -1,4 +1,5 @@
 import math
+import sys
 
 #Calculates the fitness of the new mutation
 def calc_fitness(variant_fit, orig_fit):
@@ -8,20 +9,32 @@ def calc_fitness(variant_fit, orig_fit):
     The 'variant_fit' is the new fitness value calculated to determine if mutation is accepted or rejected.
     """
 
-    xi = orig_fit
-    xj = variant_fit
-    Ne = 50
+    Ne = 10
+    beta = 0.001
+    thresholds = 0
 
-    if xj == xi:
-        return(1.0 / float(Ne))
-    if xj > xi:
-        return(1.0)
+
+    xi = calc_x(orig_fit, beta, thresholds)
+    xj = calc_x(variant_fit, beta, thresholds)
+
+
+    if xj >= xi:
+        return((1.0))
     else:
-        variant_fit = (xj / xi) ** (2 * Ne - 2)
-        return variant_fit
+        exponent = -2 * float(Ne) * (xi - xj)
+        return(safe_calc(exponent))
 
-    try:
-        resolved = ((1-pow((xi/xj), 2)) / (1-pow((xi/xj), (2 * float(Ne)))))
-    except OverflowError as e:
-        resolved = 0.0
-    return (resolved)
+
+def calc_x(data, beta, threshold):
+    total = 0
+    exponent = float(beta) * (float(data) - float(threshold))
+    total += -math.log(safe_calc(exponent) + 1)
+    return(total)
+
+
+def safe_calc(exponent):
+    if exponent > 700:
+        print("system maxed")
+        return(sys.float_info.max)
+    else:
+        return(math.exp(exponent))
