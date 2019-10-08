@@ -1,0 +1,69 @@
+geneX:
+  start: 26
+  stop: 121
+geneY:
+  start: 159
+  stop: 280
+geneZ:
+  start: 319
+  stop: 449
+promoter1:
+  current_strength: 1239099063.333512
+  previous_strength: 1289037197.5174482
+  start: 1
+  stop: 10
+promoter2:
+  current_strength: 0.0
+  previous_strength: 0.0
+  start: 0
+  stop: 0
+promoter3:
+  current_strength: 1000000000.0
+  previous_strength: 1000000000.0
+  start: 281
+  stop: 290
+region1:
+  start: 11
+  stop: 25
+region2a:
+  start: 122
+  stop: 132
+region2b:
+  start: 133
+  stop: 143
+region2c:
+  start: 144
+  stop: 159
+region3a:
+  start: 281
+  stop: 291
+region3b:
+  start: 292
+  stop: 302
+region3c:
+  start: 303
+  stop: 318
+rnase1:
+  start: 0
+  stop: 0
+rnase2:
+  start: 144
+  stop: 154
+rnase3:
+  start: 303
+  stop: 313
+terminator1:
+  current_strength: 0.9975263332758815
+  previous_strength: 0.952156968070963
+  start: 140
+  stop: 141
+terminator2:
+  current_strength: 0.0
+  previous_strength: 0.0
+  start: 0
+  stop: 0
+terminator3:
+  current_strength: 0.85
+  previous_strength: 0.8081124312814499
+  start: 449
+  stop: 450

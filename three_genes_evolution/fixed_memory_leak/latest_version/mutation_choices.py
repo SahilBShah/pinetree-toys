@@ -6,18 +6,17 @@ import yaml
 global mu
 mu = 0.0
 
-
 def modify_promoter(genome_tracker_new):
     """
     Promoters are either added with randomized polymerase strengths or removed from the genome all together.
     """
 
-    promoter_modification = ['add', 'remove']
-    chosen_modification = random.choice(promoter_modification)
+    promoter_modification = ['add', 'remove', 'modify']
+    chosen_prom_modification = random.choice(promoter_modification)
     promoter_slots = ['A', 'B']
     poly_sigma = 1e5
 
-    if chosen_modification == 'add':
+    if chosen_prom_modification == 'add':
         promoter_possibilities = ["promoter1", "promoter2", "promoter3"]
         chosen_promoter = random.choice(promoter_possibilities)
         if chosen_promoter == 'promoter2':
@@ -57,20 +56,24 @@ def modify_promoter(genome_tracker_new):
                     prom_start = genome_tracker_new[chosen_promoter]['start'] = random.randint(genome_tracker_new[regionB]['start'], gene_endB)
                     prom_stop = genome_tracker_new[chosen_promoter]['stop'] = prom_start + 9
 
-        #Determining polymerase strength
-        poly_eps = np.random.normal(mu, poly_sigma)
-        #Determines new polymerase strength to reduce sum of squares value
-        pol_strength = genome_tracker_new[chosen_promoter]['current_strength'] + poly_eps
-        while pol_strength < 0:
-            poly_eps = np.random.normal(mu, poly_sigma)
-            pol_strength = genome_tracker_new[chosen_promoter]['current_strength'] + poly_eps
-            if pol_strength > 3e10:
-                poly_eps = np.random.normal(mu, poly_sigma)
-                pol_strength = genome_tracker_new[chosen_promoter]['current_strength'] + poly_eps
-        genome_tracker_new[chosen_promoter]['prev_strength'] = genome_tracker_new[chosen_promoter]['current_strength']
-        genome_tracker_new[chosen_promoter]['current_strength'] = pol_strength
+        genome_tracker_new[chosen_promoter]['previous_strength'] = genome_tracker_new[chosen_promoter]['current_strength']
+        genome_tracker_new[chosen_promoter]['current_strength'] = 10e4
 
-    if chosen_modification == 'remove':
+    if chosen_prom_modification == "modify":
+        print("promoter modify")
+        promoter_possibilities = ['promoter1']
+        if genome_tracker_new['promoter2']['start'] > 0:
+            promoter_possibilities.append('promoter2')
+        if genome_tracker_new['promoter3']['start'] > 0:
+            promoter_possibilities.append('promoter3')
+        chosen_promoter = random.choice(promoter_possibilities)
+        genome_tracker_new[chosen_promoter]['previous_strength'] = genome_tracker_new[chosen_promoter]['current_strength']
+        prom_strength = genome_tracker_new[chosen_promoter]['current_strength'] * np.random.normal(1, 0.1)
+        while 3e10 < prom_strength < 0.0:
+            prom_strength = genome_tracker_new[chosen_promoter]['current_strength'] * np.random.normal(1, 0.1)
+        genome_tracker_new[chosen_promoter]['current_strength'] = prom_strength
+
+    if chosen_prom_modification == 'remove':
         promoter_possibilities = ['promoter2', 'promoter3']
         chosen_promoter = random.choice(promoter_possibilities)
         #Removing promoters
@@ -78,8 +81,7 @@ def modify_promoter(genome_tracker_new):
         genome_tracker_new[chosen_promoter]['stop'] = 0
 
     with open('new_gene.yml', 'w') as f:
-        yaml.dump(genome_tracker_new, f)
-    f.close()
+        yaml.dump(genome_tracker_new, f, default_flow_style=False)
 
 def modify_rnase(genome_tracker_new):
     """
@@ -87,12 +89,12 @@ def modify_rnase(genome_tracker_new):
     """
 
     rnase_modification = ['remove', 'add']
-    chosen_modification = random.choice(rnase_modification)
+    chosen_rnase_modification = random.choice(rnase_modification)
     rnase_possibilities = ["rnase1", "rnase2", "rnase3"]
     chosen_rnase = random.choice(rnase_possibilities)
     rnase_slots = ['A', 'B', 'C']
 
-    if chosen_modification == 'add':
+    if chosen_rnase_modification == 'add':
         if chosen_rnase == 'rnase2':
             regionA = 'region2a'
             regionB = 'region2b'
@@ -143,27 +145,26 @@ def modify_rnase(genome_tracker_new):
                     rnase_start = genome_tracker_new[chosen_rnase]['start'] = random.randint(genome_tracker_new[regionC]['start'], gene_endC)
                     rnase_stop = genome_tracker_new[chosen_rnase]['stop'] = rnase_start + 10
 
-    if chosen_modification == 'remove':
+    if chosen_rnase_modification == 'remove':
         genome_tracker_new[chosen_rnase]['start'] = 0
         genome_tracker_new[chosen_rnase]['stop'] = 0
 
     with open('new_gene.yml', 'w') as f:
-        yaml.dump(genome_tracker_new, f)
-    f.close()
+        yaml.dump(genome_tracker_new, f, default_flow_style=False)
 
 def modify_terminator(genome_tracker_new):
     """
     Terminators are either added with randomized terminator efficiencies or removed all together.
     """
 
-    terminator_modification = ['remove', 'add']
-    chosen_modification = random.choice(terminator_modification)
+    terminator_modification = ['remove', 'add', 'modify']
+    chosen_term_modification = random.choice(terminator_modification)
     terminator_possibilities = ["terminator1", "terminator2", "terminator3"]
     chosen_terminator = random.choice(terminator_possibilities)
     terminator_slots = ['A', 'B', 'C']
     term_sigma = 1.0
 
-    if chosen_modification == 'add':
+    if chosen_term_modification == 'add':
         if chosen_terminator == 'terminator1':
             regionA = 'region2a'
             regionB = 'region2b'
@@ -214,22 +215,31 @@ def modify_terminator(genome_tracker_new):
                     term_start = genome_tracker_new[chosen_terminator]['start'] = random.randint(genome_tracker_new[regionC]['start'], gene_endC)
                     term_stop = genome_tracker_new[chosen_terminator]['stop'] = term_start + 1
 
-        #Determining terminator polymerase efficiency rate
-        term_eps = np.random.normal(mu, term_sigma)
-        #Determines new terminator efficiency value to reduce sum of squares value
-        term_efficiency = genome_tracker_new[chosen_terminator]['current_strength'] + term_eps
-        while term_efficiency < 0 or term_efficiency > 1:
-            term_eps = np.random.normal(mu, term_sigma)
-            term_efficiency = genome_tracker_new[chosen_terminator]['current_strength'] + term_eps
-        genome_tracker_new[chosen_terminator]['current_strength'] = term_efficiency
-        genome_tracker_new[chosen_terminator]['prev_strength'] = genome_tracker_new[chosen_terminator]['current_strength']
+        genome_tracker_new[chosen_terminator]['previous_strength'] = genome_tracker_new[chosen_terminator]['current_strength']
+        genome_tracker_new[chosen_terminator]['current_strength'] = 0.85
 
-    if terminator_modification == 'remove':
+    if chosen_term_modification == "modify":
+        print("terminator modify")
+        terminator_possibilities = []
+        if genome_tracker_new['terminator1']['start'] > 0:
+            terminator_possibilities.append('terminator1')
+        if genome_tracker_new['terminator2']['start'] > 0:
+            terminator_possibilities.append('terminator2')
+        if genome_tracker_new['terminator3']['start'] > 0:
+            terminator_possibilities.append('terminator3')
+        if terminator_possibilities != []:
+            chosen_terminator = random.choice(terminator_possibilities)
+            genome_tracker_new[chosen_terminator]['previous_strength'] = genome_tracker_new[chosen_terminator]['current_strength']
+            term_eff = genome_tracker_new[chosen_terminator]['current_strength'] * np.random.normal(1, 0.1)
+            while 1.0 < term_eff < 0.0:
+                term_eff = genome_tracker_new[chosen_terminator]['current_strength'] * np.random.normal(1, 0.1)
+            genome_tracker_new[chosen_terminator]['current_strength'] = term_eff
+
+    if chosen_term_modification == 'remove':
         genome_tracker_new[chosen_terminator]['start'] = 0
         genome_tracker_new[chosen_terminator]['stop'] = 0
-        genome_tracker_new[chosen_terminator]['prev_strength'] = genome_tracker_new[chosen_terminator]['current_strength']
+        genome_tracker_new[chosen_terminator]['previous_strength'] = genome_tracker_new[chosen_terminator]['current_strength']
         genome_tracker_new[chosen_terminator]['current_strength'] = 0.0
 
     with open('new_gene.yml', 'w') as f:
-        yaml.dump(genome_tracker_new, f)
-    f.close()
+        yaml.dump(genome_tracker_new, f, default_flow_style=False)

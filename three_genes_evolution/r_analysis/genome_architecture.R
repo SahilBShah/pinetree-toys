@@ -6,10 +6,11 @@ library(gtools)
 library(yaml)
 library(reshape2)
 
-#Final genome data
-setwd("/home/sahil/pinetree-toys/three_genes_evolution/fixed_memory_leak/")
 
-best_files <- list.files("/home/sahil/pinetree-toys/three_genes_evolution/fixed_memory_leak/", pattern="genome_tracker_")
+#Final genome data
+setwd("/home/sahil/pinetree-toys/three_genes_evolution/final_program/10_02_2019/random_data5_5000_run1/")
+
+best_files <- list.files("/home/sahil/pinetree-toys/three_genes_evolution/final_program/10_02_2019/random_data5_5000_run1/", pattern="gene_")
 best_files <- mixedsort(sort(best_files))
 genome <- yaml.load_file(last(best_files))
 genome = melt(genome)
@@ -21,28 +22,28 @@ y1 = 1
 y2 = 2
 
 #Draw promoters
-if((genome[14, 1] >= 122) & (genome[15, 1] <= 132)){
+if((genome[13, 1] >= 122) & (genome[14, 1] <= 132)){
   draw_prom1_r1a <- geom_segment(mapping=aes(x=12, y=1.5, xend=12, yend=2))
   draw_prom1_r2a <- geom_segment(mapping=aes(x=12, y=2, xend=13, yend=2), arrow = arrow(length = unit(0.5, "cm")))
 } else {
   draw_prom1_r1a <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
   draw_prom1_r2a <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
 }
-if((genome[14, 1] >= 133) & (genome[15, 1] <= 143)){
+if((genome[13, 1] >= 133) & (genome[14, 1] <= 143)){
   draw_prom1_r1b <- geom_segment(mapping=aes(x=15, y=1.5, xend=15, yend=2))
   draw_prom1_r2b <- geom_segment(mapping=aes(x=15, y=2, xend=16, yend=2), arrow = arrow(length = unit(0.5, "cm")))
 } else {
   draw_prom1_r1b <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
   draw_prom1_r2b <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
 }
-if((genome[20, 1] >= 281) & genome[21, 1] <= 291){
+if((genome[17, 1] >= 281) & genome[18, 1] <= 291){
   draw_prom2_r1a <- geom_segment(mapping=aes(x=32, y=1.5, xend=32, yend=2))
   draw_prom2_r2a <- geom_segment(mapping=aes(x=32, y=2, xend=33, yend=2), arrow = arrow(length = unit(0.5, "cm")))
 } else {
   draw_prom2_r1a <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
   draw_prom2_r2a <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
 }
-if((genome[20, 1] >= 292) & genome[21, 1] <= 302){
+if((genome[17, 1] >= 292) & genome[18, 1] <= 302){
   draw_prom2_r1b <- geom_segment(mapping=aes(x=35, y=1.5, xend=35, yend=2))
   draw_prom2_r2b <- geom_segment(mapping=aes(x=35, y=2, xend=36, yend=2), arrow = arrow(length = unit(0.5, "cm")))
 } else {
@@ -51,49 +52,49 @@ if((genome[20, 1] >= 292) & genome[21, 1] <= 302){
 }
 
 #Draw terminators
-if((genome[44, 1] >= 122) & (genome[45, 1] <= 132)){
+if((genome[41, 1] >= 122) & (genome[42, 1] <= 132)){
   draw_term1_r1a <- geom_segment(mapping=aes(x=12, y=1.5, xend=12, yend=1.75))
   draw_term1_r2a <- geom_segment(mapping=aes(x=11, y=1.75, xend=13, yend=1.75))
 } else {
   draw_term1_r1a <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
   draw_term1_r2a <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
 }
-if((genome[44, 1] >= 133) & (genome[45, 1] <= 143)){
+if((genome[41, 1] >= 133) & (genome[42, 1] <= 143)){
   draw_term1_r1b <- geom_segment(mapping=aes(x=15, y=1.5, xend=15, yend=1.75))
   draw_term1_r2b <- geom_segment(mapping=aes(x=14, y=1.75, xend=16, yend=1.75))
 } else {
   draw_term1_r1b <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
   draw_term1_r2b <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
 }
-if((genome[44, 1] >= 144) & (genome[45, 1] <= 159)){
+if((genome[41, 1] >= 144) & (genome[42, 1] <= 159)){
   draw_term1_r1c <- geom_segment(mapping=aes(x=18, y=1.5, xend=18, yend=1.75))
   draw_term1_r2c <- geom_segment(mapping=aes(x=17, y=1.75, xend=19, yend=1.75))
 } else {
   draw_term1_r1c <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
   draw_term1_r2c <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
 }
-if((genome[48, 1] >= 281) & (genome[49, 1] <= 291)){
+if((genome[45, 1] >= 281) & (genome[46, 1] <= 291)){
   draw_term2_r1a <- geom_segment(mapping=aes(x=32, y=1.5, xend=32, yend=1.75))
   draw_term2_r2a <- geom_segment(mapping=aes(x=31, y=1.75, xend=33, yend=1.75))
 } else {
   draw_term2_r1a <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
   draw_term2_r2a <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
 }
-if((genome[48, 1] >= 292) & (genome[49, 1] <= 302)){
+if((genome[45, 1] >= 292) & (genome[46, 1] <= 302)){
   draw_term2_r1b <- geom_segment(mapping=aes(x=35, y=1.5, xend=35, yend=1.75))
   draw_term2_r2b <- geom_segment(mapping=aes(x=34, y=1.75, xend=36, yend=1.75))
 } else {
   draw_term2_r1b <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
   draw_term2_r2b <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
 }
-if((genome[48, 1] >= 303) & (genome[49, 1] <= 318)){
+if((genome[45, 1] >= 303) & (genome[46, 1] <= 318)){
   draw_term2_r1c <- geom_segment(mapping=aes(x=38, y=1.5, xend=38, yend=1.75))
   draw_term2_r2c <- geom_segment(mapping=aes(x=37, y=1.75, xend=39, yend=1.75))
 } else {
   draw_term2_r1c <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
   draw_term2_r2c <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
 }
-if(genome[52, 1] > 0){
+if(genome[49, 1] > 0){
   draw_term3a <- geom_segment(mapping=aes(x=50, y=2, xend=50, yend=2.25))
   draw_term3b <- geom_segment(mapping=aes(x=47, y=2.25, xend=53, yend=2.25))
 } else {
@@ -102,49 +103,49 @@ if(genome[52, 1] > 0){
 }
 
 #Draw rnases (first segment, region a within first rnase placement)
-if((genome[36, 1] >= 11) & (genome[37, 1] <= 25)){
+if((genome[33, 1] >= 11) & (genome[34, 1] <= 25)){
   draw_rnase1a <- geom_segment(mapping=(aes(x=1, y=2.1, xend=3, yend=2)))
   draw_rnase1b <- geom_segment(mapping=(aes(x=3, y=2.1, xend=1, yend=2)))
 }else{
   draw_rnase1a <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
   draw_rnase1b <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
 }
-if((genome[38, 1] >= 122) & (genome[39, 1] <= 132)){
+if((genome[35, 1] >= 122) & (genome[36, 1] <= 132)){
   draw_rnase2_r1a <- geom_segment(mapping=aes(x=11, y=1.7, xend=13, yend=1.3))
   draw_rnase2_r2a <- geom_segment(mapping=aes(x=13, y=1.7, xend=11, yend=1.3))
 }else{
   draw_rnase2_r1a <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
   draw_rnase2_r2a <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
 }
-if((genome[38, 1] >= 133) & (genome[39, 1] <= 143)){
+if((genome[35, 1] >= 133) & (genome[36, 1] <= 143)){
   draw_rnase2_r1b <- geom_segment(mapping=aes(x=14, y=1.7, xend=16, yend=1.3))
   draw_rnase2_r2b <- geom_segment(mapping=aes(x=16, y=1.7, xend=14, yend=1.3))
 }else{
   draw_rnase2_r1b <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
   draw_rnase2_r2b <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
 }
-if((genome[38, 1] >= 144) & (genome[39, 1] <= 159)){
+if((genome[35, 1] >= 144) & (genome[36, 1] <= 159)){
   draw_rnase2_r1c <- geom_segment(mapping=aes(x=17, y=1.7, xend=19, yend=1.3))
   draw_rnase2_r2c <- geom_segment(mapping=aes(x=19, y=1.7, xend=17, yend=1.3))
 } else {
   draw_rnase2_r1c <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
   draw_rnase2_r2c <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
 }
-if((genome[40, 1] >= 281) & (genome[41, 1] <= 291)){
+if((genome[37, 1] >= 281) & (genome[38, 1] <= 291)){
   draw_rnase3_r1a <- geom_segment(mapping=aes(x=31, y=1.7, xend=33, yend=1.3))
   draw_rnase3_r2a <- geom_segment(mapping=aes(x=33, y=1.7, xend=31, yend=1.3))
 }else{
   draw_rnase3_r1a <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
   draw_rnase3_r2a <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
 }
-if((genome[40, 1] >= 292) & (genome[41, 1] <= 302)){
+if((genome[37, 1] >= 292) & (genome[38, 1] <= 302)){
   draw_rnase3_r1b <- geom_segment(mapping=aes(x=34, y=1.7, xend=36, yend=1.3))
   draw_rnase3_r2b <- geom_segment(mapping=aes(x=36, y=1.7, xend=34, yend=1.3))
 }else{
   draw_rnase3_r1b <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
   draw_rnase3_r2b <- geom_segment(mapping=aes(x=0, y=0, xend=0, yend=0))
 }
-if((genome[40, 1] >= 303) & (genome[41, 1] <= 318)){
+if((genome[37, 1] >= 303) & (genome[38, 1] <= 318)){
   draw_rnase3_r1c <- geom_segment(mapping=aes(x=37, y=1.7, xend=39, yend=1.3))
   draw_rnase3_r2c <- geom_segment(mapping=aes(x=39, y=1.7, xend=37, yend=1.3))
 }else{
@@ -159,4 +160,4 @@ final_genome_plot
 
 genome_plot <- grid.arrange(final_genome_plot, nrow=1, ncol=1)
 
-ggsave("/home/sahil/pinetree-toys/three_genes_evolution/modularized_files/genome_architecture.pdf", genome_plot, width=30, height=30, limitsize=FALSE)
+ggsave("/home/sahil/pinetree-toys/three_genes_evolution/final_program/genome_architecture.pdf", genome_plot, width=30, height=30, limitsize=FALSE)

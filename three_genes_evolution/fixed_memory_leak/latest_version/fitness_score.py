@@ -7,9 +7,10 @@ def calc_fitness(variant_fit, orig_fit):
     Calculates the fitness of the new mutation and compares it to the fitness of the old mutation.
     The 'orig_fit' is the old fitness value previously calculated.
     The 'variant_fit' is the new fitness value calculated to determine if mutation is accepted or rejected.
+    The 'beta' value is determined in relationship to scale of the sum of squares values.
     """
 
-    Ne = 10
+    Ne = 0.3
     beta = 0.001
     thresholds = 0
 
