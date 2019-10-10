@@ -8,15 +8,15 @@ geneZ:
   start: 319
   stop: 449
 promoter1:
-  current_strength: 985149057.3821529
-  previous_strength: 1000000000.0
+  current_strength: 1000000000.0
+  previous_strength: 0
   start: 1
   stop: 10
 promoter2:
-  current_strength: 0
-  previous_strength: 0
-  start: 0
-  stop: 0
+  current_strength: 1000000000.0
+  previous_strength: 0.0
+  start: 122
+  stop: 131
 promoter3:
   current_strength: 0
   previous_strength: 0
@@ -44,8 +44,8 @@ region3c:
   start: 303
   stop: 318
 rnase1:
-  start: 12
-  stop: 22
+  start: 0
+  stop: 0
 rnase2:
   start: 0
   stop: 0
@@ -63,7 +63,7 @@ terminator2:
   start: 0
   stop: 0
 terminator3:
-  current_strength: 0
+  current_strength: 0.85
   previous_strength: 0
-  start: 0
-  stop: 0
+  start: 449
+  stop: 450
