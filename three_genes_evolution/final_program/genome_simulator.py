@@ -1,8 +1,14 @@
 #!/usr/bin/env python
+import argparse
 import pinetree as pt
 import yaml
 
-with open('new_gene.yml') as f:
+parser = argparse.ArgumentParser()
+parser.add_argument('output_directory')
+args = parser.parse_args()
+output_dir = args.output_directory
+
+with open(output_dir+'new_gene.yml') as f:
     genome_tracker_new = yaml.safe_load(f)
 
 sim = pt.Model(cell_volume=8e-16)
@@ -45,4 +51,4 @@ plasmid.add_gene(name="proteinY", start=genome_tracker_new['geneY']['start'], st
 plasmid.add_gene(name="proteinZ", start=genome_tracker_new['geneZ']['start'], stop=genome_tracker_new['geneZ']['stop'],
                  rbs_start=(genome_tracker_new['geneZ']['start']-15), rbs_stop=genome_tracker_new['geneZ']['start'], rbs_strength=1e7)
 sim.register_genome(plasmid)
-sim.simulate(time_limit=240, time_step=1, output='three_genes_replicated.tsv')
+sim.simulate(time_limit=240, time_step=1, output=output_dir+'three_genes_replicated.tsv')

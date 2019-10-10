@@ -19,23 +19,23 @@ plasmid.add_promoter(name="p1", start=1, stop=10,
                      interactions={"rnapol": 2e10})
 #plasmid.add_promoter(name="p1", start=122, stop=132,
                      #interactions={"rnapol": 2e10})
-#plasmid.add_promoter(name="p1", start=292, stop=302,
-                     #interactions={"rnapol": 2e10})
-#plasmid.add_terminator(name="t1", start=449, stop=450,
-                       #efficiency={"rnapol": 1.0})
+plasmid.add_promoter(name="p1", start=292, stop=302,
+                     interactions={"rnapol": 2e10})
+plasmid.add_terminator(name="t1", start=449, stop=450,
+                       efficiency={"rnapol": 1.0})
 
 plasmid.add_gene(name="proteinX", start=26, stop=121,
                  rbs_start=11, rbs_stop=26, rbs_strength=1e7)
 
 plasmid.add_gene(name="proteinY", start=159, stop=280,
                  rbs_start=144, rbs_stop=159, rbs_strength=1e7)
-#plasmid.add_rnase_site(start=133, stop=143)
+plasmid.add_rnase_site(start=133, stop=143)
 #plasmid.add_rnase_site(start=281, stop=291)
 plasmid.add_gene(name="proteinZ", start=319, stop=449,
                  rbs_start=303, rbs_stop=318, rbs_strength=1e7)
 sim.register_genome(plasmid)
 sim.simulate(time_limit=240, time_step=1,
-             output = "three_genes_test_file.tsv")
+             output = "three_genes_test_file2.tsv")
 
 '''gene1_list = [26, 121]
 gene2_list = [159, 280]

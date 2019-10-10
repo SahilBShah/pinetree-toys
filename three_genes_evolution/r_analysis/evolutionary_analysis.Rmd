@@ -79,7 +79,7 @@ plots_list <- list()
 best_files <- list.files("/home/sahil/pinetree-toys/three_genes_evolution/final_program/", pattern="three_genes_replicated_")
 best_files <- mixedsort(sort(best_files))
 plots_list <- list()
-target_data <- read.table("random_data2.tsv", header=TRUE)
+target_data <- read.table("random_data5.tsv", header=TRUE)
 target_data <- filter(target_data, species == "proteinX" | species == "proteinY" | species == "proteinZ")
 target_line_plot <-  ggplot(target_data, aes(fill=species, color=species, x=time, y=transcript)) + geom_line(stat="identity") + ggtitle("Target Genome Function") + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
 panel.background = element_blank(), axis.line = element_line(colour = "black"))
@@ -102,7 +102,7 @@ for(i in 1:length(best_files)){
 }
 
 #evo_plot <- grid.arrange(plots_list, nrow=ceiling(length(best_files) / 2), ncol=ceiling(length(best_files) / 2), top="Evolutionary Pattern of Gene Transcripts") 
-evo_plot <- grid.arrange(target_line_plot, best_plot1, best_plot2, best_plot3, best_plot4, best_plot5, best_plot6, nrow=3, ncol=3, top="Evolutionary Pattern of Gene Transcripts")
+evo_plot <- grid.arrange(target_line_plot, best_plot1, best_plot2, best_plot3, best_plot4, best_plot5, best_plot6, best_plot7, best_plot8, best_plot9, best_plot10, best_plot11, best_plot12, best_plot13, best_plot14, best_plot15, best_plot16, best_plot17, best_plot18, best_plot19, best_plot20, nrow=7, ncol=3, top="Evolutionary Pattern of Gene Transcripts")
 ggsave("/home/sahil/pinetree-toys/three_genes_evolution/final_program/evolution_graphs.pdf", evo_plot, width=30, height=30, limitsize=FALSE)
 
 ```

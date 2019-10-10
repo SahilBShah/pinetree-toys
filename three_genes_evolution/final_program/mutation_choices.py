@@ -8,7 +8,7 @@ max_promoter_strength = 3e10
 min_promoter_strength = 10e5
 
 
-def modify_promoter(genome_tracker_new):
+def modify_promoter(genome_tracker_new, output_dir):
     """
     Promoters are either added with randomized polymerase strengths or removed from the genome all together.
     """
@@ -25,16 +25,15 @@ def modify_promoter(genome_tracker_new):
             regionB = 'region2b'
             rnase = 'rnase1'
             terminator = 'terminator1'
-            gene_endA = genome_tracker_new['region2a']['start']
-            gene_endB = genome_tracker_new['region2b']['start']
+            region_endA = genome_tracker_new['region2a']['start']
+            region_endB = genome_tracker_new['region2b']['start']
         elif chosen_promoter == 'promoter3':
             regionA = 'region3a'
             regionB = 'region3b'
             rnase = 'rnase2'
             terminator = 'terminator2'
-            ########
-            gene_endA = genome_tracker_new['region3a']['start']
-            gene_endB = genome_tracker_new['region3b']['start']
+            region_endA = genome_tracker_new['region3a']['start']
+            region_endB = genome_tracker_new['region3b']['start']
 
         #Adding in a promoter between genes 1 and 2 or genes 2 and 3
         items = [rnase, terminator]
@@ -51,11 +50,11 @@ def modify_promoter(genome_tracker_new):
             available_slot = random.choice(promoter_slots)
             if available_slot == 'A':
                 region = regionA
-                gene_end = gene_endA
+                region_end = region_endA
             elif available_slot == 'B':
                 region = regionB
-                gene_end = gene_endB
-            prom_start = genome_tracker_new[chosen_promoter]['start'] = random.randint(genome_tracker_new[region]['start'], gene_end)
+                region_end = region_endB
+            prom_start = genome_tracker_new[chosen_promoter]['start'] = random.randint(genome_tracker_new[region]['start'], region_end)
             prom_stop = genome_tracker_new[chosen_promoter]['stop'] = prom_start + 9
 
         genome_tracker_new[chosen_promoter]['previous_strength'] = genome_tracker_new[chosen_promoter]['current_strength']
@@ -83,11 +82,11 @@ def modify_promoter(genome_tracker_new):
         genome_tracker_new[chosen_promoter]['previous_strength'] = genome_tracker_new[chosen_promoter]['current_strength']
         genome_tracker_new[chosen_promoter]['current_strength'] = 0.0
 
-    with open('new_gene.yml', 'w') as f:
+    with open(output_dir+'new_gene.yml', 'w') as f:
         yaml.dump(genome_tracker_new, f, default_flow_style=False)
 
 
-def modify_rnase(genome_tracker_new):
+def modify_rnase(genome_tracker_new, output_dir):
     """
     Rnases are added or removed.
     """
@@ -105,18 +104,18 @@ def modify_rnase(genome_tracker_new):
             regionC = 'region2c'
             promoter = 'promoter2'
             terminator = 'terminator1'
-            gene_endA = genome_tracker_new['region2a']['start']
-            gene_endB = genome_tracker_new['region2b']['start']
-            gene_endC = genome_tracker_new['region2c']['start']
+            region_endA = genome_tracker_new['region2a']['start']
+            region_endB = genome_tracker_new['region2b']['start']
+            region_endC = genome_tracker_new['region2c']['start']
         elif chosen_rnase == 'rnase3':
             regionA = 'region3a'
             regionB = 'region3b'
             regionC = 'region3c'
             promoter = 'promoter3'
             terminator = 'terminator2'
-            gene_endA = genome_tracker_new['region3a']['start']
-            gene_endB = genome_tracker_new['region3b']['start']
-            gene_endC = genome_tracker_new['region3c']['start']
+            region_endA = genome_tracker_new['region3a']['start']
+            region_endB = genome_tracker_new['region3b']['start']
+            region_endC = genome_tracker_new['region3c']['start']
 
         if chosen_rnase == "rnase1":
             #Adds rnase after first promoter
@@ -139,25 +138,25 @@ def modify_rnase(genome_tracker_new):
                 available_slot = random.choice(rnase_slots)
                 if available_slot == 'A':
                     region = regionA
-                    gene_end = gene_endA
+                    region_end = region_endA
                 if available_slot == 'B':
                     region = regionB
-                    gene_end = gene_endB
+                    region_end = region_endB
                 if available_slot == 'C':
                     region = regionC
-                    gene_end = gene_endC
-                rnase_start = genome_tracker_new[chosen_rnase]['start'] = random.randint(genome_tracker_new[region]['start'], gene_end)
+                    region_end = region_endC
+                rnase_start = genome_tracker_new[chosen_rnase]['start'] = random.randint(genome_tracker_new[region]['start'], region_end)
                 rnase_stop = genome_tracker_new[chosen_rnase]['stop'] = rnase_start + 10
 
     if chosen_rnase_modification == 'remove':
         genome_tracker_new[chosen_rnase]['start'] = 0
         genome_tracker_new[chosen_rnase]['stop'] = 0
 
-    with open('new_gene.yml', 'w') as f:
+    with open(output_dir+'new_gene.yml', 'w') as f:
         yaml.dump(genome_tracker_new, f, default_flow_style=False)
 
 
-def modify_terminator(genome_tracker_new):
+def modify_terminator(genome_tracker_new, output_dir):
     """
     Terminators are either added with randomized terminator efficiencies or removed all together.
     """
@@ -175,23 +174,23 @@ def modify_terminator(genome_tracker_new):
             regionC = 'region2c'
             rnase = 'rnase1'
             promoter = 'promoter2'
-            gene_endA = genome_tracker_new['region2a']['start']
-            gene_endB = genome_tracker_new['region2b']['start']
-            gene_endC = genome_tracker_new['region2c']['start']
+            region_endA = genome_tracker_new['region2a']['start']
+            region_endB = genome_tracker_new['region2b']['start']
+            region_endC = genome_tracker_new['region2c']['start']
         elif chosen_terminator == 'terminator2':
             regionA = 'region3a'
             regionB = 'region3b'
             regionC = 'region3c'
             rnase = 'rnase2'
             promoter = 'promoter3'
-            gene_endA = genome_tracker_new['region3a']['start']
-            gene_endB = genome_tracker_new['region3b']['start']
-            gene_endC = genome_tracker_new['region3c']['start']
+            region_endA = genome_tracker_new['region3a']['start']
+            region_endB = genome_tracker_new['region3b']['start']
+            region_endC = genome_tracker_new['region3c']['start']
 
         if chosen_terminator == "terminator3":
             #Adds terminator after third gene
-            genome_tracker_new[chosen_terminator]['start'] = 449
-            genome_tracker_new[chosen_terminator]['stop'] = 450
+            genome_tracker_new[chosen_terminator]['start'] = genome_tracker_new['geneZ']['stop']
+            genome_tracker_new[chosen_terminator]['stop'] = genome_tracker_new['geneZ']['stop'] + 1
         else:
             items = [promoter, rnase]
             for item in items:
@@ -209,14 +208,14 @@ def modify_terminator(genome_tracker_new):
                 available_slot = random.choice(terminator_slots)
                 if available_slot == 'A':
                     region = regionA
-                    gene_end = gene_endA
+                    region_end = region_endA
                 if available_slot == 'B':
                     region = regionB
-                    gene_end = gene_endB
+                    region_end = region_endB
                 if available_slot == 'C':
                     region = regionC
-                    gene_end = gene_endC
-                term_start = genome_tracker_new[chosen_terminator]['start'] = random.randint(genome_tracker_new[region]['start'], gene_end)
+                    region_end = region_endC
+                term_start = genome_tracker_new[chosen_terminator]['start'] = random.randint(genome_tracker_new[region]['start'], region_end)
                 term_stop = genome_tracker_new[chosen_terminator]['stop'] = term_start + 1
 
         genome_tracker_new[chosen_terminator]['previous_strength'] = genome_tracker_new[chosen_terminator]['current_strength']
@@ -244,5 +243,5 @@ def modify_terminator(genome_tracker_new):
         genome_tracker_new[chosen_terminator]['previous_strength'] = genome_tracker_new[chosen_terminator]['current_strength']
         genome_tracker_new[chosen_terminator]['current_strength'] = 0.0
 
-    with open('new_gene.yml', 'w') as f:
+    with open(output_dir+'new_gene.yml', 'w') as f:
         yaml.dump(genome_tracker_new, f, default_flow_style=False)

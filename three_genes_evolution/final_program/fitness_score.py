@@ -2,7 +2,7 @@ import math
 import sys
 
 #Calculates the fitness of the new mutation
-def calc_fitness(variant_fit, orig_fit):
+def calc_fitness(variant_fit, orig_fit, N):
     """
     Calculates the fitness of the new mutation and compares it to the fitness of the old mutation.
     The 'orig_fit' is the old fitness value previously calculated.
@@ -10,7 +10,7 @@ def calc_fitness(variant_fit, orig_fit):
     The 'beta' value is determined in relationship to scale of the sum of squares values.
     """
 
-    Ne = 10
+    Ne = N
     beta = 0.001
     thresholds = 0
 

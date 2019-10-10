@@ -1,6 +1,6 @@
 import yaml
 
-def create_yaml():
+def create_yaml(starting_file):
     """
     Creates a YAML file with the same starting point each time that can be edited as simulations occur
     """
@@ -27,6 +27,6 @@ def create_yaml():
                 region3c = dict(start=303, stop=318),
     )
 
-    with open('new_gene.yml', 'w') as outfile:
+    with open(starting_file, 'w') as outfile:
         yaml.dump(data, outfile, default_flow_style=False)
     outfile.close()
