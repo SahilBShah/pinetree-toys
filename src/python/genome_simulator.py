@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 import argparse
-import time
 import pinetree as pt
+import random
 import yaml
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('output_directory')
@@ -13,7 +14,7 @@ with open(output_dir+'new_gene.yml') as f:
     genome_tracker_new = yaml.safe_load(f)
 
 sim = pt.Model(cell_volume=8e-16)
-sim.seed(int(time.time()))
+sim.seed(random.randint(0, 10e6))
 sim.add_polymerase(name="rnapol", copy_number=4, speed=40, footprint=10)
 sim.add_ribosome(copy_number=100, speed=30, footprint=10)
 

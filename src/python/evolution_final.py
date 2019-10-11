@@ -1,6 +1,5 @@
 import argparse
 import datetime
-import evolution_setup
 import file_setup
 import fitness_score
 import initialize_yaml
@@ -21,13 +20,13 @@ sos_iter_list = []
 is_accepted = []
 accepted = 0
 i = 1
-starting_file = 'starting_gene.yml'
+starting_file = '../../data/starting_gene.yml'
 
 #Output file directory structure
 year = datetime.date.today().year
 month = datetime.date.today().month
 day = datetime.date.today().day
-output_dir = './{}_{}_{}/'.format(year, month, day)
+output_dir = '../../results/{}_{}_{}/'.format(year, month, day)
 
 
 #Command line arguments
@@ -44,7 +43,7 @@ if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 #Target file inputted as dataframe
-df = pd.read_csv(args.filename, header=0, sep='\t')
+df = pd.read_csv('../../data/'+args.filename, header=0, sep='\t')
 df = file_setup.rearrange_file(df)
 
 
@@ -94,5 +93,5 @@ while i < args.generation_number+1:
 
 all_sos_list = all_sos_list[1:]
 sos_dataframe = pd.DataFrame(data=zip(sos_iter_list, all_sos_list, is_accepted), columns=["Iteration", "Sum_of_Squares", "Accepted"])
-export_csv = sos_dataframe.to_csv('~/pinetree-toys/three_genes_evolution/final_program/' + output_dir + 'sos_data.tsv', index=False, sep='\t')
+export_csv = sos_dataframe.to_csv(output_dir + 'sos_data.tsv', index=False, sep='\t')
 print("Accepted mutations =", accepted)
