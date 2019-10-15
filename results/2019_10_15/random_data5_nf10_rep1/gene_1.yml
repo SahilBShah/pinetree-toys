@@ -50,8 +50,8 @@ rnase2:
   start: 0
   stop: 0
 rnase3:
-  start: 281
-  stop: 291
+  start: 0
+  stop: 0
 terminator1:
   current_strength: 0
   previous_strength: 0
