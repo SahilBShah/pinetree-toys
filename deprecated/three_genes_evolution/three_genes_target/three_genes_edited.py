@@ -8,7 +8,7 @@ sim.add_polymerase(name="rnapol", copy_number=4, speed=40, footprint=10)
 sim.add_ribosome(copy_number=100, speed=30, footprint=10)
 
 plasmid = pt.Genome(name="plasmid", length=450,
-                    transcript_degradation_rate=1e-2,
+                    transcript_degradation_rate=10e17,
                     transcript_degradation_rate_ext=1e-2,
                     rnase_speed=20,
                     rnase_footprint=10)
@@ -35,7 +35,7 @@ plasmid.add_gene(name="proteinZ", start=319, stop=449,
                  rbs_start=303, rbs_stop=318, rbs_strength=1e7)
 sim.register_genome(plasmid)
 sim.simulate(time_limit=240, time_step=1,
-             output = "three_genes_test_file2.tsv")
+             output = "deg_test1.tsv")
 
 '''gene1_list = [26, 121]
 gene2_list = [159, 280]
