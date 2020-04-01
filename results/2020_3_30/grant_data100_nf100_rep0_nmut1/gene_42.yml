@@ -1,0 +1,214 @@
+gene1:
+  start: 26
+  stop: 121
+gene10:
+  start: 0
+  stop: 0
+gene2:
+  start: 159
+  stop: 280
+gene3:
+  start: 319
+  stop: 449
+gene4:
+  start: 0
+  stop: 0
+gene5:
+  start: 0
+  stop: 0
+gene6:
+  start: 0
+  stop: 0
+gene7:
+  start: 0
+  stop: 0
+gene8:
+  start: 0
+  stop: 0
+gene9:
+  start: 0
+  stop: 0
+length_of_genome: 450
+promoter0:
+  current_strength: 793549434.6914542
+  previous_strength: 791566693.6655023
+  start: 1
+  stop: 10
+promoter1:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+promoter2:
+  current_strength: 0
+  previous_strength: 1000000000.0
+  start: 0
+  stop: 0
+promoter3:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+promoter4:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+promoter5:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+promoter6:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+promoter7:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+promoter8:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+promoter9:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+region0:
+  start: 11
+  stop: 25
+region1:
+  start: 121
+  stop: 158
+region10:
+  start: 0
+  stop: -1
+region2:
+  start: 280
+  stop: 318
+region3:
+  start: 449
+  stop: 450
+region4:
+  start: 0
+  stop: -1
+region5:
+  start: 0
+  stop: -1
+region6:
+  start: 0
+  stop: -1
+region7:
+  start: 0
+  stop: -1
+region8:
+  start: 0
+  stop: -1
+region9:
+  start: 0
+  stop: -1
+rnase0:
+  current_strength: 0
+  previous_strength: 0.010368048675726705
+  start: 0
+  stop: 0
+rnase1:
+  current_strength: 0.01
+  previous_strength: 0.01
+  start: 133
+  stop: 143
+rnase2:
+  current_strength: 0.01
+  previous_strength: 0.01035540183111945
+  start: 294
+  stop: 304
+rnase3:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+rnase4:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+rnase5:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+rnase6:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+rnase7:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+rnase8:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+rnase9:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+terminator1:
+  current_strength: 0
+  previous_strength: 0.85
+  start: 0
+  stop: 0
+terminator10:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+terminator2:
+  current_strength: 0
+  previous_strength: 0.7672925570669543
+  start: 0
+  stop: 0
+terminator3:
+  current_strength: 0.8918797466788476
+  previous_strength: 0.85
+  start: 449
+  stop: 450
+terminator4:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+terminator5:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+terminator6:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+terminator7:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+terminator8:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+terminator9:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0

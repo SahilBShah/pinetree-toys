@@ -1,0 +1,57 @@
+promoter0:
+  current_strength: 1186455264.4920633
+  previous_strength: 1088315063.5231826
+  start: 1
+  stop: 10
+promoter1:
+  current_strength: 0
+  previous_strength: 1000000000.0
+  start: 0
+  stop: 0
+promoter2:
+  current_strength: 0
+  previous_strength: 1238980580.1190417
+  start: 0
+  stop: 0
+region0:
+  start: 11
+  stop: 25
+region1:
+  start: 121
+  stop: 158
+region2:
+  start: 280
+  stop: 318
+region3:
+  start: 449
+  stop: 450
+rnase0:
+  current_strength: 0
+  previous_strength: 0.010377672730773646
+  start: 0
+  stop: 0
+rnase1:
+  current_strength: 0
+  previous_strength: 0.012538878887366451
+  start: 0
+  stop: 0
+rnase2:
+  current_strength: 0
+  previous_strength: 0.010312808061422785
+  start: 0
+  stop: 0
+terminator1:
+  current_strength: 0
+  previous_strength: 0.85
+  start: 0
+  stop: 0
+terminator2:
+  current_strength: 0.7872907575185405
+  previous_strength: 0.85
+  start: 289
+  stop: 290
+terminator3:
+  current_strength: 0
+  previous_strength: 0.8521276671631008
+  start: 0
+  stop: 0

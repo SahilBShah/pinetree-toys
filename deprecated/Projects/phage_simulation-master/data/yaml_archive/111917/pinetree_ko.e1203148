@@ -1,3 +1,0 @@
-Warning: Permanently added '[nid00416]:6999,[10.128.1.163]:6999' (RSA) to the list of known hosts.
-slurmstepd: error: *** JOB 1203148 ON nid00416 CANCELLED AT 2017-11-20T05:31:59 DUE TO TIME LIMIT ***
-Killed by signal 15.
