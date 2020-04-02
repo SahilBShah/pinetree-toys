@@ -6,6 +6,6 @@ gene2:
   stop: 280
 gene3:
   start: 319
-  stop: 449
+  stop: 447
 length_of_genome: 450
 num_genes: 3
