@@ -1,0 +1,32 @@
+gene_1:
+  start: 32
+  stop: 99
+gene_10:
+  start: 923
+  stop: 990
+gene_2:
+  start: 131
+  stop: 198
+gene_3:
+  start: 230
+  stop: 297
+gene_4:
+  start: 329
+  stop: 396
+gene_5:
+  start: 428
+  stop: 495
+gene_6:
+  start: 527
+  stop: 594
+gene_7:
+  start: 626
+  stop: 693
+gene_8:
+  start: 725
+  stop: 792
+gene_9:
+  start: 824
+  stop: 891
+length_of_genome: 1000
+num_genes: 10
