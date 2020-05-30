@@ -1,0 +1,68 @@
+gene_1:
+  start: 111
+  stop: 261
+gene_2:
+  start: 440
+  stop: 590
+gene_3:
+  start: 775
+  stop: 925
+length_of_genome: 1005
+num_genes: 3
+promoter_0:
+  current_strength: 305501589.1050236
+  previous_strength: 306408683.7015819
+  start: 1
+  stop: 35
+promoter_1:
+  current_strength: 1449050.0280304085
+  previous_strength: 1433238.212859001
+  start: 375
+  stop: 409
+promoter_2:
+  current_strength: 6217295.509210008
+  previous_strength: 7395320.093027923
+  start: 601
+  stop: 635
+region_0:
+  start: 35
+  stop: 81
+region_1:
+  start: 261
+  stop: 410
+region_2:
+  start: 590
+  stop: 745
+region_3:
+  start: 925
+  stop: 1005
+rnase_0:
+  current_strength: 0.0016506075229779733
+  previous_strength: 0.0017042925303302715
+  start: 71
+  stop: 80
+rnase_1:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+rnase_2:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+terminator_1:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+terminator_2:
+  current_strength: 0
+  previous_strength: 0
+  start: 0
+  stop: 0
+terminator_3:
+  current_strength: 0.07012357135650302
+  previous_strength: 0.06230964455026053
+  start: 950
+  stop: 979
