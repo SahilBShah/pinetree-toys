@@ -5,9 +5,9 @@ gene_2:
   start: 400
   stop: 550
 gene_3:
-  start: 735
-  stop: 885
-length_of_genome: 935
+  start: 700
+  stop: 850
+length_of_genome: 900
 num_genes: 3
 promoter_0:
   current_strength: 1000000000.0
@@ -20,10 +20,10 @@ promoter_1:
   start: 0
   stop: 0
 promoter_2:
-  current_strength: 100000000.0
-  previous_strength: 0
-  start: 580
-  stop: 614
+  current_strength: 0
+  previous_strength: 100000000.0
+  start: 0
+  stop: 0
 region_0:
   start: 35
   stop: 70
@@ -32,10 +32,10 @@ region_1:
   stop: 370
 region_2:
   start: 550
-  stop: 660
+  stop: 625
 region_3:
-  start: 840
-  stop: 890
+  start: 805
+  stop: 855
 rnase_0:
   current_strength: 0
   previous_strength: 0

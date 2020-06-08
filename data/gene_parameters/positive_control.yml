@@ -23,7 +23,7 @@ promoter_2:
   current_strength: 100000000.0
   previous_strength: 0
   start: 640
-  stop: 675
+  stop: 674
 region_0:
   start: 10
   stop: 26
@@ -60,9 +60,9 @@ terminator_2:
   current_strength: 0.3
   previous_strength: 0
   start: 600
-  stop: 630
+  stop: 629
 terminator_3:
   current_strength: 1.0
   previous_strength: 0
   start: 860
-  stop: 890
+  stop: 889
