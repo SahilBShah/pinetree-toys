@@ -10,7 +10,7 @@ gene_3:
 length_of_genome: 900
 num_genes: 3
 promoter_0:
-  current_strength: 1000000000.0
+  current_strength: 100000000.0
   previous_strength: 0
   start: 1
   stop: 35
